@@ -1,6 +1,4 @@
-# Cellule: Créer app.py (VERSION FINALE SANS AUCUNE ERREUR)
-import os
-
+# Cellule: Créer app.py - VERSION FINALE QUI MARCHE
 app_content = '''import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -44,24 +42,10 @@ st.markdown("""
     color: #6c757d;
     margin-top: 5px;
 }
-.alert-danger {
-    background: #f8d7da;
-    border-left: 4px solid #dc3545;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 10px;
-}
-.alert-warning {
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 10px;
-}
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-header"><h1>Tableau de Bord RH</h1><p>La Pratique Electronique | Projet PFE - Souha Ferjani</p></div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p>La Pratique Electronique | Projet PFE - Souha Ferjani</p></div>', unsafe_allow_html=True)
 
 @st.cache_data
 def load_data():
@@ -129,27 +113,27 @@ qualite = (len(recents[recents['Date_Sortie'].isna()]) / len(recents) * 100) if 
 
 mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Retr'] + mouvements['Sorties_Lice']
 
-st.sidebar.title("La Pratique Electronique")
+st.sidebar.title("🏢 La Pratique Electronique")
 st.sidebar.markdown("---")
-st.sidebar.markdown("Souha Ferjani")
+st.sidebar.markdown("**Souha Ferjani**")
 st.sidebar.markdown("Projet PFE - Business Intelligence")
 st.sidebar.markdown("---")
 
 page = st.sidebar.radio("Navigation", ["Accueil", "Mouvements", "Promotions", "Admin", "Strategique", "Alertes"])
 
 if page == "Accueil":
-    c1, c2, c3, c4 = st.columns(4)
-    with c1: st.metric("Effectif", total)
-    with c2: st.metric("Turnover", f"{turnover:.1f}%")
-    with c3: st.metric("Promotions", len(promotions))
-    with c4: st.metric("Departs", departs)
+    col1, col2, col3, col4 = st.columns(4)
+    with col1: st.metric("Effectif Total", total)
+    with col2: st.metric("Taux Rotation", f"{turnover:.1f}%")
+    with col3: st.metric("Promotions", len(promotions))
+    with col4: st.metric("Departs", departs)
     
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.pie(actifs, names='Service', title="Repartition par Service")
+        fig = px.pie(actifs, names='Service', title="Repartition par Service", hole=0.3)
         st.plotly_chart(fig, use_container_width=True)
     with col2:
-        fig = px.bar(actifs, x='Categorie', title="Cadres vs Non-cadres")
+        fig = px.bar(actifs, x='Categorie', title="Cadres vs Non-cadres", color='Categorie')
         st.plotly_chart(fig, use_container_width=True)
 
 elif page == "Mouvements":
@@ -157,13 +141,13 @@ elif page == "Mouvements":
     fig = go.Figure()
     fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Entrees'], name='Entrees', marker_color='green'))
     fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Total_Sorties'], name='Sorties', marker_color='red'))
-    fig.update_layout(title='Entrees vs Sorties', barmode='group')
+    fig.update_layout(title='Entrees vs Sorties mensuelles', barmode='group')
     st.plotly_chart(fig, use_container_width=True)
     
     col1, col2, col3 = st.columns(3)
-    with col1: st.metric("Entrees", mouvements['Entrees'].sum())
-    with col2: st.metric("Sorties", mouvements['Total_Sorties'].sum())
-    with col3: st.metric("Solde", mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum())
+    with col1: st.metric("Total Entrees", mouvements['Entrees'].sum())
+    with col2: st.metric("Total Sorties", mouvements['Total_Sorties'].sum())
+    with col3: st.metric("Solde Net", mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum())
 
 elif page == "Promotions":
     st.header("Promotions Internes")
@@ -173,12 +157,14 @@ elif page == "Admin":
     st.header("Gestion Administrative")
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse', title="Taux de reponse", markers=True)
+        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse', title="Taux de reponse questionnaires", markers=True)
+        fig.add_hline(y=50, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
     with col2:
-        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation', title="Entretiens annuels")
+        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation', title="Entretiens annuels", text='Taux_Realisation')
+        fig.add_hline(y=80, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
-    st.subheader("Sanctions")
+    st.subheader("Sanctions disciplinaires")
     st.dataframe(sanctions, use_container_width=True)
 
 elif page == "Strategique":
@@ -192,18 +178,35 @@ elif page == "Strategique":
         st.progress(fuite_cadres/100)
 
 elif page == "Alertes":
-    st.header("Alertes")
-    if turnover > 15: st.error(f"Turnover eleve: {turnover:.1f}%")
-    if fuite_cadres > 10: st.error(f"Fuite cadres: {fuite_cadres:.1f}%")
-    if qualite < 80: st.warning(f"Qualite recrutements: {qualite:.1f}%")
-    if not (turnover > 15 or fuite_cadres > 10 or qualite < 80): st.success("Aucune alerte")
+    st.header("Alertes Automatiques")
+    alert_count = 0
+    if turnover > 15:
+        st.error(f"CRITIQUE - Turnover eleve: {turnover:.1f}%")
+        alert_count += 1
+    if fuite_cadres > 10:
+        st.error(f"CRITIQUE - Fuite des cadres: {fuite_cadres:.1f}%")
+        alert_count += 1
+    if qualite < 80:
+        st.warning(f"ATTENTION - Qualite recrutements: {qualite:.1f}%")
+        alert_count += 1
+    if alert_count == 0:
+        st.success("Aucune alerte critique detectee")
 
 st.markdown("---")
-st.caption("La Pratique Electronique | Projet PFE - Souha Ferjani")
+st.caption("La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
 '''
 
+# Sauvegarder sans créer de dossiers
 with open('/content/app.py', 'w', encoding='utf-8') as f:
     f.write(app_content)
 
 print("✅ app.py cree avec succes!")
 print("📁 Fichier: /content/app.py")
+print("\n" + "="*50)
+print("COMMENT UPLOADER SUR GITHUB:")
+print("="*50)
+print("1. Telechargez ce fichier depuis le panneau gauche (clic droit sur app.py -> Telecharger)")
+print("2. Allez sur: https://github.com/souhaferjani-glitch/-RH-Dashboard")
+print("3. Cliquez sur app.py -> crayon -> supprimez tout -> collez le code -> Commit changes")
+print("4. Allez sur: https://share.streamlit.io -> deploy")
+print("="*50)
