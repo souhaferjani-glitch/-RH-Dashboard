@@ -1,5 +1,4 @@
-# Cellule: Créer app.py - VERSION FINALE QUI MARCHE
-app_content = '''import streamlit as st
+import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -24,23 +23,6 @@ st.markdown("""
 .main-header p {
     margin: 8px 0 0 0;
     font-size: 14px;
-}
-.metric-card {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    border: 1px solid #e9ecef;
-}
-.metric-value {
-    font-size: 32px;
-    font-weight: 700;
-    color: #1e3c72;
-}
-.metric-label {
-    font-size: 14px;
-    color: #6c757d;
-    margin-top: 5px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -194,19 +176,3 @@ elif page == "Alertes":
 
 st.markdown("---")
 st.caption("La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
-'''
-
-# Sauvegarder sans créer de dossiers
-with open('/content/app.py', 'w', encoding='utf-8') as f:
-    f.write(app_content)
-
-print("✅ app.py cree avec succes!")
-print("📁 Fichier: /content/app.py")
-print("\n" + "="*50)
-print("COMMENT UPLOADER SUR GITHUB:")
-print("="*50)
-print("1. Telechargez ce fichier depuis le panneau gauche (clic droit sur app.py -> Telecharger)")
-print("2. Allez sur: https://github.com/souhaferjani-glitch/-RH-Dashboard")
-print("3. Cliquez sur app.py -> crayon -> supprimez tout -> collez le code -> Commit changes")
-print("4. Allez sur: https://share.streamlit.io -> deploy")
-print("="*50)
