@@ -507,12 +507,19 @@ elif page == "⭐ Talents":
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("📋 Historique des promotions")
-        st.dataframe(promotions, use_container_width=True)
+        # Formater les dates pour affichage
+        promotions_aff = promotions.copy()
+        promotions_aff['Date_Promot'] = promotions_aff['Date_Promot'].dt.strftime('%d/%m/%Y')
+        st.dataframe(promotions_aff, use_container_width=True)
         st.metric("📊 Total promotions", len(promotions))
     
     with col2:
         st.subheader("⏱️ Délai moyen de promotion")
-        st.metric(f"{delai_promotion:.1f} ans", delta="Objectif < 3 ans")
+        # Correction: utiliser delai_promotion
+        if delai_promotion > 0:
+            st.metric(f"{delai_promotion:.1f} ans", delta="Objectif < 3 ans")
+        else:
+            st.metric("Non disponible", delta="Pas assez de données")
         
         st.subheader("🔄 Mobilité interne")
         st.metric(f"{mobilite_interne} changements", delta="2024-2025")
@@ -524,7 +531,6 @@ elif page == "⭐ Talents":
                      title="Promotions par année", text='Nombre')
         fig.update_traces(texttemplate='%{text}', textposition='outside')
         st.plotly_chart(fig, use_container_width=True)
-
 # ==================== PAGE ADMIN ====================
 elif page == "📋 Admin":
     st.markdown('<div class="main-header"><h1>📋 Administration</h1><p>Suivi des indicateurs</p></div>', unsafe_allow_html=True)
