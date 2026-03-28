@@ -319,7 +319,7 @@ def show_login():
     """, unsafe_allow_html=True)
     
     # Champs de connexion
-    st.markdown('<div class="form-group"><label class="form-label">Your e-mail address</label></div>', unsafe_allow_html=True)
+    st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
     
     st.markdown('<div class="form-group"><label class="form-label">Password</label></div>', unsafe_allow_html=True)
@@ -337,7 +337,7 @@ def show_login():
                 st.session_state.username = username
                 st.rerun()
             else:
-                st.error("❌ Invalid email or password")
+                st.error("❌ Invalid user or password")
     
     # Footer
     st.markdown("""
