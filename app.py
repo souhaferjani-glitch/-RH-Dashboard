@@ -167,7 +167,7 @@ def show_login():
     
     with st.container():
         st.markdown('<div class="login-container">', unsafe_allow_html=True)
-        st.markdown('<h1 class="login-title">📊 RH Dashboard PRO</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="login-title">📊 RH Dashboard </h1>', unsafe_allow_html=True)
         st.markdown('<p style="color:#6c757d; margin-bottom:2rem;">La Pratique Electronique</p>', unsafe_allow_html=True)
         
         username = st.text_input("👤 Nom d'utilisateur", key="login_username")
@@ -342,9 +342,18 @@ sorties_ma = mouvements['Total_Sorties'].rolling(window=3, min_periods=1).mean()
 prevision_entrees = entrees_ma.iloc[-1] * 1.05 if len(entrees_ma) > 0 else 0
 prevision_sorties = sorties_ma.iloc[-1] * 0.95 if len(sorties_ma) > 0 else 0
 
-# ==================== SIDEBAR AVEC FILTRES ====================
-st.sidebar.title("🎯 RH Dashboard")
-st.sidebar.markdown("### La Pratique Electronique")
+# ==================== SIDEBAR AVEC LOGO LOCAL ====================
+st.sidebar.markdown("""
+<div style="text-align: center; margin-bottom: 20px;">
+    <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
+         style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; border: 3px solid #667eea;">
+    <h3 style="color: #667eea; margin: 0;">La Pratique</h3>
+    <h3 style="color: #764ba2; margin: 0;">Electronique</h3>
+    <p style="color: #6c757d; font-size: 11px; margin-top: 5px;">Sous-traitance électronique</p>
+</div>
+""", unsafe_allow_html=True)
+
+st.sidebar.markdown("---")
 st.sidebar.markdown(f"**👤 {st.session_state.username}**")
 st.sidebar.markdown("---")
 
