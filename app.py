@@ -1,4 +1,4 @@
-# Cellule: Créer app.py avec logo (VERSION CORRIGÉE)
+# Cellule: Créer app.py avec logo (VERSION FINALE CORRIGÉE)
 import os
 
 os.makedirs('/content/RH_Dashboard', exist_ok=True)
@@ -84,15 +84,17 @@ st.markdown("""
 
 logo_url = "https://media.licdn.com/dms/image/v2/C4D0BAQES_Ke9tQ-EGg/company-logo_200_200/company-logo_200_200/0/1631313471231?e=2147483647&v=beta&t=d0lMZgrK1e5Pu_M03lAib2wJQSw9m7VV5d_sF5wFRac"
 
-st.markdown(f'''
-<div class="main-header">
-    <img src="{logo_url}" class="header-logo" alt="La Pratique Electronique">
-    <div class="header-title">
-        <h1>Tableau de Bord RH</h1>
-        <p>La Pratique Electronique | Projet PFE - Souha Ferjani</p>
-    </div>
-</div>
-''', unsafe_allow_html=True)
+# Header avec logo
+st.markdown(
+    '<div class="main-header">'
+    '<img src="' + logo_url + '" class="header-logo" alt="La Pratique Electronique">'
+    '<div class="header-title">'
+    '<h1>Tableau de Bord RH</h1>'
+    '<p>La Pratique Electronique | Projet PFE - Souha Ferjani</p>'
+    '</div>'
+    '</div>',
+    unsafe_allow_html=True
+)
 
 @st.cache_data
 def load_data():
@@ -270,4 +272,3 @@ with open('/content/RH_Dashboard/app.py', 'w', encoding='utf-8') as f:
     f.write(app_content)
 
 print("✅ app.py cree avec succes!")
-print("📁 Fichier: /content/RH_Dashboard/app.py")
