@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN ====================
+# ==================== LOGIN AVEC STYLE PRO ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -144,34 +144,139 @@ if "username" not in st.session_state:
 def show_login():
     st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    /* Background animé */
+    .login-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        z-index: -1;
+    }
+    
+    .login-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') repeat-x bottom;
+        background-size: 1440px 100px;
+        animation: wave 20s linear infinite;
+    }
+    
+    @keyframes wave {
+        0% { background-position-x: 0; }
+        100% { background-position-x: 1440px; }
+    }
+    
     .login-container {
         max-width: 450px;
         margin: 100px auto;
         padding: 40px;
-        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
         text-align: center;
-        animation: fadeIn 0.5s ease-in;
+        animation: slideUp 0.6s ease-out;
+        border: 1px solid rgba(255,255,255,0.2);
     }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
     .login-title {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         font-size: 2rem;
         font-weight: 800;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* Style des inputs */
+    .stTextInput > div > div > input {
+        border-radius: 12px;
+        border: 1px solid #e0e0e0;
+        padding: 12px 16px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    
+    .stTextInput > div > div > input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    /* Style du bouton */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Logo dans le login */
+    .login-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        border: 3px solid #667eea;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
     }
     </style>
+    
+    <div class="login-bg"></div>
     """, unsafe_allow_html=True)
     
     with st.container():
         st.markdown('<div class="login-container">', unsafe_allow_html=True)
-        st.markdown('<h1 class="login-title">📊 RH Dashboard </h1>', unsafe_allow_html=True)
-        st.markdown('<p style="color:#6c757d; margin-bottom:2rem;">La Pratique Electronique</p>', unsafe_allow_html=True)
         
-        username = st.text_input("👤 Nom d'utilisateur", key="login_username")
-        password = st.text_input("🔒 Mot de passe", type="password", key="login_password")
+        # Logo (optionnel - vous pouvez changer l'image)
+        st.markdown("""
+        <div style="display: flex; justify-content: center;">
+            <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
+                 class="login-logo" 
+                 onerror="this.style.display='none'">
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown('<h1 class="login-title">📊 RH Dashboard</h1>', unsafe_allow_html=True)
+        st.markdown('<p class="login-subtitle">La Pratique Electronique</p>', unsafe_allow_html=True)
+        
+        username = st.text_input("👤 Nom d'utilisateur", key="login_username", placeholder="Entrez votre nom d'utilisateur")
+        password = st.text_input("🔒 Mot de passe", type="password", key="login_password", placeholder="Entrez votre mot de passe")
         
         col1, col2, col3 = st.columns([1,2,1])
         with col2:
