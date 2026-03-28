@@ -8,9 +8,8 @@ st.set_page_config(page_title="RH Dashboard", page_icon="📊", layout="wide")
 
 # ==================== CONFIGURATION LOGIN ====================
 USERS = {
-    "admin": "admin123",
-    "souha": "souha2025",
-    "rh": "rh123"
+    "Rhadmin": "admin123",
+    
 }
 
 if "logged_in" not in st.session_state:
