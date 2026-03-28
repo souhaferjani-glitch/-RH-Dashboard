@@ -315,8 +315,7 @@ def show_login():
                 <div class="app-subtitle">La Pratique Electronique</div>
             </div>
             
-            <div class="signin-title">Sign in</div>
-            <div class="signin-sub">Connectez-vous à votre espace</div>
+        
     """, unsafe_allow_html=True)
     
     # Champs de connexion
