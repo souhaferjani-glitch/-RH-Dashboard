@@ -714,4 +714,4 @@ elif page == "⚠️ Alertes":
         st.markdown('<div class="success-card">✅ Aucune alerte critique. Tous les indicateurs sont sous contrôle.</div>', unsafe_allow_html=True)
 
 st.markdown("---")
-st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence PRO")
+st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
