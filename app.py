@@ -153,12 +153,10 @@ def show_login():
         box-sizing: border-box;
     }
     
-    /* Fond de la page */
     .stApp {
         background: #f5f5f5;
     }
     
-    /* Container principal */
     .login-wrapper {
         display: flex;
         justify-content: center;
@@ -167,7 +165,6 @@ def show_login():
         padding: 24px;
     }
     
-    /* Carte de connexion */
     .login-card {
         max-width: 420px;
         width: 100%;
@@ -178,12 +175,9 @@ def show_login():
         text-align: center;
     }
     
-    <div class="logo-section">
-    <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-         style="width: 60px; height: 60px; border-radius: 16px; margin-bottom: 16px; object-fit: cover;">
-    <div class="app-title">RH Dashboard</div>
-    <div class="app-subtitle">La Pratique Electronique</div>
-</div>
+    .logo-section {
+        margin-bottom: 28px;
+    }
     
     .logo-circle {
         width: 60px;
@@ -214,7 +208,6 @@ def show_login():
         color: #8b8e9c;
     }
     
-    /* Titre Sign in */
     .signin-title {
         font-size: 28px;
         font-weight: 600;
@@ -228,7 +221,6 @@ def show_login():
         margin-bottom: 32px;
     }
     
-    /* Champs de formulaire */
     .form-group {
         margin-bottom: 20px;
         text-align: left;
@@ -242,7 +234,6 @@ def show_login():
         margin-bottom: 8px;
     }
     
-    /* Style des inputs */
     .stTextInput > div > div > input {
         width: 100%;
         padding: 12px 16px;
@@ -265,7 +256,6 @@ def show_login():
         font-size: 13px;
     }
     
-    /* Lien Forgot Password */
     .forgot-section {
         text-align: right;
         margin-bottom: 28px;
@@ -282,7 +272,6 @@ def show_login():
         text-decoration: underline;
     }
     
-    /* Bouton Sign in */
     .stButton > button {
         width: 100%;
         background: #4f46e5;
@@ -302,7 +291,6 @@ def show_login():
         transform: translateY(-1px);
     }
     
-    /* Footer */
     .footer-section {
         margin-top: 32px;
         padding-top: 24px;
@@ -320,7 +308,6 @@ def show_login():
         text-decoration: underline;
     }
     
-    /* Cacher éléments Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
