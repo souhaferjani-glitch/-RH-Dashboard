@@ -1,5 +1,7 @@
-# Cellule: Créer app.py (VERSION FINALE QUI FONCTIONNE)
+# Cellule: Créer app.py avec logo
 import os
+
+os.makedirs('/content/RH_Dashboard', exist_ok=True)
 
 app_content = '''import streamlit as st
 import pandas as pd
@@ -7,34 +9,56 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 
-st.set_page_config(page_title="Tableau de Bord RH - La Pratique Electronique", page_icon="📊", layout="wide")
+st.set_page_config(page_title="RH Dashboard - La Pratique Electronique", page_icon="🏭", layout="wide")
 
+# ==================== STYLE CSS ====================
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    font-family: 'Inter', sans-serif;
+}
+
 .main-header {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    padding: 25px;
+    padding: 20px 25px;
     border-radius: 20px;
     color: white;
-    text-align: center;
     margin-bottom: 30px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
-.main-header h1 {
+
+.header-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid white;
+    background-color: white;
+}
+
+.header-title h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
 }
-.main-header p {
-    margin: 8px 0 0 0;
-    font-size: 14px;
+
+.header-title p {
+    margin: 5px 0 0 0;
+    font-size: 12px;
     opacity: 0.9;
 }
+
 .metric-card {
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
     padding: 20px;
     border-radius: 15px;
     text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     border: 1px solid #e9ecef;
     transition: transform 0.3s;
 }
@@ -42,32 +66,35 @@ st.markdown("""
     transform: translateY(-5px);
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
+
 .metric-value {
     font-size: 32px;
     font-weight: 700;
     color: #1e3c72;
 }
+
 .metric-label {
     font-size: 14px;
     color: #6c757d;
     margin-top: 5px;
 }
+
 .alert-danger {
-    background: #f8d7da;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
     border-left: 4px solid #dc3545;
     padding: 15px;
     margin: 10px 0;
     border-radius: 10px;
 }
 .alert-warning {
-    background: #fff3cd;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
     border-left: 4px solid #ffc107;
     padding: 15px;
     margin: 10px 0;
     border-radius: 10px;
 }
 .success-card {
-    background: #d4edda;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
     border-left: 4px solid #28a745;
     padding: 15px;
     margin: 10px 0;
@@ -76,13 +103,20 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('''
+# ==================== HEADER AVEC LOGO ====================
+logo_url = "https://media.licdn.com/dms/image/v2/C4D0BAQES_Ke9tQ-EGg/company-logo_200_200/company-logo_200_200/0/1631313471231?e=2147483647&v=beta&t=d0lMZgrK1e5Pu_M03lAib2wJQSw9m7VV5d_sF5wFRac"
+
+st.markdown(f'''
 <div class="main-header">
-    <h1>📊 Tableau de Bord RH</h1>
-    <p>La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence</p>
+    <img src="{logo_url}" class="header-logo" alt="La Pratique Electronique">
+    <div class="header-title">
+        <h1>📊 Tableau de Bord RH</h1>
+        <p>La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence</p>
+    </div>
 </div>
 ''', unsafe_allow_html=True)
 
+# ==================== CHARGEMENT DES DONNÉES ====================
 @st.cache_data
 def load_data():
     effectifs = pd.DataFrame({
@@ -135,6 +169,7 @@ def load_data():
 
 effectifs, mouvements, promotions, questionnaires, entretiens, sanctions = load_data()
 
+# ==================== CALCULS KPI ====================
 actifs = effectifs[effectifs['Date_Sortie'].isna()]
 total = len(actifs)
 departs = len(effectifs[~effectifs['Date_Sortie'].isna()])
@@ -149,7 +184,9 @@ qualite = (len(recents[recents['Date_Sortie'].isna()]) / len(recents) * 100) if 
 
 mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Retr'] + mouvements['Sorties_Lice']
 
+# ==================== SIDEBAR ====================
 st.sidebar.title("🏢 La Pratique Electronique")
+st.sidebar.markdown("### Tableau de Bord RH")
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Présenté par:** Souha Ferjani")
 st.sidebar.markdown("**Projet PFE - Business Intelligence**")
@@ -160,30 +197,32 @@ page = st.sidebar.radio("Navigation", [
     "🏠 Accueil",
     "📈 Mouvements", 
     "⭐ Promotions",
-    "📋 Administration",
+    "📋 Admin",
     "🎯 Stratégique",
     "⚠️ Alertes"
 ])
 
+# ==================== PAGE ACCUEIL ====================
 if page == "🏠 Accueil":
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("👥 Effectif Total", total)
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{total}</div><div class="metric-label">👥 Effectif Total</div></div>', unsafe_allow_html=True)
     with col2:
-        st.metric("📈 Taux de Rotation", f"{turnover:.1f}%")
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{turnover:.1f}%</div><div class="metric-label">📈 Taux Rotation</div></div>', unsafe_allow_html=True)
     with col3:
-        st.metric("⭐ Promotions", len(promotions))
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{len(promotions)}</div><div class="metric-label">⭐ Promotions</div></div>', unsafe_allow_html=True)
     with col4:
-        st.metric("🚪 Départs", departs)
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{departs}</div><div class="metric-label">🚪 Départs</div></div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.pie(actifs, names='Service', title="Répartition par Service", hole=0.3)
+        fig = px.pie(actifs, names='Service', title="🏢 Répartition par Service", hole=0.3)
         st.plotly_chart(fig, use_container_width=True)
     with col2:
-        fig = px.bar(actifs, x='Categorie', title="Cadres vs Non-cadres", color='Categorie')
+        fig = px.bar(actifs, x='Categorie', title="👥 Cadres vs Non-cadres", color='Categorie')
         st.plotly_chart(fig, use_container_width=True)
 
+# ==================== PAGE MOUVEMENTS ====================
 elif page == "📈 Mouvements":
     st.header("📈 Analyse des Mouvements")
     
@@ -201,64 +240,68 @@ elif page == "📈 Mouvements":
     with col3:
         st.metric("⚖️ Solde Net", mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum())
 
+# ==================== PAGE PROMOTIONS ====================
 elif page == "⭐ Promotions":
     st.header("⭐ Promotions Internes")
     st.dataframe(promotions, use_container_width=True)
 
-elif page == "📋 Administration":
+# ==================== PAGE ADMIN ====================
+elif page == "📋 Admin":
     st.header("📋 Gestion Administrative")
     
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse', title="Taux de réponse aux questionnaires", markers=True)
+        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse', title="📊 Taux de réponse", markers=True)
         fig.add_hline(y=50, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
     with col2:
-        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation', title="Entretiens annuels", text='Taux_Realisation')
+        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation', title="📋 Entretiens annuels", text='Taux_Realisation')
         fig.add_hline(y=80, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
     
     st.subheader("⚖️ Sanctions disciplinaires")
     st.dataframe(sanctions, use_container_width=True)
 
+# ==================== PAGE STRATÉGIQUE ====================
 elif page == "🎯 Stratégique":
     st.header("🎯 Indicateurs Stratégiques")
     
     col1, col2 = st.columns(2)
     with col1:
-        st.metric("✅ Qualité des recrutements", f"{qualite:.1f}%")
+        st.metric("✅ Qualité recrutements", f"{qualite:.1f}%")
         st.progress(qualite/100)
     with col2:
-        st.metric("💨 Fuite des compétences", f"{fuite_cadres:.1f}%")
+        st.metric("💨 Fuite compétences", f"{fuite_cadres:.1f}%")
         st.progress(fuite_cadres/100)
 
+# ==================== PAGE ALERTES ====================
 elif page == "⚠️ Alertes":
     st.header("⚠️ Alertes Automatiques")
     
     alertes = []
     if turnover > 15:
-        alertes.append(("🔴 CRITIQUE", f"Turnover élevé: {turnover:.1f}% > 15%"))
+        alertes.append(f"🔴 Turnover élevé: {turnover:.1f}%")
     if fuite_cadres > 10:
-        alertes.append(("🔴 CRITIQUE", f"Fuite des cadres: {fuite_cadres:.1f}% > 10%"))
+        alertes.append(f"🔴 Fuite des cadres: {fuite_cadres:.1f}%")
     if qualite < 80:
-        alertes.append(("🟡 ATTENTION", f"Qualité recrutements: {qualite:.1f}% < 80%"))
+        alertes.append(f"🟡 Qualité recrutements: {qualite:.1f}%")
     
     if alertes:
-        for type_alerte, message in alertes:
-            if "🔴" in type_alerte:
-                st.error(message)
+        for alerte in alertes:
+            if "🔴" in alerte:
+                st.markdown(f'<div class="alert-danger">{alerte}</div>', unsafe_allow_html=True)
             else:
-                st.warning(message)
+                st.markdown(f'<div class="alert-warning">{alerte}</div>', unsafe_allow_html=True)
     else:
-        st.success("✅ Aucune alerte critique détectée")
+        st.markdown('<div class="success-card">✅ Aucune alerte critique détectée</div>', unsafe_allow_html=True)
 
 st.markdown("---")
-st.caption("📊 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence | MiT-Nabeul")
+st.caption("🏭 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence | MiT-Nabeul")
 '''
 
+# Sauvegarder le fichier
 with open('/content/RH_Dashboard/app.py', 'w', encoding='utf-8') as f:
     f.write(app_content)
 
-print("✅ app.py créé avec succès!")
+print("✅ app.py créé avec le logo!")
 print("📁 Fichier: /content/RH_Dashboard/app.py")
-print("\n🔽 Téléchargez ce fichier et uploadez-le sur GitHub")
