@@ -136,12 +136,10 @@ st.markdown("""
 # ==================== LOGIN - DESIGN EXACTEMENT COMME L'IMAGE ====================
 USERS = {"Rhadmin": "admin123"}
 
-<div class="logo-area">
-    <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-         style="width: 70px; height: 70px; border-radius: 18px; margin-bottom: 20px;">
-    <div class="logo-title">RH Dashboard</div>
-    <div class="logo-sub">La Pratique Electronique</div>
-</div>
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
 
 def show_login():
     st.markdown("""
@@ -180,26 +178,17 @@ def show_login():
         text-align: center;
     }
     
-    /* Logo - comme dans l'image */
+    /* Logo */
     .logo-area {
         margin-bottom: 32px;
     }
     
-    .logo-icon {
+    .logo-img {
         width: 70px;
         height: 70px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 18px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
         margin-bottom: 20px;
-    }
-    
-    .logo-icon span {
-        font-size: 32px;
-        font-weight: 600;
-        color: white;
+        object-fit: cover;
     }
     
     .logo-title {
@@ -331,9 +320,9 @@ def show_login():
     <div class="login-container">
         <div class="login-card">
             <div class="logo-area">
-                <div class="logo-icon">
-                    <span>📊</span>
-                </div>
+                <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
+                     class="logo-img" 
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:70px;height:70px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:18px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px\'><span style=\'font-size:32px;color:white\'>📊</span></div>'">
                 <div class="logo-title">RH Dashboard</div>
                 <div class="logo-sub">La Pratique Electronique</div>
             </div>
