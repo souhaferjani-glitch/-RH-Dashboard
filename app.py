@@ -282,7 +282,7 @@ st.sidebar.caption("Version 2.0 - Business Intelligence")
 
 # ==================== PAGE ACCUEIL ====================
 if page == "🏠 Accueil":
-    st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p>-La Pratique Electronique - </p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p> - La Pratique Electronique - </p></div>', unsafe_allow_html=True)
     
     # KPIs
     col1, col2, col3, col4 = st.columns(4)
