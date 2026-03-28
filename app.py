@@ -43,52 +43,59 @@ st.markdown("""
 # Chargement des données
 @st.cache_data
 def load_data():
-    # Données effectifs (15 employés)
+    # Données effectifs
     effectifs = pd.DataFrame({
-        'Matricule': ['EMP001','EMP002','EMP003','EMP004','EMP005','EMP006','EMP007','EMP008','EMP009','EMP010','EMP011','EMP012','EMP013','EMP014','EMP015'],
-        'Date_Embauche': pd.to_datetime(['01/01/2020','15/06/2021','10/03/2022','05/09/2023','20/01/2021','01/07/2023','15/11/2022','10/05/2020','01/02/2024','15/08/2021','20/03/2023','05/12/2022','10/07/2021','01/09/2023','15/04/2022']),
-        'Date_Sortie': pd.to_datetime(['','01/12/2024','','','15/10/2024','','31/03/2025','','','','28/02/2025','','','','15/01/2025'], errors='coerce'),
-        'Motif_Sortie': ['','Démission','','','Retraite','','Démission','','','','Licenciement','','','','Démission'],
-        'Service': ['Commercial','RH','Technique','Commercial','Administration','Technique','Commercial','RH','Technique','Administration','Commercial','Technique','RH','Commercial','Technique'],
-        'Categorie': ['Cadre','Non cadre','Cadre','Non cadre','Cadre','Non cadre','Cadre','Cadre','Non cadre','Non cadre','Non cadre','Cadre','Non cadre','Cadre','Non cadre'],
-        'Sexe': ['H','F','H','F','H','F','F','F','H','F','H','H','F','H','F']
+        'Matricule': ['EMP001', 'EMP002', 'EMP003', 'EMP004', 'EMP005', 'EMP006', 'EMP007', 'EMP008', 'EMP009', 'EMP010', 'EMP011', 'EMP012', 'EMP013', 'EMP014', 'EMP015'],
+        'Date_Embauche': ['2020-01-01', '2021-06-15', '2022-03-10', '2023-09-05', '2021-01-20', '2023-07-01', '2022-11-15', '2020-05-10', '2024-02-01', '2021-08-15', '2023-03-20', '2022-12-05', '2021-07-10', '2023-09-01', '2022-04-15'],
+        'Date_Sortie': ['', '2024-12-01', '', '', '2024-10-15', '', '2025-03-31', '', '', '', '2025-02-28', '', '', '', '2025-01-15'],
+        'Motif_Sortie': ['', 'Démission', '', '', 'Retraite', '', 'Démission', '', '', '', 'Licenciement', '', '', '', 'Démission'],
+        'Service': ['Commercial', 'RH', 'Technique', 'Commercial', 'Administration', 'Technique', 'Commercial', 'RH', 'Technique', 'Administration', 'Commercial', 'Technique', 'RH', 'Commercial', 'Technique'],
+        'Categorie': ['Cadre', 'Non cadre', 'Cadre', 'Non cadre', 'Cadre', 'Non cadre', 'Cadre', 'Cadre', 'Non cadre', 'Non cadre', 'Non cadre', 'Cadre', 'Non cadre', 'Cadre', 'Non cadre'],
+        'Sexe': ['H', 'F', 'H', 'F', 'H', 'F', 'F', 'F', 'H', 'F', 'H', 'H', 'F', 'H', 'F']
     })
+    
+    # Conversion des dates
+    effectifs['Date_Embauche'] = pd.to_datetime(effectifs['Date_Embauche'])
+    effectifs['Date_Sortie'] = pd.to_datetime(effectifs['Date_Sortie'], errors='coerce')
     
     # Mouvements mensuels
     mouvements = pd.DataFrame({
-        'Mois': pd.to_datetime(['01/01/2024','01/02/2024','01/03/2024','01/04/2024','01/05/2024','01/06/2024']),
-        'Entrees': [2,1,3,0,2,1],
-        'Sorties_Dem': [1,0,2,1,0,2],
-        'Sorties_Retr': [0,1,0,0,0,0],
-        'Sorties_Lice': [0,0,1,0,0,0]
+        'Mois': ['2024-01-01', '2024-02-01', '2024-03-01', '2024-04-01', '2024-05-01', '2024-06-01'],
+        'Entrees': [2, 1, 3, 0, 2, 1],
+        'Sorties_Dem': [1, 0, 2, 1, 0, 2],
+        'Sorties_Retr': [0, 1, 0, 0, 0, 0],
+        'Sorties_Lice': [0, 0, 1, 0, 0, 0]
     })
+    mouvements['Mois'] = pd.to_datetime(mouvements['Mois'])
     
     # Promotions
     promotions = pd.DataFrame({
-        'Matricule': ['EMP001','EMP003','EMP008','EMP012'],
-        'Date_Promot': pd.to_datetime(['01/01/2025','15/03/2024','01/12/2024','10/06/2024']),
-        'Ancien_Grade': ['Commercial Senior','Technicien','Assistant RH','Ingénieur'],
-        'Nouveau_Grade': ['Directeur Commercial','Technicien Principal','Responsable RH','Ingénieur Principal']
+        'Matricule': ['EMP001', 'EMP003', 'EMP008', 'EMP012'],
+        'Date_Promot': ['2025-01-01', '2024-03-15', '2024-12-01', '2024-06-10'],
+        'Ancien_Grade': ['Commercial Senior', 'Technicien', 'Assistant RH', 'Ingénieur'],
+        'Nouveau_Grade': ['Directeur Commercial', 'Technicien Principal', 'Responsable RH', 'Ingénieur Principal']
     })
+    promotions['Date_Promot'] = pd.to_datetime(promotions['Date_Promot'])
     
     # Questionnaires
     questionnaires = pd.DataFrame({
-        'Periode': ['01/2024','02/2024','03/2024','04/2024','05/2024','06/2024'],
-        'Taux_Reponse': [84,76,90,80,88,78]
+        'Periode': ['01/2024', '02/2024', '03/2024', '04/2024', '05/2024', '06/2024'],
+        'Taux_Reponse': [84, 76, 90, 80, 88, 78]
     })
     
     # Entretiens
     entretiens = pd.DataFrame({
-        'Annee': [2023,2024,2025],
-        'Taux_Realisation': [90,86.4,86.7]
+        'Annee': [2023, 2024, 2025],
+        'Taux_Realisation': [90, 86.4, 86.7]
     })
     
     # Sanctions
     sanctions = pd.DataFrame({
-        'Date': pd.to_datetime(['15/01/2024','20/02/2024','10/03/2024','05/04/2024','12/05/2024']),
-        'Service': ['Commercial','Technique','RH','Commercial','Technique'],
-        'Type': ['Avertissement','Blâme','Avertissement','Mise à pied','Blâme']
+        'Date': ['2024-01-15', '2024-02-20', '2024-03-10', '2024-04-05', '2024-05-12'],
+        'Service': ['Commercial', 'Technique', 'RH', 'Commercial', 'Technique'],
+        'Type': ['Avertissement', 'Blâme', 'Avertissement', 'Mise à pied', 'Blâme']
     })
+    sanctions['Date'] = pd.to_datetime(sanctions['Date'])
     
     return effectifs, mouvements, promotions, questionnaires, entretiens, sanctions
 
