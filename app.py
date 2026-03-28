@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN - DESIGN PROFESSIONNEL AVEC LOGO LOCAL ====================
+# ==================== LOGIN - DESIGN MODERNE ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -153,11 +153,13 @@ def show_login():
         box-sizing: border-box;
     }
     
+    /* Fond dégradé moderne */
     .stApp {
-        background: #f5f5f5;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
-    .login-wrapper {
+    /* Container principal */
+    .login-container {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -165,96 +167,107 @@ def show_login():
         padding: 24px;
     }
     
+    /* Carte de login */
     .login-card {
-        max-width: 420px;
+        max-width: 440px;
         width: 100%;
         background: white;
-        border-radius: 16px;
-        padding: 40px 32px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-radius: 28px;
+        padding: 48px 40px;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
         text-align: center;
     }
     
-    .logo-section {
-        margin-bottom: 28px;
-    }
-    
-    .logo-img {
-        width: 70px;
-        height: 70px;
-        border-radius: 16px;
-        margin-bottom: 16px;
-        object-fit: cover;
-    }
-    
-    .app-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #1e1e2f;
-        margin-bottom: 4px;
-    }
-    
-    .app-subtitle {
-        font-size: 12px;
-        color: #8b8e9c;
-    }
-    
-    .signin-title {
-        font-size: 28px;
-        font-weight: 600;
-        color: #1e1e2f;
-        margin-bottom: 8px;
-    }
-    
-    .signin-sub {
-        font-size: 14px;
-        color: #6c727f;
+    /* Logo */
+    .logo-area {
         margin-bottom: 32px;
     }
     
+    .logo-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 16px;
+        border: 3px solid #667eea;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    }
+    
+    .logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 4px;
+    }
+    
+    .logo-sub {
+        font-size: 13px;
+        color: #8b8e9c;
+    }
+    
+    /* Titre Login */
+    .login-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+    
+    .login-subtitle {
+        font-size: 14px;
+        color: #64748b;
+        margin-bottom: 32px;
+    }
+    
+    /* Champs de formulaire */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
         text-align: left;
     }
     
     .form-label {
         display: block;
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 500;
-        color: #4a5568;
+        color: #334155;
         margin-bottom: 8px;
     }
     
+    /* Style des inputs */
     .stTextInput > div > div > input {
         width: 100%;
-        padding: 12px 16px;
-        font-size: 14px;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
+        padding: 14px 18px;
+        font-size: 15px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 16px;
         background: #fafbfc;
         transition: all 0.2s ease;
     }
     
     .stTextInput > div > div > input:focus {
-        border-color: #4f46e5;
+        border-color: #667eea;
         background: white;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         outline: none;
     }
     
     .stTextInput > div > div > input::placeholder {
         color: #cbd5e1;
-        font-size: 13px;
+        font-size: 14px;
     }
     
+    /* Lien Forgot Password */
     .forgot-section {
         text-align: right;
         margin-bottom: 28px;
     }
     
     .forgot-link {
-        font-size: 12px;
-        color: #4f46e5;
+        font-size: 13px;
+        color: #667eea;
         text-decoration: none;
         font-weight: 500;
     }
@@ -263,25 +276,26 @@ def show_login():
         text-decoration: underline;
     }
     
+    /* Bouton Login */
     .stButton > button {
         width: 100%;
-        background: #4f46e5;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 12px 20px;
-        font-size: 14px;
+        padding: 14px 24px;
+        font-size: 16px;
         font-weight: 600;
         border-radius: 40px;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-top: 4px;
     }
     
     .stButton > button:hover {
-        background: #6366f1;
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
     }
     
+    /* Footer */
     .footer-section {
         margin-top: 32px;
         padding-top: 24px;
@@ -291,7 +305,7 @@ def show_login():
     }
     
     .footer-section a {
-        color: #4f46e5;
+        color: #667eea;
         text-decoration: none;
     }
     
@@ -299,30 +313,32 @@ def show_login():
         text-decoration: underline;
     }
     
+    /* Cacher éléments Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     .stDeployButton {display: none;}
     </style>
     
-    <div class="login-wrapper">
+    <div class="login-container">
         <div class="login-card">
-            <div class="logo-section">
+            <div class="logo-area">
                 <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
                      class="logo-img" 
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:70px;height:70px;background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:32px;color:white\'>📊</span></div>'">
-                <div class="app-title">RH Dashboard</div>
-                <div class="app-subtitle">La Pratique Electronique</div>
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:40px;color:white\'>📊</span></div>'">
+                <div class="logo-text">RH Dashboard</div>
+                <div class="logo-sub">La Pratique Electronique</div>
             </div>
             
-        
+            <div class="login-title">Login</div>
+            <div class="login-subtitle">Accédez à votre espace RH</div>
     """, unsafe_allow_html=True)
     
     # Champs de connexion
-    st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
+    st.markdown('<div class="form-group"><label class="form-label">Username / Password</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
     
-    st.markdown('<div class="form-group"><label class="form-label">Password</label></div>', unsafe_allow_html=True)
+    st.markdown('<div class="form-group"><label class="form-label">Password Reset</label></div>', unsafe_allow_html=True)
     password = st.text_input("", placeholder="••••••••", type="password", key="login_password", label_visibility="collapsed")
     
     # Lien Forgot Password
@@ -331,13 +347,13 @@ def show_login():
     # Bouton
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("Sign in", use_container_width=True):
+        if st.button("Log In", use_container_width=True):
             if username in USERS and USERS[username] == password:
                 st.session_state.logged_in = True
                 st.session_state.username = username
                 st.rerun()
             else:
-                st.error("❌ Invalid user or password")
+                st.error("❌ Invalid username or password")
     
     # Footer
     st.markdown("""
