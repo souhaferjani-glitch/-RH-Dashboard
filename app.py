@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN AVEC DESIGN PRO ====================
+# ==================== LOGIN AVEC LOGO LOCAL ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -146,12 +146,10 @@ def show_login():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
-    /* Reset et style global */
     .stApp {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
-    /* Container principal */
     .login-wrapper {
         display: flex;
         justify-content: center;
@@ -160,7 +158,6 @@ def show_login():
         padding: 20px;
     }
     
-    /* Carte de login */
     .login-card {
         max-width: 480px;
         width: 100%;
@@ -182,28 +179,19 @@ def show_login():
         }
     }
     
-    /* Logo */
     .logo-container {
         text-align: center;
         margin-bottom: 32px;
     }
     
-    .logo-circle {
+    .logo-img {
         width: 100px;
         height: 100px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        object-fit: cover;
         margin-bottom: 16px;
+        border: 4px solid #667eea;
         box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.3);
-    }
-    
-    .logo-text {
-        font-size: 48px;
-        font-weight: 800;
-        color: white;
     }
     
     .company-name {
@@ -222,7 +210,6 @@ def show_login():
         margin-bottom: 0;
     }
     
-    /* Titre */
     .welcome-title {
         font-size: 28px;
         font-weight: 700;
@@ -238,11 +225,6 @@ def show_login():
         margin-bottom: 32px;
     }
     
-    /* Champs de formulaire */
-    .form-group {
-        margin-bottom: 24px;
-    }
-    
     .form-label {
         display: block;
         font-size: 14px;
@@ -251,7 +233,6 @@ def show_login():
         margin-bottom: 8px;
     }
     
-    /* Style des inputs Streamlit */
     .stTextInput > div > div > input {
         width: 100%;
         padding: 14px 18px;
@@ -261,6 +242,7 @@ def show_login():
         background: white;
         transition: all 0.3s ease;
         font-family: 'Inter', sans-serif;
+        margin-bottom: 20px;
     }
     
     .stTextInput > div > div > input:focus {
@@ -269,12 +251,6 @@ def show_login():
         outline: none;
     }
     
-    .stTextInput > div > div > input::placeholder {
-        color: #9ca3af;
-        font-weight: 400;
-    }
-    
-    /* Style du bouton */
     .stButton > button {
         width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -287,7 +263,6 @@ def show_login():
         cursor: pointer;
         transition: all 0.3s ease;
         margin-top: 8px;
-        font-family: 'Inter', sans-serif;
     }
     
     .stButton > button:hover {
@@ -295,17 +270,6 @@ def show_login():
         box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
     }
     
-    .stButton > button:active {
-        transform: translateY(0);
-    }
-    
-    /* Messages d'erreur */
-    .stAlert {
-        border-radius: 12px;
-        margin-top: 16px;
-    }
-    
-    /* Footer */
     .login-footer {
         text-align: center;
         margin-top: 32px;
@@ -315,7 +279,6 @@ def show_login():
         color: #9ca3af;
     }
     
-    /* Cacher les éléments par défaut de Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
@@ -324,9 +287,9 @@ def show_login():
     <div class="login-wrapper">
         <div class="login-card">
             <div class="logo-container">
-                <div class="logo-circle">
-                    <span class="logo-text">📊</span>
-                </div>
+                <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
+                     class="logo-img" 
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'logo-circle\'><span class=\'logo-text\'>📊</span></div>'">
                 <div class="company-name">La Pratique Electronique</div>
                 <div class="company-subtitle">Sous-traitance électronique</div>
             </div>
@@ -335,20 +298,12 @@ def show_login():
             <div class="welcome-subtitle">Connectez-vous à votre espace RH</div>
     """, unsafe_allow_html=True)
     
-    # Formulaire
+    # Labels et inputs
+    st.markdown('<label class="form-label">👤 Nom d\'utilisateur</label>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Entrez votre nom d'utilisateur", key="login_username", label_visibility="collapsed")
+    
+    st.markdown('<label class="form-label">🔒 Mot de passe</label>', unsafe_allow_html=True)
     password = st.text_input("", placeholder="Entrez votre mot de passe", type="password", key="login_password", label_visibility="collapsed")
-    
-    # Ajouter des labels personnalisés
-    st.markdown('<div class="form-group"><label class="form-label">👤 Nom d\'utilisateur</label></div>', unsafe_allow_html=True)
-    st.markdown('<div class="form-group"><label class="form-label">🔒 Mot de passe</label></div>', unsafe_allow_html=True)
-    
-    # Réorganiser pour que les inputs soient après les labels
-    # Note: Streamlit affiche dans l'ordre, donc on utilise un workaround
-    
-    st.markdown("""
-            <div style="margin-top: 8px;">
-    """, unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
@@ -361,8 +316,6 @@ def show_login():
                 st.error("❌ Nom d'utilisateur ou mot de passe incorrect")
     
     st.markdown("""
-            </div>
-            
             <div class="login-footer">
                 © 2025 La Pratique Electronique<br>
                 Tous droits réservés
