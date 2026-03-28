@@ -258,13 +258,11 @@ prevision_entrees = entrees_ma.iloc[-1] * 1.05
 prevision_sorties = sorties_ma.iloc[-1] * 0.95
 
 # ==================== SIDEBAR AVANCÉE ====================
-st.sidebar.title("🎯 RH Dashboard PRO")
+st.sidebar.title("🎯 RH Dashboard ")
 st.sidebar.markdown("### La Pratique Electronique")
 st.sidebar.markdown(f"**👤 {st.session_state.username}**")
 st.sidebar.markdown("---")
 
-# Thème
-theme = st.sidebar.selectbox("🎨 Thème", ["Clair", "Sombre"], index=0)
 
 # Période
 periode = st.sidebar.selectbox("📅 Période", ["6 mois", "Année", "2 ans"], index=0)
@@ -277,18 +275,18 @@ if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
     st.session_state.logged_in = False
     st.session_state.username = ""
     st.rerun()
-
-st.sidebar.markdown("---")
-st.sidebar.caption("© 2025 - La Pratique Electronique")
-st.sidebar.caption("Version 2.0 - Business Intelligence")
-
+    
 # Navigation
 page = st.sidebar.radio("Navigation", [
     "🏠 Acceuil", "📈 Analytics", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes"
 ])
+st.sidebar.markdown("---")
+st.sidebar.caption("© 2025 - La Pratique Electronique")
+st.sidebar.caption("Version 2.0 - Business Intelligence")
 
-# ==================== PAGE DASHBOARD ====================
-if page == "🏠 Dashboard":
+
+# ==================== PAGE Acceuil ====================
+if page == "🏠 Acceuil":
     st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p>La Pratique Electronique - Version PRO</p></div>', unsafe_allow_html=True)
     
     # KPIs
