@@ -4,19 +4,43 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 
-st.set_page_config(page_title="Tableau de Bord RH - La Pratique Electronique", page_icon="📊", layout="wide")
+st.set_page_config(page_title="Tableau de Bord RH", page_icon="📊", layout="wide")
 
 # Style CSS
 st.markdown("""
 <style>
-.main-header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 20px; border-radius: 10px; color: white; text-align: center; margin-bottom: 20px; }
-.metric-card { background-color: #f0f2f6; padding: 15px; border-radius: 10px; text-align: center; }
-.alert-danger { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 10px; margin: 10px 0; border-radius: 5px; }
-.alert-warning { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; border-radius: 5px; }
+.main-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.metric-card {
+    background-color: #f0f2f6;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+.alert-warning {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# Charger les données
+# Chargement des données
 @st.cache_data
 def load_data():
     # Données effectifs (15 employés)
@@ -153,9 +177,6 @@ elif page == "📈 Mouvements & Turnover":
 elif page == "⭐ Promotions":
     st.header("⭐ Promotions Internes")
     st.dataframe(promotions, use_container_width=True)
-    if len(promotions) > 0:
-        fig = px.bar(promotions, x='Matricule', y=promotions['Date_Promot'].dt.year, title="Promotions")
-        st.plotly_chart(fig, use_container_width=True)
 
 # PAGE 4: Gestion Administrative
 elif page == "📋 Gestion Administrative":
@@ -193,7 +214,10 @@ elif page == "⚠️ Alertes":
     
     if alertes:
         for type_a, msg in alertes:
-            st.error(msg) if "🔴" in type_a else st.warning(msg)
+            if "🔴" in type_a:
+                st.error(msg)
+            else:
+                st.warning(msg)
     else:
         st.success("✅ Aucune alerte")
 
