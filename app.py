@@ -281,8 +281,8 @@ mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Re
 
 # 1. Taux de départ 1ère année
 embauches_an_dernier = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
-departs_1ere_annee = len(embauches_an_dernier[~embauches_an_dernier['Date_Sortie'].isna()])
 if len(embauches_an_dernier) > 0:
+    departs_1ere_annee = len(embauches_an_dernier[~embauches_an_dernier['Date_Sortie'].isna()])
     taux_depart_1ere = (departs_1ere_annee / len(embauches_an_dernier) * 100)
 else:
     taux_depart_1ere = 0
@@ -319,7 +319,10 @@ for service in actifs['Service'].unique():
     sanctions_service = len(sanctions[sanctions['Service'] == service])
     taux_sanctions = (sanctions_service / effectif_service * 100) if effectif_service > 0 else 0
     
-    absences = absenteisme[absenteisme['Service'] == service]['Taux_Absence'].mean() if service in absenteisme['Service'].values else 0
+    if service in absenteisme['Service'].values:
+        absences = absenteisme[absenteisme['Service'] == service]['Taux_Absence'].mean()
+    else:
+        absences = 0
     
     score_risque = (turnover_service * 0.4) + (taux_sanctions * 0.3) + (absences * 0.3)
     niveau = "🟢 Faible" if score_risque < 10 else "🟡 Moyen" if score_risque < 20 else "🔴 Élevé"
@@ -336,7 +339,7 @@ for service in actifs['Service'].unique():
 date_limite = datetime.now() + timedelta(days=30)
 contrats_alertes = contrats_expiration[contrats_expiration['Date_Fin'] <= date_limite]
 
-# Prévisions
+# 8. Prévisions
 entrees_ma = mouvements['Entrees'].rolling(window=3, min_periods=1).mean()
 sorties_ma = mouvements['Total_Sorties'].rolling(window=3, min_periods=1).mean()
 prevision_entrees = entrees_ma.iloc[-1] * 1.05 if len(entrees_ma) > 0 else 0
