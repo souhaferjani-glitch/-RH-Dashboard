@@ -1,5 +1,5 @@
 # RH Dashboard
-## Projet PFE - Souha Ferjani
+
 ### La Pratique Electronique
 
 Dashboard RH interactif avec Streamlit.
