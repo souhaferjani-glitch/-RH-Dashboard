@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ==================== STYLE CSS AVANCÉ ====================
+# ==================== STYLE CSS ====================
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -107,13 +107,6 @@ st.markdown("""
         100% { transform: scale(1); }
     }
     
-    .stats-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        margin: 1rem 0;
-    }
-    
     .trend-up {
         color: #51cf66;
         font-weight: bold;
@@ -122,6 +115,13 @@ st.markdown("""
     .trend-down {
         color: #ff6b6b;
         font-weight: bold;
+    }
+    
+    .center-chart {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -236,7 +236,7 @@ def load_data():
 
 effectifs, mouvements, promotions, questionnaires, entretiens, sanctions = load_data()
 
-# ==================== CALCULS AVANCÉS ====================
+# ==================== CALCULS ====================
 actifs = effectifs[effectifs['Date_Sortie'].isna()]
 total = len(actifs)
 departs = len(effectifs[~effectifs['Date_Sortie'].isna()])
@@ -251,23 +251,20 @@ qualite = (len(recents[recents['Date_Sortie'].isna()]) / len(recents) * 100) if 
 
 mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Retr'] + mouvements['Sorties_Lice']
 
-# Prévisions (tendance)
+# Prévisions
 entrees_ma = mouvements['Entrees'].rolling(window=3, min_periods=1).mean()
 sorties_ma = mouvements['Total_Sorties'].rolling(window=3, min_periods=1).mean()
-prevision_entrees = entrees_ma.iloc[-1] * 1.05
-prevision_sorties = sorties_ma.iloc[-1] * 0.95
+prevision_entrees = entrees_ma.iloc[-1] * 1.05 if len(entrees_ma) > 0 else 0
+prevision_sorties = sorties_ma.iloc[-1] * 0.95 if len(sorties_ma) > 0 else 0
 
-# ==================== SIDEBAR AVANCÉE ====================
-st.sidebar.title("🎯 RH Dashboard ")
+# ==================== SIDEBAR ====================
+st.sidebar.title("🎯 RH Dashboard")
 st.sidebar.markdown("### La Pratique Electronique")
 st.sidebar.markdown(f"**👤 {st.session_state.username}**")
 st.sidebar.markdown("---")
 
-
-# Période
 periode = st.sidebar.selectbox("📅 Période", ["6 mois", "Année", "2 ans"], index=0)
 
-# Export
 if st.sidebar.button("📥 Exporter PDF", use_container_width=True):
     st.sidebar.success("Export en cours...")
 
@@ -275,18 +272,16 @@ if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
     st.session_state.logged_in = False
     st.session_state.username = ""
     st.rerun()
-    
-# Navigation
+
 page = st.sidebar.radio("Navigation", [
-    "🏠 Acceuil", "📈 Analytics", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes"
+    "🏠 Accueil", "📈 Analytics", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes"
 ])
 st.sidebar.markdown("---")
 st.sidebar.caption("© 2025 - La Pratique Electronique")
 st.sidebar.caption("Version 2.0 - Business Intelligence")
 
-
-# ==================== PAGE Acceuil ====================
-if page == "🏠 Acceuil":
+# ==================== PAGE ACCUEIL ====================
+if page == "🏠 Accueil":
     st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p>La Pratique Electronique - Version PRO</p></div>', unsafe_allow_html=True)
     
     # KPIs
@@ -327,32 +322,25 @@ if page == "🏠 Acceuil":
         </div>
         ''', unsafe_allow_html=True)
     
-    # Graphiques avancés
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        fig = px.pie(actifs, names='Service', title="🏢 Répartition par Service",
-                     hole=0.4, color_discrete_sequence=px.colors.qualitative.Set3)
+    # GRAPHIQUE PRINCIPAL AU CENTRE
+    st.markdown('<div class="center-chart">', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        effectifs_service = actifs.groupby('Service').size().reset_index(name='Effectif')
+        fig = px.pie(effectifs_service, values='Effectif', names='Service', 
+                     title="🏢 Répartition par Service",
+                     hole=0.4, 
+                     color_discrete_sequence=px.colors.qualitative.Set3)
         fig.update_traces(textposition='inside', textinfo='percent+label',
                           marker=dict(line=dict(color='white', width=2)))
-        fig.update_layout(showlegend=False, height=400)
+        fig.update_layout(showlegend=False, height=450)
         st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        # Graphique 3D
-        fig = px.scatter_3d(actifs, x=actifs.groupby('Service').size().index,
-                            y=actifs.groupby('Service').size().values,
-                            z=range(len(actifs.groupby('Service').size())),
-                            title="Distribution 3D des Services",
-                            color=actifs.groupby('Service').size().index)
-        fig.update_layout(height=400)
-        st.plotly_chart(fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==================== PAGE ANALYTICS ====================
 elif page == "📈 Analytics":
     st.markdown('<div class="main-header"><h1>📈 Analyse Avancée</h1><p>Visualisation des tendances</p></div>', unsafe_allow_html=True)
     
-    # Graphique interactif
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=mouvements['Mois'], y=mouvements['Entrees'],
                              mode='lines+markers', name='Entrées',
@@ -373,7 +361,6 @@ elif page == "📈 Analytics":
                       hovermode='x unified', height=500)
     st.plotly_chart(fig, use_container_width=True)
     
-    # Prévisions
     st.subheader("🔮 Prévisions")
     col1, col2 = st.columns(2)
     with col1:
