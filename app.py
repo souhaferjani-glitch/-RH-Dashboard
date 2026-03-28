@@ -495,10 +495,10 @@ elif page == "📈 Mouvements":
     fig.update_layout(xaxis_title='Mois', yaxis_title='Effectif')
     st.plotly_chart(fig, use_container_width=True)
     
-    # 1. Taux de départ 1ère année
-    embauches_an_dernier = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
-    departs_1ere_annee = len(embauches_an_dernier[~embauches_an_dernier['Date_Sortie'].isna()])
-    taux_depart_1ere = (departs_1ere_annee / len(embauches_an_dernier) * 100) if len(embauches_an_dernier) > 0 else 0
+   # Taux de départ 1ère année
+    st.subheader("📊 Taux de départ durant la première année")
+    st.metric(f"{taux_depart_1ere:.1f}%", delta="Objectif <20%")
+    st.progress(taux_depart_1ere/100)
 
 # ==================== PAGE TALENTS ====================
 elif page == "⭐ Talents":
