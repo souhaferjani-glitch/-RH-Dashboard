@@ -190,7 +190,7 @@ if not st.session_state.logged_in:
     show_login()
     st.stop()
 
-# ==================== CHARGEMENT DES DONNÉES (AVEC ABSENTÉISME) ====================
+# ==================== CHARGEMENT DES DONNÉES ====================
 @st.cache_data
 def load_data():
     effectifs = pd.DataFrame({
@@ -282,7 +282,10 @@ mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Re
 # 1. Taux de départ 1ère année
 embauches_an_dernier = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
 departs_1ere_annee = len(embauches_an_dernier[~embauches_an_dernier['Date_Sortie'].isna()])
-taux_depart_1ere = (departs_1ere_annee / len(embauches_an_dernier) * 100) if len(embauches_an_dernier) > 0 else 0
+if len(embauches_an_dernier) > 0:
+    taux_depart_1ere = (departs_1ere_annee / len(embauches_an_dernier) * 100)
+else:
+    taux_depart_1ere = 0
 
 # 2. Délai moyen de promotion
 if len(promotions) > 0:
@@ -302,14 +305,6 @@ for i in range(len(mouvements)):
     cumul_entrees = mouvements['Entrees'].iloc[:i+1].sum()
     cumul_sorties = mouvements['Total_Sorties'].iloc[:i+1].sum()
     effectifs_par_mois.append(cumul_entrees - cumul_sorties)
-
-evolution_mensuelle = []
-for i in range(1, len(effectifs_par_mois)):
-    if effectifs_par_mois[i-1] > 0:
-        evol = ((effectifs_par_mois[i] - effectifs_par_mois[i-1]) / effectifs_par_mois[i-1]) * 100
-    else:
-        evol = 0
-    evolution_mensuelle.append(evol)
 
 # 5. Sanctions par service
 sanctions_par_service = sanctions.groupby('Service').size().reset_index(name='Nb_Sanctions')
