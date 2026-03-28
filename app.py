@@ -9,64 +9,64 @@ st.set_page_config(page_title="RH Dashboard", page_icon="📊", layout="wide")
 # ==================== CONFIGURATION LOGIN ====================
 # Définir les utilisateurs autorisés
 USERS = {
-    "admin": "admin123",
-    "souha": "souha2025",
-    "rh": "rh123"
+    "Rhadmin": "admin123",
 }
 
+# Initialiser session state
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
+
 # Fonction de login
-def check_login():
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
+def show_login():
+    st.markdown("""
+    <style>
+    .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    .login-title {
+        color: #1e3c72;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
-    if not st.session_state.logged_in:
-        st.markdown("""
-        <style>
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .login-title {
-            color: #1e3c72;
-            margin-bottom: 30px;
-            font-size: 28px;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+    with st.container():
+        st.markdown('<div class="login-container">', unsafe_allow_html=True)
+        st.markdown('<h1 class="login-title">📊 RH Dashboard</h1>', unsafe_allow_html=True)
+        st.markdown('<p style="color:#666;margin-bottom:20px">La Pratique Electronique</p>', unsafe_allow_html=True)
         
-        with st.container():
-            st.markdown('<div class="login-container">', unsafe_allow_html=True)
-            st.markdown('<h1 class="login-title">📊 RH Dashboard</h1>', unsafe_allow_html=True)
-            st.markdown('<p style="color:#666;margin-bottom:20px">La Pratique Electronique</p>', unsafe_allow_html=True)
-            
-            username = st.text_input("👤 Nom d'utilisateur", key="username")
-            password = st.text_input("🔒 Mot de passe", type="password", key="password")
-            
-            col1, col2, col3 = st.columns([1,2,1])
-            with col2:
-                login_btn = st.button("Se connecter", use_container_width=True)
-            
-            if login_btn:
-                if username in USERS and USERS[username] == password:
-                    st.session_state.logged_in = True
-                    st.session_state.username = username
-                    st.rerun()
-                else:
-                    st.error("❌ Nom d'utilisateur ou mot de passe incorrect")
-            
-            st.markdown('<p style="color:#999;font-size:12px;margin-top:30px">© 2025 - Projet PFE Souha Ferjani</p>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+        username = st.text_input("👤 Nom d'utilisateur", key="login_username")
+        password = st.text_input("🔒 Mot de passe", type="password", key="login_password")
         
-        return False
-    return True
+        col1, col2, col3 = st.columns([1,2,1])
+        with col2:
+            login_btn = st.button("Se connecter", use_container_width=True)
+        
+        if login_btn:
+            if username in USERS and USERS[username] == password:
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.rerun()
+            else:
+                st.error("❌ Nom d'utilisateur ou mot de passe incorrect")
+        
+        st.markdown('<p style="color:#999;font-size:12px;margin-top:30px">© 2025 - Projet PFE Souha Ferjani</p>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    return False
 
 # Vérifier login
-if not check_login():
+if not st.session_state.logged_in:
+    show_login()
     st.stop()
 
 # ==================== STYLE CSS ====================
@@ -174,12 +174,13 @@ mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Re
 # ==================== SIDEBAR ====================
 st.sidebar.title("📊 Tableau de Bord RH")
 st.sidebar.markdown("### La Pratique Electronique")
-st.sidebar.markdown(f"**Connecté(e) en tant que:** {st.session_state.username}")
+st.sidebar.markdown(f"**Connecté(e):** {st.session_state.username}")
 st.sidebar.markdown("**Projet PFE - Business Intelligence**")
 st.sidebar.markdown("---")
 
 if st.sidebar.button("🚪 Se déconnecter"):
     st.session_state.logged_in = False
+    st.session_state.username = ""
     st.rerun()
 
 st.sidebar.markdown("---")
