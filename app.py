@@ -1,7 +1,5 @@
-# Cellule: Créer app.py (VERSION FINALE PROFESSIONNELLE)
+# Cellule: Créer app.py (VERSION FINALE QUI FONCTIONNE)
 import os
-
-os.makedirs('/content/RH_Dashboard', exist_ok=True)
 
 app_content = '''import streamlit as st
 import pandas as pd
@@ -78,12 +76,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown(\'\'\'
+st.markdown('''
 <div class="main-header">
     <h1>📊 Tableau de Bord RH</h1>
     <p>La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence</p>
 </div>
-\'\'\', unsafe_allow_html=True)
+''', unsafe_allow_html=True)
 
 @st.cache_data
 def load_data():
@@ -213,11 +211,11 @@ elif page == "📋 Administration":
     col1, col2 = st.columns(2)
     with col1:
         fig = px.line(questionnaires, x='Periode', y='Taux_Reponse', title="Taux de réponse aux questionnaires", markers=True)
-        fig.add_hline(y=50, line_dash="dash", line_color="red", annotation_text="Seuil 50%")
+        fig.add_hline(y=50, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
     with col2:
         fig = px.bar(entretiens, x='Annee', y='Taux_Realisation', title="Entretiens annuels", text='Taux_Realisation')
-        fig.add_hline(y=80, line_dash="dash", line_color="red", annotation_text="Objectif 80%")
+        fig.add_hline(y=80, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
     
     st.subheader("⚖️ Sanctions disciplinaires")
@@ -263,3 +261,4 @@ with open('/content/RH_Dashboard/app.py', 'w', encoding='utf-8') as f:
 
 print("✅ app.py créé avec succès!")
 print("📁 Fichier: /content/RH_Dashboard/app.py")
+print("\n🔽 Téléchargez ce fichier et uploadez-le sur GitHub")
