@@ -529,22 +529,27 @@ elif page == "⭐ Talents":
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("📋 Historique des promotions")
-        # Formater les dates pour affichage
-        promotions_aff = promotions.copy()
-        promotions_aff['Date_Promot'] = promotions_aff['Date_Promot'].dt.strftime('%d/%m/%Y')
-        st.dataframe(promotions_aff, use_container_width=True)
-        st.metric("📊 Total promotions", len(promotions))
+        st.dataframe(promotions, use_container_width=True)
+        st.write("📊 **Total promotions**")
+        st.write(f"### {len(promotions)}")
     
     with col2:
         st.subheader("⏱️ Délai moyen de promotion")
-        # Correction: utiliser delai_promotion
-        if delai_promotion > 0:
-            st.metric(f"{delai_promotion:.1f} ans", delta="Objectif < 3 ans")
+        # Calcul direct
+        if len(promotions) > 0:
+            promo_temp = promotions.merge(effectifs[['Matricule', 'Date_Embauche']], 
+                                          left_on='Matricule', right_on='Matricule')
+            promo_temp['Delai'] = (promo_temp['Date_Promot'] - promo_temp['Date_Embauche']).dt.days / 365.25
+            delai_calc = promo_temp['Delai'].mean()
+            st.write(f"### {delai_calc:.1f} ans")
+            st.write("**Objectif:** < 3 ans")
         else:
-            st.metric("Non disponible", delta="Pas assez de données")
+            st.write("### Non disponible")
+            st.write("**Objectif:** < 3 ans")
         
         st.subheader("🔄 Mobilité interne")
-        st.metric(f"{mobilite_interne} changements", delta="2024-2025")
+        st.write(f"### {len(promotions)} changements")
+        st.write("**Période:** 2024-2025")
     
     if len(promotions) > 0:
         promotions_par_annee = promotions.groupby(promotions['Date_Promot'].dt.year).size().reset_index(name='Nombre')
