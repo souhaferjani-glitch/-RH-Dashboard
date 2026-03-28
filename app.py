@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN - DESIGN PROFESSIONNEL ====================
+# ==================== LOGIN - DESIGN PROFESSIONNEL AVEC LOGO LOCAL ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -179,21 +179,12 @@ def show_login():
         margin-bottom: 28px;
     }
     
-    .logo-circle {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    .logo-img {
+        width: 70px;
+        height: 70px;
         border-radius: 16px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
         margin-bottom: 16px;
-    }
-    
-    .logo-circle span {
-        font-size: 28px;
-        font-weight: 600;
-        color: white;
+        object-fit: cover;
     }
     
     .app-title {
@@ -317,9 +308,9 @@ def show_login():
     <div class="login-wrapper">
         <div class="login-card">
             <div class="logo-section">
-                <div class="logo-circle">
-                    <span>📊</span>
-                </div>
+                <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
+                     class="logo-img" 
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:70px;height:70px;background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:32px;color:white\'>📊</span></div>'">
                 <div class="app-title">RH Dashboard</div>
                 <div class="app-subtitle">La Pratique Electronique</div>
             </div>
