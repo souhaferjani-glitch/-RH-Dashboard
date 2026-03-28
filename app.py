@@ -8,8 +8,9 @@ st.set_page_config(page_title="RH Dashboard", page_icon="📊", layout="wide")
 
 # ==================== CONFIGURATION LOGIN ====================
 USERS = {
-    "Rhadmin": "admin123",
-    
+    "admin": "admin123",
+    "souha": "souha2025",
+    "rh": "rh123"
 }
 
 if "logged_in" not in st.session_state:
@@ -66,7 +67,7 @@ if not st.session_state.logged_in:
     show_login()
     st.stop()
 
-# ==================== STYLE CSS AVANCÉ ====================
+# ==================== STYLE CSS ====================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -239,64 +240,26 @@ if page == "🏠 Accueil":
     
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.pie(actifs, names='Service', title="🏢 Répartition par Service", 
-                     hole=0.4, color_discrete_sequence=px.colors.qualitative.Set3)
-        fig.update_traces(textposition='inside', textinfo='percent+label', 
-                          marker=dict(line=dict(color='white', width=2)))
-        fig.update_layout(showlegend=True, legend=dict(orientation="h", yanchor="bottom", y=-0.2))
+        fig = px.pie(actifs, names='Service', title="🏢 Répartition par Service", hole=0.4)
+        fig.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         fig = px.bar(actifs.groupby('Categorie').size().reset_index(name='nb'), 
-                     x='Categorie', y='nb', color='Categorie',
-                     title="👥 Cadres vs Non-cadres",
-                     color_discrete_sequence=['#1e3c72', '#2a5298'])
+                     x='Categorie', y='nb', color='Categorie', title="👥 Cadres vs Non-cadres")
         fig.update_traces(textposition='outside', texttemplate='%{y}')
-        fig.update_layout(showlegend=False, yaxis_title="Effectif")
         st.plotly_chart(fig, use_container_width=True)
 
-# ==================== PAGE MOUVEMENTS (VERSION AVANCÉE) ====================
+# ==================== PAGE MOUVEMENTS ====================
 elif page == "📈 Mouvements":
     st.markdown('<div class="main-header"><h1>📈 Analyse des Mouvements</h1><p>Suivi des entrées et sorties</p></div>', unsafe_allow_html=True)
     
-    # Graphique en barres avec couleurs professionnelles
     fig = go.Figure()
-    fig.add_trace(go.Bar(
-        x=mouvements['Mois'].dt.strftime('%b %Y'),
-        y=mouvements['Entrees'],
-        name='Entrées',
-        marker_color='#2ecc71',
-        marker_line_color='white',
-        marker_line_width=2,
-        text=mouvements['Entrees'],
-        textposition='outside',
-        hovertemplate='<b>%{x}</b><br>Entrées: %{y}<extra></extra>'
-    ))
-    fig.add_trace(go.Bar(
-        x=mouvements['Mois'].dt.strftime('%b %Y'),
-        y=mouvements['Total_Sorties'],
-        name='Sorties',
-        marker_color='#e74c3c',
-        marker_line_color='white',
-        marker_line_width=2,
-        text=mouvements['Total_Sorties'],
-        textposition='outside',
-        hovertemplate='<b>%{x}</b><br>Sorties: %{y}<extra></extra>'
-    ))
-    fig.update_layout(
-        title=dict(text='📊 Évolution des entrées et sorties', font=dict(size=20)),
-        barmode='group',
-        xaxis_title="Mois",
-        yaxis_title="Nombre",
-        plot_bgcolor='white',
-        hovermode='x unified',
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
-    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
+    fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Entrees'], name='Entrées', marker_color='#2ecc71', text=mouvements['Entrees'], textposition='outside'))
+    fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Total_Sorties'], name='Sorties', marker_color='#e74c3c', text=mouvements['Total_Sorties'], textposition='outside'))
+    fig.update_layout(title='Entrées vs Sorties mensuelles', barmode='group')
     st.plotly_chart(fig, use_container_width=True)
     
-    # Cartes de statistiques
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f'<div class="metric-card"><div class="metric-value" style="color:#2ecc71">{mouvements["Entrees"].sum()}</div><div class="metric-label">📥 Total Entrées</div></div>', unsafe_allow_html=True)
@@ -304,37 +267,7 @@ elif page == "📈 Mouvements":
         st.markdown(f'<div class="metric-card"><div class="metric-value" style="color:#e74c3c">{mouvements["Total_Sorties"].sum()}</div><div class="metric-label">📤 Total Sorties</div></div>', unsafe_allow_html=True)
     with col3:
         solde = mouvements["Entrees"].sum() - mouvements["Total_Sorties"].sum()
-        color = "#2ecc71" if solde > 0 else "#e74c3c"
-        st.markdown(f'<div class="metric-card"><div class="metric-value" style="color:{color}">{solde:+d}</div><div class="metric-label">⚖️ Solde Net</div></div>', unsafe_allow_html=True)
-    
-    # Graphique en courbes pour la tendance
-    st.markdown("---")
-    st.subheader("📈 Tendance mensuelle")
-    fig2 = go.Figure()
-    fig2.add_trace(go.Scatter(
-        x=mouvements['Mois'].dt.strftime('%b %Y'),
-        y=mouvements['Entrees'],
-        name='Entrées',
-        mode='lines+markers',
-        line=dict(color='#2ecc71', width=3),
-        marker=dict(size=10, symbol='circle'),
-        fill='tozeroy',
-        fillcolor='rgba(46, 204, 113, 0.2)'
-    ))
-    fig2.add_trace(go.Scatter(
-        x=mouvements['Mois'].dt.strftime('%b %Y'),
-        y=mouvements['Total_Sorties'],
-        name='Sorties',
-        mode='lines+markers',
-        line=dict(color='#e74c3c', width=3),
-        marker=dict(size=10, symbol='circle'),
-        fill='tozeroy',
-        fillcolor='rgba(231, 76, 60, 0.2)'
-    ))
-    fig2.update_layout(plot_bgcolor='white', hovermode='x unified')
-    fig2.update_xaxes(showgrid=True, gridcolor='#ecf0f1')
-    fig2.update_yaxes(showgrid=True, gridcolor='#ecf0f1')
-    st.plotly_chart(fig2, use_container_width=True)
+        st.markdown(f'<div class="metric-card"><div class="metric-value">{"+" if solde > 0 else ""}{solde}</div><div class="metric-label">⚖️ Solde Net</div></div>', unsafe_allow_html=True)
 
 # ==================== PAGE PROMOTIONS ====================
 elif page == "⭐ Promotions":
@@ -347,22 +280,13 @@ elif page == "📋 Admin":
     
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse', 
-                      title="📊 Taux de réponse aux questionnaires",
-                      markers=True, line_shape='spline')
-        fig.add_hline(y=50, line_dash="dash", line_color="red", 
-                      annotation_text="Seuil alerte 50%")
-        fig.update_layout(plot_bgcolor='white')
+        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse', title="Taux de réponse", markers=True)
+        fig.add_hline(y=50, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation', 
-                     title="📋 Entretiens annuels",
-                     text='Taux_Realisation', color='Taux_Realisation',
-                     color_continuous_scale=['red', 'yellow', 'green'])
-        fig.add_hline(y=80, line_dash="dash", line_color="red", 
-                      annotation_text="Objectif 80%")
-        fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
+        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation', title="Entretiens annuels", text='Taux_Realisation')
+        fig.add_hline(y=80, line_dash="dash", line_color="red")
         st.plotly_chart(fig, use_container_width=True)
     
     st.subheader("⚖️ Sanctions disciplinaires")
@@ -374,32 +298,11 @@ elif page == "🎯 Stratégique":
     
     col1, col2 = st.columns(2)
     with col1:
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=qualite,
-            title={'text': "Qualité des recrutements"},
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [0, 100]},
-                   'bar': {'color': "#2ecc71"},
-                   'steps': [{'range': [0, 50], 'color': "#f8d7da"},
-                             {'range': [50, 80], 'color': "#fff3cd"},
-                             {'range': [80, 100], 'color': "#d4edda"}],
-                   'threshold': {'line': {'color': "red", 'width': 4}, 'value': 80}}))
-        st.plotly_chart(fig, use_container_width=True)
-    
+        st.metric("✅ Qualité recrutements", f"{qualite:.1f}%")
+        st.progress(qualite/100)
     with col2:
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=fuite_cadres,
-            title={'text': "Fuite des compétences"},
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [0, 30]},
-                   'bar': {'color': "#e74c3c"},
-                   'steps': [{'range': [0, 5], 'color': "#d4edda"},
-                             {'range': [5, 10], 'color': "#fff3cd"},
-                             {'range': [10, 30], 'color': "#f8d7da"}],
-                   'threshold': {'line': {'color': "red", 'width': 4}, 'value': 10}}))
-        st.plotly_chart(fig, use_container_width=True)
+        st.metric("💨 Fuite compétences", f"{fuite_cadres:.1f}%")
+        st.progress(fuite_cadres/100)
 
 # ==================== PAGE ALERTES ====================
 elif page == "⚠️ Alertes":
@@ -407,20 +310,20 @@ elif page == "⚠️ Alertes":
     
     alertes = []
     if turnover > 15:
-        alertes.append(("🔴 CRITIQUE", f"Turnover élevé: {turnover:.1f}%", "Seuil > 15%"))
+        alertes.append(f"🔴 Turnover élevé: {turnover:.1f}%")
     if fuite_cadres > 10:
-        alertes.append(("🔴 CRITIQUE", f"Fuite des cadres: {fuite_cadres:.1f}%", "Seuil > 10%"))
+        alertes.append(f"🔴 Fuite des cadres: {fuite_cadres:.1f}%")
     if qualite < 80:
-        alertes.append(("🟡 ATTENTION", f"Qualité recrutements: {qualite:.1f}%", "Seuil < 80%"))
+        alertes.append(f"🟡 Qualité recrutements: {qualite:.1f}%")
     
     if alertes:
-        for type_a, msg, seuil in alertes:
-            if "🔴" in type_a:
-                st.markdown(f'<div class="alert-danger"><strong>{type_a}</strong><br>{msg}<br><span style="font-size:12px">{seuil}</span></div>', unsafe_allow_html=True)
+        for alerte in alertes:
+            if "🔴" in alerte:
+                st.markdown(f'<div class="alert-danger">{alerte}</div>', unsafe_allow_html=True)
             else:
-                st.markdown(f'<div class="alert-warning"><strong>{type_a}</strong><br>{msg}<br><span style="font-size:12px">{seuil}</span></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="alert-warning">{alerte}</div>', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="success-card">✅ Aucune alerte critique détectée. Tous les indicateurs sont dans les normes.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="success-card">✅ Aucune alerte critique détectée</div>', unsafe_allow_html=True)
 
 st.markdown("---")
-st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
+st.caption("La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
