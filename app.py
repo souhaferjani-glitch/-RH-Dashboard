@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN AVEC IMAGE DE FOND ====================
+# ==================== LOGIN AVEC DESIGN PRO ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -146,34 +146,32 @@ def show_login():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
-    /* Background avec image */
-    .login-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
+    /* Reset et style global */
+    .stApp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* Container principal */
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    /* Carte de login */
+    .login-card {
+        max-width: 480px;
         width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%),
-                    url('https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
-        background-size: cover;
-        background-position: center;
-        z-index: -1;
-    }
-    
-    .login-container {
-        max-width: 450px;
-        margin: 100px auto;
-        padding: 40px;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(10px);
-        border-radius: 24px;
+        background: white;
+        border-radius: 32px;
+        padding: 48px 40px;
         box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-        text-align: center;
-        animation: slideUp 0.6s ease-out;
-        border: 1px solid rgba(255,255,255,0.2);
+        animation: fadeInUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
     
-    @keyframes slideUp {
+    @keyframes fadeInUp {
         from {
             opacity: 0;
             transform: translateY(30px);
@@ -184,45 +182,112 @@ def show_login():
         }
     }
     
-    .login-title {
+    /* Logo */
+    .logo-container {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+    
+    .logo-circle {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.3);
+    }
+    
+    .logo-text {
+        font-size: 48px;
+        font-weight: 800;
+        color: white;
+    }
+    
+    .company-name {
+        font-size: 24px;
+        font-weight: 700;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        font-size: 2rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
+        margin-bottom: 4px;
     }
     
-    .login-subtitle {
-        color: #6c757d;
-        font-size: 0.9rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stTextInput > div > div > input {
-        border-radius: 12px;
-        border: 1px solid #e0e0e0;
-        padding: 12px 16px;
+    .company-subtitle {
         font-size: 14px;
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+    
+    /* Titre */
+    .welcome-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f2937;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+    
+    .welcome-subtitle {
+        font-size: 14px;
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 32px;
+    }
+    
+    /* Champs de formulaire */
+    .form-group {
+        margin-bottom: 24px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+    
+    /* Style des inputs Streamlit */
+    .stTextInput > div > div > input {
+        width: 100%;
+        padding: 14px 18px;
+        font-size: 15px;
+        border: 2px solid #e5e7eb;
+        border-radius: 16px;
+        background: white;
         transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
     }
     
     .stTextInput > div > div > input:focus {
         border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        outline: none;
     }
     
+    .stTextInput > div > div > input::placeholder {
+        color: #9ca3af;
+        font-weight: 400;
+    }
+    
+    /* Style du bouton */
     .stButton > button {
+        width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        border-radius: 12px;
-        padding: 12px 24px;
-        font-weight: 600;
+        padding: 14px 24px;
         font-size: 16px;
+        font-weight: 600;
+        border-radius: 16px;
+        cursor: pointer;
         transition: all 0.3s ease;
-        width: 100%;
+        margin-top: 8px;
+        font-family: 'Inter', sans-serif;
     }
     
     .stButton > button:hover {
@@ -230,48 +295,82 @@ def show_login():
         box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
     }
     
-    .login-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin-bottom: 20px;
-        border: 3px solid #667eea;
-        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    .stButton > button:active {
+        transform: translateY(0);
     }
+    
+    /* Messages d'erreur */
+    .stAlert {
+        border-radius: 12px;
+        margin-top: 16px;
+    }
+    
+    /* Footer */
+    .login-footer {
+        text-align: center;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #e5e7eb;
+        font-size: 12px;
+        color: #9ca3af;
+    }
+    
+    /* Cacher les éléments par défaut de Streamlit */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
     
-    <div class="login-bg"></div>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <span class="logo-text">📊</span>
+                </div>
+                <div class="company-name">La Pratique Electronique</div>
+                <div class="company-subtitle">Sous-traitance électronique</div>
+            </div>
+            
+            <div class="welcome-title">Bienvenue</div>
+            <div class="welcome-subtitle">Connectez-vous à votre espace RH</div>
     """, unsafe_allow_html=True)
     
-    with st.container():
-        st.markdown('<div class="login-container">', unsafe_allow_html=True)
-        
-        # Logo
-        st.markdown("""
-        <div style="display: flex; justify-content: center;">
-            <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-                 class="login-logo" 
-                 onerror="this.style.display='none'">
+    # Formulaire
+    username = st.text_input("", placeholder="Entrez votre nom d'utilisateur", key="login_username", label_visibility="collapsed")
+    password = st.text_input("", placeholder="Entrez votre mot de passe", type="password", key="login_password", label_visibility="collapsed")
+    
+    # Ajouter des labels personnalisés
+    st.markdown('<div class="form-group"><label class="form-label">👤 Nom d\'utilisateur</label></div>', unsafe_allow_html=True)
+    st.markdown('<div class="form-group"><label class="form-label">🔒 Mot de passe</label></div>', unsafe_allow_html=True)
+    
+    # Réorganiser pour que les inputs soient après les labels
+    # Note: Streamlit affiche dans l'ordre, donc on utilise un workaround
+    
+    st.markdown("""
+            <div style="margin-top: 8px;">
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        if st.button("Se connecter", use_container_width=True):
+            if username in USERS and USERS[username] == password:
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.rerun()
+            else:
+                st.error("❌ Nom d'utilisateur ou mot de passe incorrect")
+    
+    st.markdown("""
+            </div>
+            
+            <div class="login-footer">
+                © 2025 La Pratique Electronique<br>
+                Tous droits réservés
+            </div>
         </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown('<h1 class="login-title">📊 RH Dashboard</h1>', unsafe_allow_html=True)
-        st.markdown('<p class="login-subtitle">La Pratique Electronique</p>', unsafe_allow_html=True)
-        
-        username = st.text_input("👤 Nom d'utilisateur", key="login_username", placeholder="Entrez votre nom d'utilisateur")
-        password = st.text_input("🔒 Mot de passe", type="password", key="login_password", placeholder="Entrez votre mot de passe")
-        
-        col1, col2, col3 = st.columns([1,2,1])
-        with col2:
-            if st.button("Se connecter", use_container_width=True):
-                if username in USERS and USERS[username] == password:
-                    st.session_state.logged_in = True
-                    st.session_state.username = username
-                    st.rerun()
-                else:
-                    st.error("❌ Identifiants incorrects")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
+    
     return False
 
 if not st.session_state.logged_in:
