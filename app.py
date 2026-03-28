@@ -449,13 +449,17 @@ elif page == "📈 Mouvements":
     # Indicateurs de flux
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("📥 Total Entrées", mouvements['Entrees'].sum())
+        st.write("📥 **Total Entrées**")
+        st.write(f"### {mouvements['Entrees'].sum()}")
     with col2:
-        st.metric("📤 Total Sorties", mouvements['Total_Sorties'].sum())
+        st.write("📤 **Total Sorties**")
+        st.write(f"### {mouvements['Total_Sorties'].sum()}")
     with col3:
-        st.metric("⚖️ Solde Net", mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum())
+        st.write("⚖️ **Solde Net**")
+        st.write(f"### {mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum()}")
     with col4:
-        st.metric("🔄 Turnover", f"{turnover:.1f}%")
+        st.write("🔄 **Turnover**")
+        st.write(f"### {turnover:.1f}%")
     
     # Graphique Entrées/Sorties
     fig = go.Figure()
@@ -472,11 +476,14 @@ elif page == "📈 Mouvements":
     st.subheader("📊 Motifs de Sortie")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("📝 Démission", mouvements['Sorties_Dem'].sum())
+        st.write("📝 **Démission**")
+        st.write(f"### {mouvements['Sorties_Dem'].sum()}")
     with col2:
-        st.metric("👴 Retraite", mouvements['Sorties_Retr'].sum())
+        st.write("👴 **Retraite**")
+        st.write(f"### {mouvements['Sorties_Retr'].sum()}")
     with col3:
-        st.metric("⚖️ Licenciement", mouvements['Sorties_Lice'].sum())
+        st.write("⚖️ **Licenciement**")
+        st.write(f"### {mouvements['Sorties_Lice'].sum()}")
     
     # Turnover par service
     st.subheader("📊 Turnover par Service")
@@ -500,20 +507,21 @@ elif page == "📈 Mouvements":
     fig.update_layout(xaxis_title='Mois', yaxis_title='Effectif')
     st.plotly_chart(fig, use_container_width=True)
     
-    # Taux de départ 1ère année - VERSION CORRIGÉE AVEC TRY/EXCEPT
+    # Taux de départ 1ère année - Version SIMPLE sans st.metric
     st.subheader("📊 Taux de départ durant la première année")
     
-    # Calcul ici directement pour éviter les erreurs
+    # Calcul direct
     embauches_recentes = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
     if len(embauches_recentes) > 0:
         departs_recents = embauches_recentes['Date_Sortie'].notna().sum()
         taux_calcule = (departs_recents / len(embauches_recentes) * 100)
-        st.metric(f"{taux_calcule:.1f}%", delta="Objectif <20%")
+        st.write(f"### {taux_calcule:.1f}%")
+        st.write("**Objectif:** < 20%")
         st.progress(taux_calcule/100)
     else:
-        st.metric("0.0%", delta="Objectif <20%")
+        st.write("### 0.0%")
+        st.write("**Objectif:** < 20%")
         st.info("ℹ️ Pas d'embauches dans la dernière année")
-
 # ==================== PAGE TALENTS ====================
 elif page == "⭐ Talents":
     st.markdown('<div class="main-header"><h1>⭐ Gestion des Talents</h1><p>Promotions et mobilité interne</p></div>', unsafe_allow_html=True)
