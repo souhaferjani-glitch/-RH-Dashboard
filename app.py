@@ -347,9 +347,7 @@ st.sidebar.markdown("""
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
          style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; border: 3px solid #667eea;">
-    <h3 style="color: #667eea; margin: 0;">La Pratique</h3>
-    <h3 style="color: #764ba2; margin: 0;">Electronique</h3>
-    <p style="color: #6c757d; font-size: 11px; margin-top: 5px;">Sous-traitance électronique</p>
+    <h3 style="color: #667eea; margin: 0;">La Pratique Electronique</h3>
 </div>
 """, unsafe_allow_html=True)
 
