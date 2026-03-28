@@ -4,9 +4,72 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 
-st.set_page_config(page_title="Tableau de Bord RH", page_icon="📊", layout="wide")
+st.set_page_config(page_title="RH Dashboard", page_icon="📊", layout="wide")
 
-# Style CSS
+# ==================== CONFIGURATION LOGIN ====================
+# Définir les utilisateurs autorisés
+USERS = {
+    "admin": "admin123",
+    "souha": "souha2025",
+    "rh": "rh123"
+}
+
+# Fonction de login
+def check_login():
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+    
+    if not st.session_state.logged_in:
+        st.markdown("""
+        <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .login-title {
+            color: #1e3c72;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        with st.container():
+            st.markdown('<div class="login-container">', unsafe_allow_html=True)
+            st.markdown('<h1 class="login-title">📊 RH Dashboard</h1>', unsafe_allow_html=True)
+            st.markdown('<p style="color:#666;margin-bottom:20px">La Pratique Electronique</p>', unsafe_allow_html=True)
+            
+            username = st.text_input("👤 Nom d'utilisateur", key="username")
+            password = st.text_input("🔒 Mot de passe", type="password", key="password")
+            
+            col1, col2, col3 = st.columns([1,2,1])
+            with col2:
+                login_btn = st.button("Se connecter", use_container_width=True)
+            
+            if login_btn:
+                if username in USERS and USERS[username] == password:
+                    st.session_state.logged_in = True
+                    st.session_state.username = username
+                    st.rerun()
+                else:
+                    st.error("❌ Nom d'utilisateur ou mot de passe incorrect")
+            
+            st.markdown('<p style="color:#999;font-size:12px;margin-top:30px">© 2025 - Projet PFE Souha Ferjani</p>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        return False
+    return True
+
+# Vérifier login
+if not check_login():
+    st.stop()
+
+# ==================== STYLE CSS ====================
 st.markdown("""
 <style>
 .main-header {
@@ -40,60 +103,52 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Chargement des données
+# ==================== CHARGEMENT DES DONNÉES ====================
 @st.cache_data
 def load_data():
-    # Données effectifs
     effectifs = pd.DataFrame({
-        'Matricule': ['EMP001', 'EMP002', 'EMP003', 'EMP004', 'EMP005', 'EMP006', 'EMP007', 'EMP008', 'EMP009', 'EMP010', 'EMP011', 'EMP012', 'EMP013', 'EMP014', 'EMP015'],
-        'Date_Embauche': ['2020-01-01', '2021-06-15', '2022-03-10', '2023-09-05', '2021-01-20', '2023-07-01', '2022-11-15', '2020-05-10', '2024-02-01', '2021-08-15', '2023-03-20', '2022-12-05', '2021-07-10', '2023-09-01', '2022-04-15'],
-        'Date_Sortie': ['', '2024-12-01', '', '', '2024-10-15', '', '2025-03-31', '', '', '', '2025-02-28', '', '', '', '2025-01-15'],
-        'Motif_Sortie': ['', 'Démission', '', '', 'Retraite', '', 'Démission', '', '', '', 'Licenciement', '', '', '', 'Démission'],
-        'Service': ['Commercial', 'RH', 'Technique', 'Commercial', 'Administration', 'Technique', 'Commercial', 'RH', 'Technique', 'Administration', 'Commercial', 'Technique', 'RH', 'Commercial', 'Technique'],
-        'Categorie': ['Cadre', 'Non cadre', 'Cadre', 'Non cadre', 'Cadre', 'Non cadre', 'Cadre', 'Cadre', 'Non cadre', 'Non cadre', 'Non cadre', 'Cadre', 'Non cadre', 'Cadre', 'Non cadre'],
-        'Sexe': ['H', 'F', 'H', 'F', 'H', 'F', 'F', 'F', 'H', 'F', 'H', 'H', 'F', 'H', 'F']
+        'Matricule': ['EMP001','EMP002','EMP003','EMP004','EMP005','EMP006','EMP007','EMP008','EMP009','EMP010','EMP011','EMP012','EMP013','EMP014','EMP015'],
+        'Date_Embauche': ['2020-01-01','2021-06-15','2022-03-10','2023-09-05','2021-01-20','2023-07-01','2022-11-15','2020-05-10','2024-02-01','2021-08-15','2023-03-20','2022-12-05','2021-07-10','2023-09-01','2022-04-15'],
+        'Date_Sortie': ['','2024-12-01','','','2024-10-15','','2025-03-31','','','','2025-02-28','','','','2025-01-15'],
+        'Motif_Sortie': ['','Démission','','','Retraite','','Démission','','','','Licenciement','','','','Démission'],
+        'Service': ['Commercial','RH','Technique','Commercial','Administration','Technique','Commercial','RH','Technique','Administration','Commercial','Technique','RH','Commercial','Technique'],
+        'Categorie': ['Cadre','Non cadre','Cadre','Non cadre','Cadre','Non cadre','Cadre','Cadre','Non cadre','Non cadre','Non cadre','Cadre','Non cadre','Cadre','Non cadre'],
+        'Sexe': ['H','F','H','F','H','F','F','F','H','F','H','H','F','H','F']
     })
-    
-    # Conversion des dates
     effectifs['Date_Embauche'] = pd.to_datetime(effectifs['Date_Embauche'])
     effectifs['Date_Sortie'] = pd.to_datetime(effectifs['Date_Sortie'], errors='coerce')
     
-    # Mouvements mensuels
     mouvements = pd.DataFrame({
-        'Mois': ['2024-01-01', '2024-02-01', '2024-03-01', '2024-04-01', '2024-05-01', '2024-06-01'],
-        'Entrees': [2, 1, 3, 0, 2, 1],
-        'Sorties_Dem': [1, 0, 2, 1, 0, 2],
-        'Sorties_Retr': [0, 1, 0, 0, 0, 0],
-        'Sorties_Lice': [0, 0, 1, 0, 0, 0]
+        'Mois': ['2024-01-01','2024-02-01','2024-03-01','2024-04-01','2024-05-01','2024-06-01'],
+        'Entrees': [2,1,3,0,2,1],
+        'Sorties_Dem': [1,0,2,1,0,2],
+        'Sorties_Retr': [0,1,0,0,0,0],
+        'Sorties_Lice': [0,0,1,0,0,0]
     })
     mouvements['Mois'] = pd.to_datetime(mouvements['Mois'])
     
-    # Promotions
     promotions = pd.DataFrame({
-        'Matricule': ['EMP001', 'EMP003', 'EMP008', 'EMP012'],
-        'Date_Promot': ['2025-01-01', '2024-03-15', '2024-12-01', '2024-06-10'],
-        'Ancien_Grade': ['Commercial Senior', 'Technicien', 'Assistant RH', 'Ingénieur'],
-        'Nouveau_Grade': ['Directeur Commercial', 'Technicien Principal', 'Responsable RH', 'Ingénieur Principal']
+        'Matricule': ['EMP001','EMP003','EMP008','EMP012'],
+        'Date_Promot': ['2025-01-01','2024-03-15','2024-12-01','2024-06-10'],
+        'Ancien_Grade': ['Commercial Senior','Technicien','Assistant RH','Ingénieur'],
+        'Nouveau_Grade': ['Directeur Commercial','Technicien Principal','Responsable RH','Ingénieur Principal']
     })
     promotions['Date_Promot'] = pd.to_datetime(promotions['Date_Promot'])
     
-    # Questionnaires
     questionnaires = pd.DataFrame({
-        'Periode': ['01/2024', '02/2024', '03/2024', '04/2024', '05/2024', '06/2024'],
-        'Taux_Reponse': [84, 76, 90, 80, 88, 78]
+        'Periode': ['01/2024','02/2024','03/2024','04/2024','05/2024','06/2024'],
+        'Taux_Reponse': [84,76,90,80,88,78]
     })
     
-    # Entretiens
     entretiens = pd.DataFrame({
-        'Annee': [2023, 2024, 2025],
-        'Taux_Realisation': [90, 86.4, 86.7]
+        'Annee': [2023,2024,2025],
+        'Taux_Realisation': [90,86.4,86.7]
     })
     
-    # Sanctions
     sanctions = pd.DataFrame({
-        'Date': ['2024-01-15', '2024-02-20', '2024-03-10', '2024-04-05', '2024-05-12'],
-        'Service': ['Commercial', 'Technique', 'RH', 'Commercial', 'Technique'],
-        'Type': ['Avertissement', 'Blâme', 'Avertissement', 'Mise à pied', 'Blâme']
+        'Date': ['2024-01-15','2024-02-20','2024-03-10','2024-04-05','2024-05-12'],
+        'Service': ['Commercial','Technique','RH','Commercial','Technique'],
+        'Type': ['Avertissement','Blâme','Avertissement','Mise à pied','Blâme']
     })
     sanctions['Date'] = pd.to_datetime(sanctions['Date'])
     
@@ -101,7 +156,7 @@ def load_data():
 
 effectifs, mouvements, promotions, questionnaires, entretiens, sanctions = load_data()
 
-# Calculs des KPI
+# ==================== CALCULS KPI ====================
 actifs = effectifs[effectifs['Date_Sortie'].isna()]
 total = len(actifs)
 departs = len(effectifs[~effectifs['Date_Sortie'].isna()])
@@ -116,11 +171,17 @@ qualite = (len(recents[recents['Date_Sortie'].isna()]) / len(recents) * 100) if 
 
 mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Retr'] + mouvements['Sorties_Lice']
 
-# Sidebar
+# ==================== SIDEBAR ====================
 st.sidebar.title("📊 Tableau de Bord RH")
 st.sidebar.markdown("### La Pratique Electronique")
-st.sidebar.markdown("**Présenté par:** Souha Ferjani")
+st.sidebar.markdown(f"**Connecté(e) en tant que:** {st.session_state.username}")
 st.sidebar.markdown("**Projet PFE - Business Intelligence**")
+st.sidebar.markdown("---")
+
+if st.sidebar.button("🚪 Se déconnecter"):
+    st.session_state.logged_in = False
+    st.rerun()
+
 st.sidebar.markdown("---")
 
 page = st.sidebar.radio("Navigation", [
@@ -132,27 +193,19 @@ page = st.sidebar.radio("Navigation", [
     "⚠️ Alertes"
 ])
 
-# PAGE 1: Vue d'ensemble
+# ==================== PAGES ====================
 if page == "🏠 Vue d'ensemble":
     st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p>La Pratique Electronique</p></div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric("👥 Effectif Total", total)
-        st.markdown('</div>', unsafe_allow_html=True)
     with col2:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric("📈 Taux de Rotation", f"{turnover:.1f}%")
-        st.markdown('</div>', unsafe_allow_html=True)
     with col3:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric("⭐ Promotions", len(promotions))
-        st.markdown('</div>', unsafe_allow_html=True)
     with col4:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         st.metric("🚪 Départs", departs)
-        st.markdown('</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
@@ -161,11 +214,7 @@ if page == "🏠 Vue d'ensemble":
     with col2:
         fig = px.bar(actifs, x='Categorie', title="Cadres vs Non-cadres", color='Categorie')
         st.plotly_chart(fig, use_container_width=True)
-    
-    with st.expander("📋 Liste des employés"):
-        st.dataframe(actifs[['Matricule', 'Service', 'Categorie', 'Sexe']], use_container_width=True)
 
-# PAGE 2: Mouvements
 elif page == "📈 Mouvements & Turnover":
     st.header("📈 Analyse des Mouvements")
     
@@ -180,12 +229,10 @@ elif page == "📈 Mouvements & Turnover":
     with col2: st.metric("Total Sorties", mouvements['Total_Sorties'].sum())
     with col3: st.metric("Taux Rotation", f"{turnover:.1f}%")
 
-# PAGE 3: Promotions
 elif page == "⭐ Promotions":
     st.header("⭐ Promotions Internes")
     st.dataframe(promotions, use_container_width=True)
 
-# PAGE 4: Gestion Administrative
 elif page == "📋 Gestion Administrative":
     st.header("📋 Gestion Administrative")
     col1, col2 = st.columns(2)
@@ -200,7 +247,6 @@ elif page == "📋 Gestion Administrative":
     st.subheader("⚖️ Sanctions")
     st.dataframe(sanctions, use_container_width=True)
 
-# PAGE 5: Indicateurs Stratégiques
 elif page == "🎯 Indicateurs Stratégiques":
     st.header("🎯 Indicateurs Stratégiques")
     col1, col2 = st.columns(2)
@@ -211,7 +257,6 @@ elif page == "🎯 Indicateurs Stratégiques":
         st.metric("💨 Fuite compétences", f"{fuite_cadres:.1f}%")
         st.progress(fuite_cadres/100)
 
-# PAGE 6: Alertes
 elif page == "⚠️ Alertes":
     st.header("⚠️ Alertes Automatiques")
     alertes = []
