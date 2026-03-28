@@ -324,11 +324,13 @@ def show_login():
         <div class="login-card">
             <div class="logo-area">
                 <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-                      class="logo-img" 
+                       class="logo-img" 
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:40px;color:white\'>📊</span></div>'">
-                
+                <div class="logo-text"></div>
                 <div class="logo-sub">La Pratique Electronique</div>
             </div>
+            <div class="login-subtitle">Accédez à votre espace RH</div>
+    """, unsafe_allow_html=True)
             
            
     """, unsafe_allow_html=True)
