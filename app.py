@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN AVEC STYLE PRO ====================
+# ==================== LOGIN AVEC IMAGE DE FOND ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -146,32 +146,18 @@ def show_login():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
-    /* Background animé */
+    /* Background avec image */
     .login-bg {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%),
+                    url('https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
         z-index: -1;
-    }
-    
-    .login-bg::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') repeat-x bottom;
-        background-size: 1440px 100px;
-        animation: wave 20s linear infinite;
-    }
-    
-    @keyframes wave {
-        0% { background-position-x: 0; }
-        100% { background-position-x: 1440px; }
     }
     
     .login-container {
@@ -214,7 +200,6 @@ def show_login():
         margin-bottom: 2rem;
     }
     
-    /* Style des inputs */
     .stTextInput > div > div > input {
         border-radius: 12px;
         border: 1px solid #e0e0e0;
@@ -228,7 +213,6 @@ def show_login():
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
     
-    /* Style du bouton */
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -246,7 +230,6 @@ def show_login():
         box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
     }
     
-    /* Logo dans le login */
     .login-logo {
         width: 80px;
         height: 80px;
@@ -263,7 +246,7 @@ def show_login():
     with st.container():
         st.markdown('<div class="login-container">', unsafe_allow_html=True)
         
-        # Logo (optionnel - vous pouvez changer l'image)
+        # Logo
         st.markdown("""
         <div style="display: flex; justify-content: center;">
             <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
@@ -294,7 +277,6 @@ def show_login():
 if not st.session_state.logged_in:
     show_login()
     st.stop()
-
 # ==================== CHARGEMENT DES DONNÉES ====================
 @st.cache_data
 def load_data():
