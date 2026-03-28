@@ -490,15 +490,29 @@ elif page == "📈 Mouvements":
     
     # Évolution mensuelle des effectifs
     st.subheader("📈 Évolution Mensuelle des Effectifs")
+    effectifs_par_mois = []
+    for i in range(len(mouvements)):
+        cumul_entrees = mouvements['Entrees'].iloc[:i+1].sum()
+        cumul_sorties = mouvements['Total_Sorties'].iloc[:i+1].sum()
+        effectifs_par_mois.append(cumul_entrees - cumul_sorties)
     fig = px.line(x=mouvements['Mois'].dt.strftime('%b %Y'), y=effectifs_par_mois,
                   markers=True, title="Évolution des effectifs")
     fig.update_layout(xaxis_title='Mois', yaxis_title='Effectif')
     st.plotly_chart(fig, use_container_width=True)
     
-   # Taux de départ 1ère année
+    # Taux de départ 1ère année - VERSION CORRIGÉE AVEC TRY/EXCEPT
     st.subheader("📊 Taux de départ durant la première année")
-    st.metric(f"{taux_depart_1ere:.1f}%", delta="Objectif <20%")
-    st.progress(taux_depart_1ere/100)
+    
+    # Calcul ici directement pour éviter les erreurs
+    embauches_recentes = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
+    if len(embauches_recentes) > 0:
+        departs_recents = embauches_recentes['Date_Sortie'].notna().sum()
+        taux_calcule = (departs_recents / len(embauches_recentes) * 100)
+        st.metric(f"{taux_calcule:.1f}%", delta="Objectif <20%")
+        st.progress(taux_calcule/100)
+    else:
+        st.metric("0.0%", delta="Objectif <20%")
+        st.info("ℹ️ Pas d'embauches dans la dernière année")
 
 # ==================== PAGE TALENTS ====================
 elif page == "⭐ Talents":
