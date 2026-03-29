@@ -720,7 +720,7 @@ elif page == "⭐ Talents":
                      title="Promotions par année", text='Nombre')
         fig.update_traces(texttemplate='%{text}', textposition='outside')
         st.plotly_chart(fig, use_container_width=True)
-# ==================== PAGE ADMIN - VERSION PRO AVEC COULEURS KPI ====================
+# ==================== PAGE ADMIN - COULEURS KPI ====================
 elif page == "📋 Admin":
     st.markdown('<div class="main-header"><h1>📋 Administration</h1><p>Suivi des indicateurs</p></div>', unsafe_allow_html=True)
     
@@ -732,21 +732,21 @@ elif page == "📋 Admin":
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">{questionnaires['Taux_Reponse'].mean():.1f}%</div>
+            <div class="metric-value" style="color: #667eea;">{questionnaires['Taux_Reponse'].mean():.1f}%</div>
             <div class="metric-label">📋 Taux moyen</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">{questionnaires['Nb_Diffuses'].sum()}</div>
+            <div class="metric-value" style="color: #667eea;">{questionnaires['Nb_Diffuses'].sum()}</div>
             <div class="metric-label">📊 Nb questionnaires diffusés</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">{questionnaires['Nb_Reponses'].sum()}</div>
+            <div class="metric-value" style="color: #667eea;">{questionnaires['Nb_Reponses'].sum()}</div>
             <div class="metric-label">📝 Nb réponses reçues</div>
         </div>
         """, unsafe_allow_html=True)
@@ -757,8 +757,11 @@ elif page == "📋 Admin":
     with col2:
         fig = px.line(questionnaires, x='Periode', y='Taux_Reponse',
                       title="📈 Évolution du taux de participation",
-                      markers=True, line_shape='spline',
-                      color_discrete_sequence=['#51cf66'])
+                      markers=True, line_shape='spline')
+        fig.update_traces(
+            marker=dict(size=12, symbol='circle', color='#667eea'),
+            line=dict(width=3, color='#667eea')
+        )
         fig.add_hline(y=50, line_dash="dash", line_color="#ff6b6b", 
                       annotation_text="⚠️ Seuil alerte 50%", annotation_position="bottom right")
         fig.update_layout(
@@ -771,7 +774,6 @@ elif page == "📋 Admin":
             title_font_size=20,
             title_x=0.5
         )
-        fig.update_traces(marker=dict(size=12, symbol='circle', color='#51cf66'), line=dict(width=3, color='#51cf66'))
         fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         st.plotly_chart(fig, use_container_width=True)
@@ -785,38 +787,45 @@ elif page == "📋 Admin":
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">{entretiens['Taux_Realisation'].mean():.1f}%</div>
+            <div class="metric-value" style="color: #667eea;">{entretiens['Taux_Realisation'].mean():.1f}%</div>
             <div class="metric-label">📊 Taux moyen</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">{entretiens['Nb_Planifies'].sum()}</div>
+            <div class="metric-value" style="color: #667eea;">{entretiens['Nb_Planifies'].sum()}</div>
             <div class="metric-label">📋 Entretiens planifiés</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">{entretiens['Nb_Realises'].sum()}</div>
+            <div class="metric-value" style="color: #667eea;">{entretiens['Nb_Realises'].sum()}</div>
             <div class="metric-label">✅ Entretiens réalisés</div>
         </div>
         """, unsafe_allow_html=True)
     
-    # Graphique agrandi au centre avec couleurs KPI
+    # Graphique avec couleurs KPI (vert pour OK, jaune pour moyen, rouge pour critique)
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
-        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation',
-                     title="📊 Taux de réalisation des entretiens annuels",
-                     text='Taux_Realisation',
-                     color='Taux_Realisation',
-                     color_continuous_scale=['#ff6b6b', '#ffd93d', '#51cf66'])
+        # Définir les couleurs selon le taux
+        colors = ['#ff6b6b' if x < 80 else '#51cf66' for x in entretiens['Taux_Realisation']]
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=entretiens['Annee'],
+            y=entretiens['Taux_Realisation'],
+            text=entretiens['Taux_Realisation'],
+            textposition='outside',
+            texttemplate='%{text:.1f}%',
+            marker_color=colors,
+            marker_line_color='white',
+            marker_line_width=2
+        ))
         fig.add_hline(y=80, line_dash="dash", line_color="#ff6b6b", 
                       annotation_text="🎯 Objectif 80%", annotation_position="bottom right")
-        fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside', 
-                          marker=dict(line=dict(color='white', width=2)))
         fig.update_layout(
+            title="📊 Taux de réalisation des entretiens annuels",
             height=500,
             xaxis_title="Année",
             yaxis_title="Taux de réalisation (%)",
@@ -841,7 +850,7 @@ elif page == "📋 Admin":
         fig = px.pie(sanctions_par_service, values='Nb_Sanctions', names='Service',
                      title="Répartition des sanctions par service",
                      hole=0.4,
-                     color_discrete_sequence=px.colors.qualitative.Set3)
+                     color_discrete_sequence=['#667eea', '#764ba2', '#51cf66', '#ff6b6b', '#ffd93d'])
         fig.update_traces(textposition='inside', textinfo='percent+label',
                           marker=dict(line=dict(color='white', width=2)))
         fig.update_layout(height=400, title_font_size=18, title_x=0.5)
@@ -853,15 +862,23 @@ elif page == "📋 Admin":
     
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
-        fig = px.bar(absenteisme, x='Service', y='Taux_Absence', 
-                     title="📈 Taux d'absentéisme par service",
-                     color='Taux_Absence',
-                     color_continuous_scale=['#51cf66', '#ffd93d', '#ff6b6b'],
-                     text='Taux_Absence')
+        # Définir les couleurs selon le taux d'absentéisme
+        colors_abs = ['#51cf66' if x < 5 else '#ffd93d' if x < 8 else '#ff6b6b' for x in absenteisme['Taux_Absence']]
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=absenteisme['Service'],
+            y=absenteisme['Taux_Absence'],
+            text=absenteisme['Taux_Absence'],
+            textposition='outside',
+            texttemplate='%{text:.1f}%',
+            marker_color=colors_abs,
+            marker_line_color='white',
+            marker_line_width=2
+        ))
         fig.add_hline(y=8, line_dash="dash", line_color="#ff6b6b", 
                       annotation_text="⚠️ Seuil alerte 8%")
-        fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
         fig.update_layout(
+            title="📈 Taux d'absentéisme par service",
             height=450,
             xaxis_title="Service",
             yaxis_title="Taux d'absentéisme (%)",
