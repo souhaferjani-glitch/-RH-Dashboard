@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN - VERSION PRO STABLE ====================
+# ==================== LOGIN - VERSION DÉFINITIVE ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -153,7 +153,7 @@ def show_login():
         box-sizing: border-box;
     }
     
-    /* Fond fixe sans animation */
+    /* Fond fixe */
     .stApp {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
@@ -167,116 +167,114 @@ def show_login():
         padding: 20px;
     }
     
-    /* Carte de login - taille adaptée */
+    /* Carte de login - plus petite */
     .login-card {
-        max-width: 380px;
+        max-width: 340px;
         width: 100%;
         background: white;
-        border-radius: 28px;
-        padding: 40px 32px;
-        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        border-radius: 24px;
+        padding: 32px 28px;
+        box-shadow: 0 20px 40px -12px rgba(0,0,0,0.25);
         text-align: center;
     }
     
     /* Logo Section */
     .logo-section {
-        margin-bottom: 28px;
+        margin-bottom: 24px;
     }
     
     .logo-img {
-        width: 70px;
-        height: 70px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         object-fit: cover;
-        margin-bottom: 16px;
-        border: 3px solid #667eea;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+        margin-bottom: 12px;
+        border: 2px solid #667eea;
     }
     
     .company-name {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
     
     .company-tagline {
-        font-size: 11px;
+        font-size: 10px;
         color: #8b8e9c;
     }
     
     /* Welcome Section */
     .welcome-section {
-        margin-bottom: 28px;
+        margin-bottom: 24px;
     }
     
     .welcome-title {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: 700;
         color: #1e293b;
-        margin-bottom: 4px;
+        margin-bottom: 3px;
     }
     
     .welcome-sub {
-        font-size: 13px;
+        font-size: 12px;
         color: #8b8e9c;
     }
     
     /* Form Section */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         text-align: left;
     }
     
     .form-label {
         display: block;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
         color: #334155;
-        margin-bottom: 6px;
+        margin-bottom: 5px;
     }
     
-    /* Inputs plus petits */
+    /* Inputs - plus petits et moins larges */
+    .stTextInput > div {
+        width: 100% !important;
+    }
+    
     .stTextInput > div > div > input {
         width: 100%;
-        padding: 10px 14px;
-        font-size: 13px;
+        padding: 8px 12px;
+        font-size: 12px;
         border: 1.5px solid #e2e8f0;
-        border-radius: 12px;
+        border-radius: 10px;
         background: #fafbfc;
-        transition: all 0.2s ease;
     }
     
     .stTextInput > div > div > input:focus {
         border-color: #667eea;
         background: white;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
         outline: none;
     }
     
     .stTextInput > div > div > input::placeholder {
         color: #cbd5e1;
-        font-size: 12px;
+        font-size: 11px;
     }
     
     /* Forgot Password */
     .forgot-section {
         text-align: right;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
     
     .forgot-link {
-        font-size: 11px;
+        font-size: 10px;
         color: #667eea;
         text-decoration: none;
         font-weight: 500;
-    }
-    
-    .forgot-link:hover {
-        text-decoration: underline;
     }
     
     /* Login Button */
@@ -285,28 +283,27 @@ def show_login():
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 11px 20px;
-        font-size: 14px;
+        padding: 9px 16px;
+        font-size: 13px;
         font-weight: 600;
-        border-radius: 30px;
+        border-radius: 25px;
         cursor: pointer;
-        transition: all 0.3s ease;
     }
     
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
     }
     
     /* Footer */
     .footer-section {
-        margin-top: 28px;
-        padding-top: 20px;
+        margin-top: 24px;
+        padding-top: 16px;
         border-top: 1px solid #edf2f7;
     }
     
     .footer-text {
-        font-size: 10px;
+        font-size: 9px;
         color: #94a3b8;
     }
     
@@ -315,11 +312,29 @@ def show_login():
         text-decoration: none;
     }
     
-    /* Hide Streamlit Elements */
+    /* Hide Streamlit Elements - Supprime le curseur et le manage app */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     .stDeployButton {display: none;}
+    .stAppDeployButton {display: none;}
+    .stStatusWidget {display: none;}
+    .viewerBadge_container__1QSob {display: none;}
+    
+    /* Supprimer le curseur qui monte/descend */
+    .st-emotion-cache-1y4p8pa {
+        max-width: none !important;
+    }
+    
+    /* Cacher le bandeau "Manage app" */
+    .stAppViewContainer > .st-emotion-cache-1v0mbdj {
+        display: none !important;
+    }
+    
+    /* Cacher le footer Streamlit */
+    .st-emotion-cache-1v0mbdj {
+        display: none !important;
+    }
     </style>
     
     <div class="login-wrapper">
@@ -327,7 +342,7 @@ def show_login():
             <div class="logo-section">
                 <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
                      class="logo-img" 
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:70px;height:70px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:32px;color:white\'>📊</span></div>'">
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:60px;height:60px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px\'><span style=\'font-size:28px;color:white\'>📊</span></div>'">
                 <div class="company-name">La Pratique Electronique</div>
                 <div class="company-tagline">Sous-traitance électronique</div>
             </div>
