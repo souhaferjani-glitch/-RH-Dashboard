@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN - DESIGN EXACTEMENT COMME L'IMAGE ====================
+# ==================== LOGIN - VERSION ULTRA MODERNE PRO ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -144,7 +144,7 @@ if "username" not in st.session_state:
 def show_login():
     st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     * {
         font-family: 'Inter', sans-serif;
@@ -153,100 +153,156 @@ def show_login():
         box-sizing: border-box;
     }
     
-    .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Animation du fond */
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
-    .login-container {
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .stApp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background-size: 200% 200%;
+        animation: gradientBG 8s ease infinite;
+    }
+    
+    .login-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        padding: 24px;
+        padding: 20px;
     }
     
     .login-card {
-        max-width: 420px;
+        max-width: 440px;
         width: 100%;
-        background: white;
-        border-radius: 24px;
-        padding: 48px 36px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        border-radius: 32px;
+        padding: 48px 40px;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
         text-align: center;
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        border: 1px solid rgba(255,255,255,0.2);
     }
     
-    .logo-area {
-        margin-bottom: 32px;
+    /* Logo Section */
+    .logo-section {
+        margin-bottom: 36px;
+    }
+    
+    .logo-animated {
+        animation: float 3s ease-in-out infinite;
     }
     
     .logo-img {
-        width: 80px;
-        height: 80px;
+        width: 85px;
+        height: 85px;
         border-radius: 50%;
         object-fit: cover;
-        margin-bottom: 16px;
-    }
-    
-    .app-name {
-        font-size: 22px;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 4px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px -5px rgba(102, 126, 234, 0.4);
+        border: 3px solid white;
     }
     
     .company-name {
-        font-size: 13px;
-        color: #9ca3af;
+        font-size: 22px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 6px;
     }
     
-    .login-title {
-        font-size: 28px;
-        font-weight: 600;
-        color: #111827;
-        margin-bottom: 8px;
+    .company-tagline {
+        font-size: 12px;
+        color: #8b8e9c;
+        letter-spacing: 0.5px;
     }
     
-    .login-sub {
-        font-size: 14px;
-        color: #6b7280;
+    /* Welcome Section */
+    .welcome-section {
         margin-bottom: 32px;
     }
     
-    .input-group {
+    .welcome-title {
+        font-size: 32px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+    }
+    
+    .welcome-sub {
+        font-size: 14px;
+        color: #8b8e9c;
+    }
+    
+    /* Form Section */
+    .form-group {
         margin-bottom: 24px;
         text-align: left;
     }
     
-    .input-label {
+    .form-label {
         display: block;
         font-size: 13px;
-        font-weight: 500;
-        color: #374151;
+        font-weight: 600;
+        color: #334155;
         margin-bottom: 8px;
+        letter-spacing: 0.3px;
     }
     
+    .form-label i {
+        margin-right: 8px;
+    }
+    
+    /* Inputs Modernes */
     .stTextInput > div > div > input {
         width: 100%;
-        padding: 12px 16px;
+        padding: 14px 18px;
         font-size: 14px;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        background: #f9fafb;
-        transition: all 0.2s;
+        border: 2px solid #e2e8f0;
+        border-radius: 20px;
+        background: #fafbfc;
+        transition: all 0.3s ease;
     }
     
     .stTextInput > div > div > input:focus {
         border-color: #667eea;
         background: white;
-        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         outline: none;
     }
     
     .stTextInput > div > div > input::placeholder {
-        color: #d1d5db;
+        color: #cbd5e1;
+        font-size: 13px;
     }
     
-    .forgot-row {
+    /* Forgot Password */
+    .forgot-section {
         text-align: right;
         margin-bottom: 28px;
     }
@@ -255,80 +311,94 @@ def show_login():
         font-size: 12px;
         color: #667eea;
         text-decoration: none;
-        font-weight: 500;
+        font-weight: 600;
+        transition: all 0.3s;
     }
     
     .forgot-link:hover {
+        color: #764ba2;
         text-decoration: underline;
     }
     
+    /* Login Button */
     .stButton > button {
         width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 12px 20px;
+        padding: 14px 24px;
         font-size: 15px;
-        font-weight: 600;
+        font-weight: 700;
         border-radius: 40px;
         cursor: pointer;
-        transition: 0.3s;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
     }
     
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px -10px rgba(102, 126, 234, 0.5);
+    }
+    
+    /* Footer */
+    .footer-section {
+        margin-top: 36px;
+        padding-top: 24px;
+        border-top: 1px solid #edf2f7;
     }
     
     .footer-text {
-        margin-top: 32px;
-        padding-top: 24px;
-        border-top: 1px solid #f3f4f6;
-        font-size: 12px;
-        color: #9ca3af;
+        font-size: 11px;
+        color: #94a3b8;
     }
     
     .footer-text a {
         color: #667eea;
         text-decoration: none;
+        font-weight: 500;
     }
     
     .footer-text a:hover {
         text-decoration: underline;
     }
     
+    /* Hide Streamlit Elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     .stDeployButton {display: none;}
     </style>
     
-    <div class="login-container">
+    <div class="login-wrapper">
         <div class="login-card">
-            <div class="logo-area">
+            <div class="logo-section logo-animated">
                 <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
                      class="logo-img" 
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:38px;color:white\'>📊</span></div>'">
-                <div class="app-name"></div>
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:85px;height:85px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 10px 30px -5px rgba(102,126,234,0.4);border:3px solid white\'><span style=\'font-size:42px;color:white\'>📊</span></div>'">
                 <div class="company-name">La Pratique Electronique</div>
+                <div class="company-tagline">Sous-traitance électronique</div>
             </div>
             
+            <div class="welcome-section">
+                <div class="welcome-title">Welcome Back</div>
+                <div class="welcome-sub">Sign in to continue</div>
+            </div>
     """, unsafe_allow_html=True)
     
-    # Champs
-    st.markdown('<div class="input-group"><label class="input-label">Username </label></div>', unsafe_allow_html=True)
+    # Champs de connexion
+    st.markdown('<div class="form-group"><label class="form-label"><i>👤</i> Username</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
     
-    st.markdown('<div class="input-group"><label class="input-label">Password </label></div>', unsafe_allow_html=True)
+    st.markdown('<div class="form-group"><label class="form-label"><i>🔒</i> Password</label></div>', unsafe_allow_html=True)
     password = st.text_input("", placeholder="••••••••", type="password", key="login_password", label_visibility="collapsed")
     
     # Forgot Password
-    st.markdown('<div class="forgot-row"><a href="#" class="forgot-link">Forgot Password?</a></div>', unsafe_allow_html=True)
+    st.markdown('<div class="forgot-section"><a href="#" class="forgot-link">Forgot Password?</a></div>', unsafe_allow_html=True)
     
-    # Bouton
-    col1, col2, col3 = st.columns([1,2,1])
+    # Bouton Login
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("Log In", use_container_width=True):
+        if st.button("Login", use_container_width=True):
             if username in USERS and USERS[username] == password:
                 st.session_state.logged_in = True
                 st.session_state.username = username
@@ -338,8 +408,10 @@ def show_login():
     
     # Footer
     st.markdown("""
-            <div class="footer-text">
-                Email us anytime at <a href="#">rh@lapratique-electronique.com</a>
+            <div class="footer-section">
+                <div class="footer-text">
+                    Need help? <a href="#">Contact Support</a>
+                </div>
             </div>
         </div>
     </div>
