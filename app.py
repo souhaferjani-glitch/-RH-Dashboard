@@ -375,10 +375,6 @@ def show_login():
             <!-- Partie Droite - Formulaire de connexion -->
             <div class="login-right">
                 <div class="welcome-title">Bienvenue</div>
-                  <div class="brand-description">
-                    Sous-traitance électronique<br>
-                    Solutions innovantes depuis 2001
-                </div>
     """, unsafe_allow_html=True)
     # Champs de connexion
     st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
