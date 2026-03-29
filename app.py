@@ -357,13 +357,6 @@ def show_login():
                 <div class="left-title">RH Dashboard</div>
                 <div class="left-subtitle">La Pratique Electronique</div>
             </div>
-            
-            <!-- Partie Droite - Formulaire -->
-            <div class="login-right">
-                <div class="welcome-title">Welcome Back</div>
-                <div class="welcome-sub">Sign in to continue</div>
-    """, unsafe_allow_html=True)
-    
     # Champs de connexion
     st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
