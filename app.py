@@ -153,17 +153,11 @@ def show_login():
         box-sizing: border-box;
     }
     
-    /* Animation du fond */
+    /* Fond avec animation */
     @keyframes gradientBG {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
-    }
-    
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-8px); }
-        100% { transform: translateY(0px); }
     }
     
     .stApp {
@@ -172,7 +166,8 @@ def show_login():
         animation: gradientBG 8s ease infinite;
     }
     
-    .login-wrapper {
+    /* Container principal */
+    .login-container {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -180,18 +175,18 @@ def show_login():
         padding: 40px;
     }
     
-    /* Carte split en deux colonnes */
-    .login-card {
+    /* Carte split - Logo à gauche, formulaire à droite */
+    .login-split-card {
+        display: flex;
         max-width: 900px;
         width: 100%;
         background: white;
         border-radius: 32px;
-        display: flex;
         overflow: hidden;
-        box-shadow: 0 30px 50px -20px rgba(0,0,0,0.3);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
     }
     
-    /* Partie gauche - Logo */
+    /* Partie gauche - Logo et Branding */
     .login-left {
         flex: 1;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -203,50 +198,50 @@ def show_login():
         text-align: center;
     }
     
-    .logo-animated {
-        animation: float 3s ease-in-out infinite;
-    }
-    
-    .logo-img {
+    .logo-large {
         width: 120px;
         height: 120px;
         border-radius: 50%;
         object-fit: cover;
         margin-bottom: 24px;
         border: 4px solid rgba(255,255,255,0.3);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     }
     
-    .left-title {
-        font-size: 24px;
-        font-weight: 700;
+    .brand-title {
+        font-size: 28px;
+        font-weight: 800;
         color: white;
         margin-bottom: 8px;
     }
     
-    .left-subtitle {
-        font-size: 13px;
+    .brand-subtitle {
+        font-size: 14px;
         color: rgba(255,255,255,0.8);
+        margin-bottom: 16px;
+    }
+    
+    .brand-description {
+        font-size: 12px;
+        color: rgba(255,255,255,0.7);
+        line-height: 1.5;
     }
     
     /* Partie droite - Formulaire */
     .login-right {
         flex: 1;
         padding: 48px 40px;
-        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     .welcome-title {
         font-size: 28px;
         font-weight: 700;
         color: #1e293b;
-        margin-bottom: 8px;
-    }
-    
-    .welcome-sub {
-        font-size: 14px;
-        color: #8b8e9c;
         margin-bottom: 32px;
+        text-align: center;
     }
     
     /* Form Group */
@@ -288,7 +283,7 @@ def show_login():
     /* Forgot Password */
     .forgot-section {
         text-align: right;
-        margin-bottom: 28px;
+        margin-bottom: 24px;
     }
     
     .forgot-link {
@@ -308,27 +303,30 @@ def show_login():
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 12px 20px;
+        padding: 12px 24px;
         font-size: 14px;
         font-weight: 600;
-        border-radius: 30px;
+        border-radius: 40px;
         cursor: pointer;
         transition: all 0.3s ease;
     }
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
     }
     
     /* Footer */
-    .footer-text {
+    .footer-section {
         margin-top: 32px;
         padding-top: 20px;
         border-top: 1px solid #edf2f7;
+        text-align: center;
+    }
+    
+    .footer-text {
         font-size: 11px;
         color: #94a3b8;
-        text-align: center;
     }
     
     .footer-text a {
@@ -343,20 +341,47 @@ def show_login():
     .stDeployButton {display: none;}
     .stAppDeployButton {display: none;}
     .stStatusWidget {display: none;}
+    .viewerBadge_container__1QSob {display: none;}
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .login-split-card {
+            flex-direction: column;
+            max-width: 400px;
+        }
+        .login-left {
+            padding: 32px;
+        }
+        .logo-large {
+            width: 80px;
+            height: 80px;
+        }
+        .brand-title {
+            font-size: 22px;
+        }
+    }
     </style>
     
-    <div class="login-wrapper">
-        <div class="login-card">
-            <!-- Partie Gauche - Logo -->
+    <div class="login-container">
+        <div class="login-split-card">
+            <!-- Partie Gauche - Logo et Branding -->
             <div class="login-left">
-                <div class="logo-animated">
-                    <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-                         class="logo-img" 
-                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:120px;height:120px;background:rgba(255,255,255,0.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px\'><span style=\'font-size:55px;color:white\'>📊</span></div>'">
+                <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
+                     class="logo-large" 
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:120px;height:120px;background:rgba(255,255,255,0.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px;border:4px solid rgba(255,255,255,0.3)\'><span style=\'font-size:55px;color:white\'>📊</span></div>'">
+                <div class="brand-title">RH Dashboard</div>
+                <div class="brand-subtitle">La Pratique Electronique</div>
+                <div class="brand-description">
+                    Sous-traitance électronique<br>
+                    Solutions innovantes depuis 2005
                 </div>
-                <div class="left-title">RH Dashboard</div>
-                <div class="left-subtitle">La Pratique Electronique</div>
             </div>
+            
+            <!-- Partie Droite - Formulaire de connexion -->
+            <div class="login-right">
+                <div class="welcome-title">Bienvenue</div>
+    """, unsafe_allow_html=True)
+    
     # Champs de connexion
     st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
@@ -380,8 +405,10 @@ def show_login():
     
     # Footer
     st.markdown("""
-                <div class="footer-text">
-                    Need help? <a href="#">Contact Support</a>
+                <div class="footer-section">
+                    <div class="footer-text">
+                        Need help? <a href="#">Contact Support</a>
+                    </div>
                 </div>
             </div>
         </div>
