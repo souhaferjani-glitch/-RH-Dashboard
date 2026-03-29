@@ -309,12 +309,10 @@ def show_login():
                 <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
                      class="logo-img" 
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:38px;color:white\'>📊</span></div>'">
-                <div class="app-name">RH Dashboard</div>
+                <div class="app-name"></div>
                 <div class="company-name">La Pratique Electronique</div>
             </div>
             
-            <div class="login-title">Login</div>
-            <div class="login-sub">Accédez à votre tableau de bord</div>
     """, unsafe_allow_html=True)
     
     # Champs
