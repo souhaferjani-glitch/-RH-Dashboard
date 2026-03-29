@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN - VERSION DÉFINITIVE ====================
+# ==================== LOGIN - DESIGN SPLIT (LOGO GAUCHE / FORMULAIRE DROITE) ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -153,128 +153,153 @@ def show_login():
         box-sizing: border-box;
     }
     
-    /* Fond fixe */
-    .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Animation du fond */
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
-    /* Container principal */
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .stApp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background-size: 200% 200%;
+        animation: gradientBG 8s ease infinite;
+    }
+    
     .login-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        padding: 20px;
+        padding: 40px;
     }
     
-    /* Carte de login - plus petite */
+    /* Carte split en deux colonnes */
     .login-card {
-        max-width: 340px;
+        max-width: 900px;
         width: 100%;
         background: white;
-        border-radius: 24px;
-        padding: 32px 28px;
-        box-shadow: 0 20px 40px -12px rgba(0,0,0,0.25);
+        border-radius: 32px;
+        display: flex;
+        overflow: hidden;
+        box-shadow: 0 30px 50px -20px rgba(0,0,0,0.3);
+    }
+    
+    /* Partie gauche - Logo */
+    .login-left {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 48px 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         text-align: center;
     }
     
-    /* Logo Section */
-    .logo-section {
-        margin-bottom: 24px;
+    .logo-animated {
+        animation: float 3s ease-in-out infinite;
     }
     
     .logo-img {
-        width: 60px;
-        height: 60px;
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
         object-fit: cover;
-        margin-bottom: 12px;
-        border: 2px solid #667eea;
-    }
-    
-    .company-name {
-        font-size: 18px;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 3px;
-    }
-    
-    .company-tagline {
-        font-size: 10px;
-        color: #8b8e9c;
-    }
-    
-    /* Welcome Section */
-    .welcome-section {
         margin-bottom: 24px;
+        border: 4px solid rgba(255,255,255,0.3);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    
+    .left-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 8px;
+    }
+    
+    .left-subtitle {
+        font-size: 13px;
+        color: rgba(255,255,255,0.8);
+    }
+    
+    /* Partie droite - Formulaire */
+    .login-right {
+        flex: 1;
+        padding: 48px 40px;
+        background: white;
     }
     
     .welcome-title {
-        font-size: 24px;
+        font-size: 28px;
         font-weight: 700;
         color: #1e293b;
-        margin-bottom: 3px;
+        margin-bottom: 8px;
     }
     
     .welcome-sub {
-        font-size: 12px;
+        font-size: 14px;
         color: #8b8e9c;
+        margin-bottom: 32px;
     }
     
-    /* Form Section */
+    /* Form Group */
     .form-group {
-        margin-bottom: 16px;
-        text-align: left;
+        margin-bottom: 20px;
     }
     
     .form-label {
         display: block;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 600;
         color: #334155;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
     
-    /* Inputs - plus petits et moins larges */
-    .stTextInput > div {
-        width: 100% !important;
-    }
-    
+    /* Inputs */
     .stTextInput > div > div > input {
         width: 100%;
-        padding: 8px 12px;
-        font-size: 12px;
+        padding: 12px 16px;
+        font-size: 14px;
         border: 1.5px solid #e2e8f0;
-        border-radius: 10px;
+        border-radius: 12px;
         background: #fafbfc;
+        transition: all 0.2s ease;
     }
     
     .stTextInput > div > div > input:focus {
         border-color: #667eea;
         background: white;
-        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         outline: none;
     }
     
     .stTextInput > div > div > input::placeholder {
         color: #cbd5e1;
-        font-size: 11px;
+        font-size: 13px;
     }
     
     /* Forgot Password */
     .forgot-section {
         text-align: right;
-        margin-bottom: 20px;
+        margin-bottom: 28px;
     }
     
     .forgot-link {
-        font-size: 10px;
+        font-size: 12px;
         color: #667eea;
         text-decoration: none;
         font-weight: 500;
+    }
+    
+    .forgot-link:hover {
+        text-decoration: underline;
     }
     
     /* Login Button */
@@ -283,28 +308,27 @@ def show_login():
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 9px 16px;
-        font-size: 13px;
+        padding: 12px 20px;
+        font-size: 14px;
         font-weight: 600;
-        border-radius: 25px;
+        border-radius: 30px;
         cursor: pointer;
+        transition: all 0.3s ease;
     }
     
     .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
     }
     
     /* Footer */
-    .footer-section {
-        margin-top: 24px;
-        padding-top: 16px;
-        border-top: 1px solid #edf2f7;
-    }
-    
     .footer-text {
-        font-size: 9px;
+        margin-top: 32px;
+        padding-top: 20px;
+        border-top: 1px solid #edf2f7;
+        font-size: 11px;
         color: #94a3b8;
+        text-align: center;
     }
     
     .footer-text a {
@@ -312,45 +336,32 @@ def show_login():
         text-decoration: none;
     }
     
-    /* Hide Streamlit Elements - Supprime le curseur et le manage app */
+    /* Hide Streamlit Elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     .stDeployButton {display: none;}
     .stAppDeployButton {display: none;}
     .stStatusWidget {display: none;}
-    .viewerBadge_container__1QSob {display: none;}
-    
-    /* Supprimer le curseur qui monte/descend */
-    .st-emotion-cache-1y4p8pa {
-        max-width: none !important;
-    }
-    
-    /* Cacher le bandeau "Manage app" */
-    .stAppViewContainer > .st-emotion-cache-1v0mbdj {
-        display: none !important;
-    }
-    
-    /* Cacher le footer Streamlit */
-    .st-emotion-cache-1v0mbdj {
-        display: none !important;
-    }
     </style>
     
     <div class="login-wrapper">
         <div class="login-card">
-            <div class="logo-section">
-                <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-                     class="logo-img" 
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:60px;height:60px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px\'><span style=\'font-size:28px;color:white\'>📊</span></div>'">
-                <div class="company-name">La Pratique Electronique</div>
-                <div class="company-tagline">Sous-traitance électronique</div>
+            <!-- Partie Gauche - Logo -->
+            <div class="login-left">
+                <div class="logo-animated">
+                    <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
+                         class="logo-img" 
+                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:120px;height:120px;background:rgba(255,255,255,0.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px\'><span style=\'font-size:55px;color:white\'>📊</span></div>'">
+                </div>
+                <div class="left-title">RH Dashboard</div>
+                <div class="left-subtitle">La Pratique Electronique</div>
             </div>
             
-            <div class="welcome-section">
-                <div class="welcome-title">Welcome</div>
-                <div class="welcome-sub">Sign in</div>
-            </div>
+            <!-- Partie Droite - Formulaire -->
+            <div class="login-right">
+                <div class="welcome-title">Welcome Back</div>
+                <div class="welcome-sub">Sign in to continue</div>
     """, unsafe_allow_html=True)
     
     # Champs de connexion
@@ -376,7 +387,6 @@ def show_login():
     
     # Footer
     st.markdown("""
-            <div class="footer-section">
                 <div class="footer-text">
                     Need help? <a href="#">Contact Support</a>
                 </div>
