@@ -371,14 +371,14 @@ def show_login():
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:120px;height:120px;background:rgba(255,255,255,0.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px;border:4px solid rgba(255,255,255,0.3)\'><span style=\'font-size:55px;color:white\'>📊</span></div>'">
                 <div class="brand-title">RH Dashboard</div>
                 <div class="brand-subtitle">La Pratique Electronique</div>
-                <div class="brand-description">
-                    Sous-traitance électronique<br>
-                    Solutions innovantes depuis 2001
-                </div>
             </div>
             <!-- Partie Droite - Formulaire de connexion -->
             <div class="login-right">
                 <div class="welcome-title">Bienvenue</div>
+                  <div class="brand-description">
+                    Sous-traitance électronique<br>
+                    Solutions innovantes depuis 2001
+                </div>
     """, unsafe_allow_html=True)
     # Champs de connexion
     st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
