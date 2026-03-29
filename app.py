@@ -373,7 +373,7 @@ def show_login():
                 <div class="brand-subtitle">La Pratique Electronique</div>
                 <div class="brand-description">
                     Sous-traitance électronique<br>
-                    Solutions innovantes depuis 2005
+                    Solutions innovantes depuis 2001
                 </div>
             </div>
             
@@ -381,7 +381,6 @@ def show_login():
             <div class="login-right">
                 <div class="welcome-title">Bienvenue</div>
     """, unsafe_allow_html=True)
-    
     # Champs de connexion
     st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
