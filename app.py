@@ -376,7 +376,6 @@ def show_login():
                     Solutions innovantes depuis 2001
                 </div>
             </div>
-            
             <!-- Partie Droite - Formulaire de connexion -->
             <div class="login-right">
                 <div class="welcome-title">Bienvenue</div>
