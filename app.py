@@ -720,66 +720,130 @@ elif page == "⭐ Talents":
                      title="Promotions par année", text='Nombre')
         fig.update_traces(texttemplate='%{text}', textposition='outside')
         st.plotly_chart(fig, use_container_width=True)
-# ==================== PAGE ADMIN ====================
+# ==================== PAGE ADMIN - VERSION PRO ====================
 elif page == "📋 Admin":
     st.markdown('<div class="main-header"><h1>📋 Administration</h1><p>Suivi des indicateurs</p></div>', unsafe_allow_html=True)
     
-    # Taux de réponse questionnaires
-    st.subheader("📊 Taux de réponse aux questionnaires")
-    col1, col2 = st.columns(2)
+    # ========== SECTION 1: TAUX DE RÉPONSE QUESTIONNAIRES ==========
+    st.subheader("📊 Évolution du taux de participation")
+    
+    # Métriques en haut
+    col1, col2, col3 = st.columns(3)
     with col1:
-        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse',
-                      title="Évolution du taux de participation", markers=True,
-                      line_shape='spline')
-        fig.add_hline(y=50, line_dash="dash", line_color="red", annotation_text="Seuil alerte 50%")
-        st.plotly_chart(fig, use_container_width=True)
+        st.metric("📋 Taux moyen", f"{questionnaires['Taux_Reponse'].mean():.1f}%", delta="Moyenne")
     with col2:
-        st.metric("📋 Taux moyen", f"{questionnaires['Taux_Reponse'].mean():.1f}%")
         st.metric("📊 Nb questionnaires diffusés", questionnaires['Nb_Diffuses'].sum())
+    with col3:
         st.metric("📝 Nb réponses reçues", questionnaires['Nb_Reponses'].sum())
     
-    # Entretiens annuels
-    st.subheader("📋 Entretiens annuels")
-    col1, col2 = st.columns(2)
-    with col1:
-        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation',
-                     title="Taux de réalisation", text='Taux_Realisation',
-                     color='Taux_Realisation',
-                     color_continuous_scale=['red','yellow','green'])
-        fig.add_hline(y=80, line_dash="dash", line_color="red", annotation_text="Objectif 80%")
-        fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
-        st.plotly_chart(fig, use_container_width=True)
+    # Graphique agrandi au centre
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
+        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse',
+                      title="📈 Évolution du taux de participation",
+                      markers=True, line_shape='spline',
+                      color_discrete_sequence=['#667eea'])
+        fig.add_hline(y=50, line_dash="dash", line_color="#ef4444", 
+                      annotation_text="⚠️ Seuil alerte 50%", annotation_position="bottom right")
+        fig.update_layout(
+            height=500,
+            xaxis_title="Période",
+            yaxis_title="Taux de réponse (%)",
+            yaxis_range=[0, 100],
+            plot_bgcolor='white',
+            hovermode='x unified',
+            title_font_size=20,
+            title_x=0.5
+        )
+        fig.update_traces(marker=dict(size=12, symbol='circle'), line=dict(width=3))
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # ========== SECTION 2: ENTRETIENS ANNUELS ==========
+    st.markdown("---")
+    st.subheader("📋 Entretiens annuels")
+    
+    # Métriques
+    col1, col2, col3 = st.columns(3)
+    with col1:
         st.metric("📊 Taux moyen", f"{entretiens['Taux_Realisation'].mean():.1f}%")
+    with col2:
         st.metric("📋 Entretiens planifiés", entretiens['Nb_Planifies'].sum())
+    with col3:
         st.metric("✅ Entretiens réalisés", entretiens['Nb_Realises'].sum())
     
-    # Contrats arrivant à expiration
+    # Graphique agrandi au centre
+    col1, col2, col3 = st.columns([1, 8, 1])
+    with col2:
+        fig = px.bar(entretiens, x='Annee', y='Taux_Realisation',
+                     title="📊 Taux de réalisation des entretiens annuels",
+                     text='Taux_Realisation',
+                     color='Taux_Realisation',
+                     color_continuous_scale=['#ef4444', '#f59e0b', '#10b981'])
+        fig.add_hline(y=80, line_dash="dash", line_color="#ef4444", 
+                      annotation_text="🎯 Objectif 80%", annotation_position="bottom right")
+        fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside', 
+                          marker=dict(line=dict(color='white', width=2)))
+        fig.update_layout(
+            height=500,
+            xaxis_title="Année",
+            yaxis_title="Taux de réalisation (%)",
+            yaxis_range=[0, 100],
+            plot_bgcolor='white',
+            title_font_size=20,
+            title_x=0.5
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # ========== SECTION 3: SANCTIONS ==========
+    st.markdown("---")
+    st.subheader("⚖️ Sanctions disciplinaires")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.dataframe(sanctions, use_container_width=True)
+    with col2:
+        sanctions_par_service = sanctions.groupby('Service').size().reset_index(name='Nb_Sanctions')
+        fig = px.pie(sanctions_par_service, values='Nb_Sanctions', names='Service',
+                     title="Répartition des sanctions par service",
+                     hole=0.4,
+                     color_discrete_sequence=px.colors.qualitative.Set3)
+        fig.update_traces(textposition='inside', textinfo='percent+label')
+        fig.update_layout(height=400)
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # ========== SECTION 4: ABSENTÉISME ==========
+    st.markdown("---")
+    st.subheader("📊 Taux d'absentéisme par service")
+    
+    col1, col2, col3 = st.columns([1, 8, 1])
+    with col2:
+        fig = px.bar(absenteisme, x='Service', y='Taux_Absence', 
+                     title="📈 Taux d'absentéisme par service",
+                     color='Taux_Absence',
+                     color_continuous_scale=['#10b981', '#f59e0b', '#ef4444'],
+                     text='Taux_Absence')
+        fig.add_hline(y=8, line_dash="dash", line_color="#ef4444", 
+                      annotation_text="⚠️ Seuil alerte 8%")
+        fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
+        fig.update_layout(
+            height=450,
+            xaxis_title="Service",
+            yaxis_title="Taux d'absentéisme (%)",
+            plot_bgcolor='white',
+            title_font_size=20,
+            title_x=0.5
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # ========== SECTION 5: CONTRATS EXPIRATION ==========
+    st.markdown("---")
     st.subheader("⚠️ Contrats arrivant à expiration (30 jours)")
     if len(contrats_alertes) > 0:
         st.warning(f"{len(contrats_alertes)} contrat(s) expire(nt) dans les 30 jours")
         st.dataframe(contrats_alertes, use_container_width=True)
     else:
         st.success("✅ Aucun contrat n'expire dans les 30 jours")
-    
-    # Sanctions disciplinaires
-    st.subheader("⚖️ Sanctions disciplinaires")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.dataframe(sanctions, use_container_width=True)
-    with col2:
-        st.subheader("📊 Sanctions par service")
-        st.dataframe(sanctions_par_service, use_container_width=True)
-    
-    # Absentéisme
-    st.subheader("📊 Taux d'absentéisme par service")
-    fig = px.bar(absenteisme, x='Service', y='Taux_Absence', 
-                 title="Taux d'absentéisme",
-                 color='Taux_Absence',
-                 color_continuous_scale=['green','yellow','red'])
-    fig.add_hline(y=8, line_dash="dash", line_color="red", annotation_text="Seuil alerte 8%")
-    st.plotly_chart(fig, use_container_width=True)
-
 # ==================== PAGE KPIs ====================
 elif page == "🎯 KPIs":
     st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>Performance RH</p></div>', unsafe_allow_html=True)
