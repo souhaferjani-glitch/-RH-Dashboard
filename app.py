@@ -510,25 +510,20 @@ st.sidebar.markdown("""
     <h3 style="color: #667eea; margin: 0;">La Pratique Electronique</h3>
 </div>
 """, unsafe_allow_html=True)
-
 st.sidebar.markdown("---")
 st.sidebar.markdown(f"**👤 {st.session_state.username}**")
 st.sidebar.markdown("---")
-
 # Filtres
 st.sidebar.subheader("📊 Filtres")
 service_filter = st.sidebar.multiselect("Service", actifs['Service'].unique(), default=actifs['Service'].unique())
 categorie_filter = st.sidebar.multiselect("Catégorie", actifs['Categorie'].unique(), default=actifs['Categorie'].unique())
 sexe_filter = st.sidebar.multiselect("Sexe", actifs['Sexe'].unique(), default=actifs['Sexe'].unique())
-
 if st.sidebar.button("📥 Exporter PDF", use_container_width=True):
     st.sidebar.success("Export en cours...")
-
 if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
     st.session_state.logged_in = False
     st.session_state.username = ""
     st.rerun()
-
 page = st.sidebar.radio("Navigation", [
     "🏠 Accueil", "📈 Mouvements", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes"
 ])
