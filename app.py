@@ -133,7 +133,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN - DESIGN EXACTEMENT COMME L'IMAGE ====================
+# ==================== LOGIN - CENTRÉ AVEC LOGO EN HAUT ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -157,26 +157,28 @@ def show_login():
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
-    .login-container {
+    .login-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        padding: 24px;
+        padding: 20px;
     }
     
     .login-card {
-        max-width: 420px;
+        max-width: 400px;
         width: 100%;
         background: white;
-        border-radius: 24px;
+        border-radius: 28px;
         padding: 48px 36px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
         text-align: center;
+        margin-top: -60px;
     }
     
+    /* Logo */
     .logo-area {
-        margin-bottom: 32px;
+        margin-bottom: 28px;
     }
     
     .logo-img {
@@ -187,33 +189,21 @@ def show_login():
         margin-bottom: 16px;
     }
     
-    .app-name {
-        font-size: 22px;
+    .company-name {
+        font-size: 20px;
         font-weight: 700;
-        color: #1f2937;
+        color: #1e293b;
         margin-bottom: 4px;
     }
     
-    .company-name {
-        font-size: 13px;
-        color: #9ca3af;
+    .company-slogan {
+        font-size: 12px;
+        color: #94a3b8;
     }
     
-    .login-title {
-        font-size: 28px;
-        font-weight: 600;
-        color: #111827;
-        margin-bottom: 8px;
-    }
-    
-    .login-sub {
-        font-size: 14px;
-        color: #6b7280;
-        margin-bottom: 32px;
-    }
-    
+    /* Champs */
     .input-group {
-        margin-bottom: 24px;
+        margin-bottom: 20px;
         text-align: left;
     }
     
@@ -221,17 +211,17 @@ def show_login():
         display: block;
         font-size: 13px;
         font-weight: 500;
-        color: #374151;
-        margin-bottom: 8px;
+        color: #334155;
+        margin-bottom: 6px;
     }
     
     .stTextInput > div > div > input {
         width: 100%;
-        padding: 12px 16px;
+        padding: 14px 16px;
         font-size: 14px;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        background: #f9fafb;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 14px;
+        background: #fafbfc;
         transition: all 0.2s;
     }
     
@@ -243,9 +233,10 @@ def show_login():
     }
     
     .stTextInput > div > div > input::placeholder {
-        color: #d1d5db;
+        color: #cbd5e1;
     }
     
+    /* Forgot Password */
     .forgot-row {
         text-align: right;
         margin-bottom: 28px;
@@ -262,30 +253,32 @@ def show_login():
         text-decoration: underline;
     }
     
+    /* Bouton */
     .stButton > button {
         width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 12px 20px;
+        padding: 14px 20px;
         font-size: 15px;
         font-weight: 600;
         border-radius: 40px;
         cursor: pointer;
-        transition: 0.3s;
+        transition: all 0.3s;
     }
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        box-shadow: 0 10px 25px -5px rgba(102,126,234,0.4);
     }
     
+    /* Footer */
     .footer-text {
         margin-top: 32px;
         padding-top: 24px;
-        border-top: 1px solid #f3f4f6;
+        border-top: 1px solid #f1f5f9;
         font-size: 12px;
-        color: #9ca3af;
+        color: #94a3b8;
     }
     
     .footer-text a {
@@ -303,23 +296,22 @@ def show_login():
     .stDeployButton {display: none;}
     </style>
     
-    <div class="login-container">
+    <div class="login-wrapper">
         <div class="login-card">
             <div class="logo-area">
                 <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
                      class="logo-img" 
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px\'><span style=\'font-size:38px;color:white\'>📊</span></div>'">
-                <div class="app-name"></div>
                 <div class="company-name">La Pratique Electronique</div>
+                <div class="company-slogan">Sous-traitance électronique</div>
             </div>
-            
     """, unsafe_allow_html=True)
     
     # Champs
-    st.markdown('<div class="input-group"><label class="input-label">Username </label></div>', unsafe_allow_html=True)
+    st.markdown('<div class="input-group"><label class="input-label">Username</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
     
-    st.markdown('<div class="input-group"><label class="input-label">Password </label></div>', unsafe_allow_html=True)
+    st.markdown('<div class="input-group"><label class="input-label">Password</label></div>', unsafe_allow_html=True)
     password = st.text_input("", placeholder="••••••••", type="password", key="login_password", label_visibility="collapsed")
     
     # Forgot Password
@@ -328,7 +320,7 @@ def show_login():
     # Bouton
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        if st.button("Log In", use_container_width=True):
+        if st.button("Sign in", use_container_width=True):
             if username in USERS and USERS[username] == password:
                 st.session_state.logged_in = True
                 st.session_state.username = username
