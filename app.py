@@ -727,18 +727,28 @@ elif page == "📋 Admin":
     # ==================== INDICATEUR 1: TAUX DE RÉPONSE QUESTIONNAIRES ====================
     st.markdown("---")
     st.subheader("📊 1. Taux de réponse aux questionnaires")
-    st.caption("Formule: (Réponses / Diffusés) × 100 | Objectif: > 50%")
+    st.caption("Formule: (Réponses / Diffusés) × 100 | Seuil de vigilance: 50%")
     
-    # Calcul de la couleur
-    taux_moyen = questionnaires['Taux_Reponse'].mean()
-    couleur_taux = "#51cf66" if taux_moyen >= 50 else "#ff6b6b"
+    # Calcul du statut
+    taux_reponse_moyen = questionnaires['Taux_Reponse'].mean()
+    if taux_reponse_moyen >= 75:
+        statut_questionnaires = "🟢 Conforme"
+        couleur_questionnaires = "#51cf66"
+    elif taux_reponse_moyen >= 50:
+        statut_questionnaires = "🟡 Vigilance"
+        couleur_questionnaires = "#ffd93d"
+    else:
+        statut_questionnaires = "🔴 Critique"
+        couleur_questionnaires = "#ff6b6b"
     
+    # Métriques
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value" style="color: {couleur_taux};">{taux_moyen:.1f}%</div>
+            <div class="metric-value" style="color: {couleur_questionnaires};">{taux_reponse_moyen:.1f}%</div>
             <div class="metric-label">📋 Taux moyen</div>
+            <div class="metric-label" style="color: {couleur_questionnaires}; font-size: 11px;">{statut_questionnaires}</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
@@ -756,48 +766,51 @@ elif page == "📋 Admin":
         </div>
         """, unsafe_allow_html=True)
     
-    # Graphique avec zone colorée
+    # Graphique d'évolution
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=questionnaires['Periode'], 
-            y=questionnaires['Taux_Reponse'],
-            mode='lines+markers', 
-            name='Taux de réponse',
-            line=dict(color='#667eea', width=3),
-            marker=dict(size=10, color='#667eea', symbol='circle'),
-            fill='tozeroy',
-            fillcolor='rgba(102, 126, 234, 0.1)'
-        ))
-        fig.add_hline(y=50, line_dash="dash", line_color="#ff6b6b", 
-                      line_width=2, annotation_text="Seuil alerte 50%")
-        fig.update_layout(
-            height=450, 
-            xaxis_title="Période", 
-            yaxis_title="Taux de réponse (%)",
-            yaxis_range=[0, 100], 
-            plot_bgcolor='white',
-            hovermode='x unified'
-        )
-        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#e2e8f0')
-        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#e2e8f0')
+        fig = px.line(questionnaires, x='Periode', y='Taux_Reponse',
+                      title="📈 Évolution du taux de participation",
+                      markers=True, line_shape='spline')
+        fig.update_traces(marker=dict(size=12, symbol='circle', color='#667eea'), line=dict(width=3, color='#667eea'))
+        
+        # Zone d'alerte colorée
+        fig.add_hrect(y0=0, y1=50, line_width=0, fillcolor="#ff6b6b", opacity=0.1, annotation_text="Zone critique", annotation_position="bottom left")
+        fig.add_hline(y=50, line_dash="dash", line_color="#ff6b6b", line_width=2)
+        fig.add_hline(y=75, line_dash="dash", line_color="#ffd93d", line_width=2, annotation_text="Seuil vigilance 75%", annotation_position="bottom right")
+        
+        fig.update_layout(height=450, xaxis_title="Période", yaxis_title="Taux de réponse (%)",
+                          yaxis_range=[0, 100], plot_bgcolor='white', title_font_size=18, title_x=0.5)
+        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
+        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         st.plotly_chart(fig, use_container_width=True)
     
     # ==================== INDICATEUR 2: ENTRETIENS ANNUELS ====================
     st.markdown("---")
     st.subheader("📋 2. Entretiens annuels")
-    st.caption("Formule: (Réalisés / Planifiés) × 100 | Objectif: > 80%")
+    st.caption("Formule: (Réalisés / Planifiés) × 100 | Seuil de vigilance: 80%")
     
-    taux_entretiens = entretiens['Taux_Realisation'].mean()
-    couleur_entretiens = "#51cf66" if taux_entretiens >= 80 else "#ff6b6b"
+    taux_entretien_moyen = entretiens['Taux_Realisation'].mean()
+    if taux_entretien_moyen >= 90:
+        statut_entretien = "🟢 Excellence"
+        couleur_entretien = "#51cf66"
+    elif taux_entretien_moyen >= 80:
+        statut_entretien = "🟢 Conforme"
+        couleur_entretien = "#51cf66"
+    elif taux_entretien_moyen >= 60:
+        statut_entretien = "🟡 Vigilance"
+        couleur_entretien = "#ffd93d"
+    else:
+        statut_entretien = "🔴 Critique"
+        couleur_entretien = "#ff6b6b"
     
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value" style="color: {couleur_entretiens};">{taux_entretiens:.1f}%</div>
+            <div class="metric-value" style="color: {couleur_entretien};">{taux_entretien_moyen:.1f}%</div>
             <div class="metric-label">📊 Taux moyen de réalisation</div>
+            <div class="metric-label" style="color: {couleur_entretien}; font-size: 11px;">{statut_entretien}</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
@@ -817,96 +830,110 @@ elif page == "📋 Admin":
     
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
+        # Couleurs basées sur le seuil
+        colors = ['#ff6b6b' if x < 80 else '#51cf66' for x in entretiens['Taux_Realisation']]
         fig = go.Figure()
-        fig.add_trace(go.Bar(
-            x=entretiens['Annee'], 
-            y=entretiens['Taux_Realisation'],
-            text=entretiens['Taux_Realisation'],
-            textposition='outside',
-            texttemplate='%{text:.1f}%',
-            marker_color=['#ff6b6b' if x < 80 else '#51cf66' for x in entretiens['Taux_Realisation']],
-            marker_line_color='white',
-            marker_line_width=2
-        ))
-        fig.add_hline(y=80, line_dash="dash", line_color="#ff6b6b", line_width=2, 
-                      annotation_text="Objectif 80%")
-        fig.update_layout(
-            height=450, 
-            xaxis_title="Année", 
-            yaxis_title="Taux de réalisation (%)",
-            yaxis_range=[0, 100], 
-            plot_bgcolor='white',
-            bargap=0.3
-        )
-        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#e2e8f0')
-        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#e2e8f0')
+        fig.add_trace(go.Bar(x=entretiens['Annee'], y=entretiens['Taux_Realisation'],
+                             text=entretiens['Taux_Realisation'], textposition='outside',
+                             texttemplate='%{text:.1f}%', marker_color=colors,
+                             marker_line_color='white', marker_line_width=2))
+        fig.add_hline(y=80, line_dash="dash", line_color="#ff6b6b", line_width=2,
+                      annotation_text="🎯 Objectif 80%", annotation_position="bottom right")
+        fig.update_layout(title="📊 Taux de réalisation des entretiens annuels", height=450,
+                          xaxis_title="Année", yaxis_title="Taux de réalisation (%)",
+                          yaxis_range=[0, 100], plot_bgcolor='white', title_font_size=18, title_x=0.5)
+        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
+        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         st.plotly_chart(fig, use_container_width=True)
     
-    # ==================== INDICATEUR 3: CONTRATS EXPIRATION ====================
+    # ==================== INDICATEUR 3: CONTRATS ARRIVANT À EXPIRATION ====================
     st.markdown("---")
     st.subheader("⚠️ 3. Contrats arrivant à expiration (30 jours)")
     st.caption("Liste des contrats dont la date de fin est ≤ J+30")
     
     if len(contrats_alertes) > 0:
-        st.error(f"🚨 {len(contrats_alertes)} contrat(s) expire(nt) dans les 30 jours")
+        st.markdown(f"""
+        <div class="alert-critical">
+            🚨 ALERTE CRITIQUE | {len(contrats_alertes)} contrat(s) expire(nt) dans les 30 jours
+        </div>
+        """, unsafe_allow_html=True)
         st.dataframe(contrats_alertes, use_container_width=True)
     else:
-        st.success("✅ Aucun contrat n'expire dans les 30 jours")
+        st.markdown("""
+        <div class="success-card">
+            ✅ AUCUNE ALERTE | Aucun contrat n'expire dans les 30 jours
+        </div>
+        """, unsafe_allow_html=True)
     
-    # ==================== INDICATEUR 4: SANCTIONS ====================
+    # ==================== INDICATEUR 4: SANCTIONS DISCIPLINAIRES ====================
     st.markdown("---")
     st.subheader("⚖️ 4. Sanctions disciplinaires")
+    st.caption("Suivi des sanctions par service et par type")
     
     col1, col2 = st.columns(2)
     with col1:
         st.dataframe(sanctions, use_container_width=True)
     with col2:
         sanctions_par_service = sanctions.groupby('Service').size().reset_index(name='Nb_Sanctions')
+        
+        # Statut par service
+        max_sanctions = sanctions_par_service['Nb_Sanctions'].max()
+        sanctions_par_service['Statut'] = sanctions_par_service['Nb_Sanctions'].apply(
+            lambda x: '🔴 Critique' if x == max_sanctions and x > 2 else '🟡 Vigilance' if x > 1 else '🟢 Normal'
+        )
+        
         fig = px.pie(sanctions_par_service, values='Nb_Sanctions', names='Service',
-                     title="Sanctions par service", hole=0.4,
-                     color_discrete_sequence=['#667eea', '#764ba2', '#51cf66', '#ff6b6b', '#ffd93d'])
+                     title="Répartition des sanctions par service",
+                     hole=0.4, color_discrete_sequence=['#667eea', '#764ba2', '#51cf66', '#ff6b6b', '#ffd93d'])
         fig.update_traces(textposition='inside', textinfo='percent+label',
                           marker=dict(line=dict(color='white', width=2)))
-        fig.update_layout(height=400)
+        fig.update_layout(height=400, title_font_size=18, title_x=0.5)
         st.plotly_chart(fig, use_container_width=True)
     
-    # ==================== INDICATEUR 5: ABSENTÉISME ====================
+    # ==================== INDICATEUR 5: TAUX D'ABSENTÉISME ====================
     st.markdown("---")
     st.subheader("📊 5. Taux d'absentéisme par service")
-    st.caption("Formule: (Nombre de jours d'absence / Effectif) × 100 | Seuil alerte: > 8%")
+    st.caption("Formule: (Nombre de jours d'absence / Effectif) × 100 | Seuil d'alerte: 8%")
     
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
-        # Couleur automatique selon valeur (rouge si > seuil)
+        # Couleurs: Vert (<5%), Jaune (5-8%), Rouge (>8%)
+        colors_abs = ['#51cf66' if x < 5 else '#ffd93d' if x < 8 else '#ff6b6b' for x in absenteisme['Taux_Absence']]
+        
         fig = go.Figure()
-        fig.add_trace(go.Bar(
-            x=absenteisme['Service'], 
-            y=absenteisme['Taux_Absence'],
-            text=absenteisme['Taux_Absence'],
-            textposition='outside',
-            texttemplate='%{text:.1f}%',
-            marker_color=['#ff6b6b' if x >= 8 else '#51cf66' for x in absenteisme['Taux_Absence']],
-            marker_line_color='white',
-            marker_line_width=2
-        ))
-        fig.add_hline(y=8, line_dash="dash", line_color="#ff6b6b", line_width=2,
-                      annotation_text="⚠️ Seuil alerte 8%")
-        fig.update_layout(
-            height=450, 
-            xaxis_title="Service", 
-            yaxis_title="Taux d'absentéisme (%)",
-            plot_bgcolor='white',
-            bargap=0.3
-        )
-        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#e2e8f0')
-        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#e2e8f0')
+        fig.add_trace(go.Bar(x=absenteisme['Service'], y=absenteisme['Taux_Absence'],
+                             text=absenteisme['Taux_Absence'], textposition='outside',
+                             texttemplate='%{text:.1f}%', 
+                             marker_color=colors_abs,
+                             marker_line_color='white', marker_line_width=2))
+        
+        # Zone rouge au-dessus du seuil
+        fig.add_hrect(y0=8, y1=100, line_width=0, fillcolor="#ff6b6b", opacity=0.15)
+        fig.add_hline(y=8, line_dash="dash", line_color="#ff6b6b", line_width=3,
+                      annotation_text="🔴 SEUIL D'ALERTE 8%", annotation_position="top right",
+                      annotation_font_size=12, annotation_font_color="#ff6b6b")
+        
+        fig.update_layout(title="📈 Taux d'absentéisme par service", height=450,
+                          xaxis_title="Service", yaxis_title="Taux d'absentéisme (%)",
+                          plot_bgcolor='white', title_font_size=18, title_x=0.5)
+        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
+        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         st.plotly_chart(fig, use_container_width=True)
     
-    # ==================== RÉCAPITULATIF ====================
-    st.markdown("---")
-    st.subheader("📋 Récapitulatif des indicateurs administratifs")
+    # Ajouter un résumé des services en alerte
+    services_alerte = absenteisme[absenteisme['Taux_Absence'] > 8]['Service'].tolist()
+    if services_alerte:
+        st.markdown(f"""
+        <div class="alert-warning">
+            ⚠️ VIGILANCE | Service(s) concerné(s) par l'absentéisme: {', '.join(services_alerte)}
+        </div>
+        """, unsafe_allow_html=True)
     
-    recap_data = pd.DataFrame({
+    # ==================== RÉCAPITULATIF PROFESSIONNEL ====================
+    st.markdown("---")
+    st.subheader("📊 Synthèse des indicateurs administratifs")
+    
+    recap_data = {
         "Indicateur": [
             "Taux de réponse questionnaires",
             "Entretiens annuels",
@@ -914,22 +941,36 @@ elif page == "📋 Admin":
             "Sanctions disciplinaires",
             "Taux d'absentéisme"
         ],
-        "Valeur": [
-            f"{questionnaires['Taux_Reponse'].mean():.1f}%",
-            f"{entretiens['Taux_Realisation'].mean():.1f}%",
+        "Valeur mesurée": [
+            f"{taux_reponse_moyen:.1f}%",
+            f"{taux_entretien_moyen:.1f}%",
             f"{len(contrats_alertes)} contrat(s)",
             f"{len(sanctions)} sanction(s)",
             f"{absenteisme['Taux_Absence'].mean():.1f}%"
         ],
-        "Objectif": [
-            "> 50%",
-            "> 80%",
-            "0 contrat",
-            "À surveiller",
-            "< 8%"
+        "Seuil de référence": [
+            "75%",
+            "80%",
+            "0",
+            "-",
+            "8%"
+        ],
+        "Statut": [
+            statut_questionnaires,
+            statut_entretien,
+            "🔴 Critique" if len(contrats_alertes) > 0 else "🟢 Conforme",
+            "🟡 À surveiller" if len(sanctions) > 3 else "🟢 Normal",
+            "🔴 Critique" if absenteisme['Taux_Absence'].mean() > 8 else "🟡 Vigilance" if absenteisme['Taux_Absence'].mean() > 5 else "🟢 Conforme"
+        ],
+        "Action recommandée": [
+            "Maintenir" if taux_reponse_moyen >= 75 else "Améliorer la communication" if taux_reponse_moyen >= 50 else "Campagne de sensibilisation",
+            "Maintenir" if taux_entretien_moyen >= 80 else "Planifier les entretiens manquants",
+            "Contacter les responsables" if len(contrats_alertes) > 0 else "Aucune action",
+            "Analyse des causes" if len(sanctions) > 3 else "Aucune action",
+            "Plan d'action RH" if absenteisme['Taux_Absence'].mean() > 8 else "Surveillance"
         ]
-    })
-    st.dataframe(recap_data, use_container_width=True)
+    }
+    st.dataframe(pd.DataFrame(recap_data), use_container_width=True, hide_index=True)
 # ==================== PAGE KPIs ====================
 elif page == "🎯 KPIs":
     st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>Performance RH</p></div>', unsafe_allow_html=True)
