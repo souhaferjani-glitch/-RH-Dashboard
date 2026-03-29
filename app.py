@@ -521,6 +521,7 @@ sexe_filter = st.sidebar.multiselect("Sexe", actifs['Sexe'].unique(), default=ac
 page = st.sidebar.radio("Navigation", [
     "🏠 Accueil", "📈 Mouvements", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes"
 ])
+st.sidebar.markdown("---")
 if st.sidebar.button("📥 Exporter PDF", use_container_width=True):
     st.sidebar.success("Export en cours...")
 if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
