@@ -591,18 +591,6 @@ if page == "🏠 Accueil":
         fig.update_traces(textposition='inside', textinfo='percent+label')
         fig.update_layout(height=450)
         st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        fig = go.Figure()
-        fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Entrees'], 
-                             name='Entrées', marker_color='#51cf66',
-                             text=mouvements['Entrees'], textposition='outside'))
-        fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Total_Sorties'], 
-                             name='Sorties', marker_color='#ff6b6b',
-                             text=mouvements['Total_Sorties'], textposition='outside'))
-        fig.update_layout(title='📊 Entrées vs Sorties mensuelles', barmode='group', height=450)
-        st.plotly_chart(fig, use_container_width=True)
-    
     st.markdown("---")
     st.markdown('<div class="section-title">📊 Démographie</div>', unsafe_allow_html=True)
     
