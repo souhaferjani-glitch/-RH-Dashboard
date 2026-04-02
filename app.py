@@ -576,26 +576,32 @@ if page == "🏠 Accueil":
             <div class="trend-down">▼ -2 vs 2023</div>
         </div>
         """, unsafe_allow_html=True)
-     # ========== GRAPHIQUE CENTRÉ ==========
-    st.markdown("---")
-    
-    # Centrer le graphique avec des colonnes vides à gauche et à droite
-    col_left, col_center, col_right = st.columns([1, 3, 1])
-    
-    with col_center:
-        effectifs_filtres = actifs[actifs['Service'].isin(service_filter) & 
-                                    actifs['Categorie'].isin(categorie_filter) & 
-                                    actifs['Sexe'].isin(sexe_filter)]
-        effectifs_service = effectifs_filtres.groupby('Service').size().reset_index(name='Effectif')
-        fig = px.pie(effectifs_service, values='Effectif', names='Service', 
-                     title="🏢 Répartition par Service",
-                     hole=0.4, 
-                     color_discrete_sequence=px.colors.qualitative.Set3)
-        fig.update_traces(textposition='inside', textinfo='percent+label',
-                          marker=dict(line=dict(color='white', width=2)))
-        fig.update_layout(height=450, title_font_size=20, title_x=0.5)
-        st.plotly_chart(fig, use_container_width=True)
-    st.markdown("---")
+# ========== GRAPHIQUE CENTRÉ ==========
+st.markdown("---")
+
+# Centrer le graphique avec des colonnes vides à gauche et à droite
+col_left, col_center, col_right = st.columns([1, 3, 1])
+
+with col_center:
+    effectifs_filtres = actifs[actifs['Service'].isin(service_filter) & 
+                                actifs['Categorie'].isin(categorie_filter) & 
+                                actifs['Sexe'].isin(sexe_filter)]
+    effectifs_service = effectifs_filtres.groupby('Service').size().reset_index(name='Effectif')
+    fig = px.pie(effectifs_service, values='Effectif', names='Service', 
+                 title="🏢 Répartition par Service",
+                 hole=0.4, 
+                 color_discrete_sequence=px.colors.qualitative.Set3)
+    fig.update_traces(textposition='inside', textinfo='percent+label',
+                      marker=dict(line=dict(color='white', width=2)))
+    # Aligner le titre à gauche
+    fig.update_layout(
+        height=450, 
+        title_font_size=20, 
+        title_x=0,  # 0 = gauche, 0.5 = centre, 1 = droite
+        showlegend=False
+    )
+    st.plotly_chart(fig, use_container_width=True)
+st.markdown("---")
     st.markdown('<div class="section-title">📊 Démographie</div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
