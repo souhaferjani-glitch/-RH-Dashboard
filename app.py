@@ -675,17 +675,33 @@ elif page == "📈 Mouvements":
     # Indicateurs de flux
     col1, col2, col3, col4 = st.columns(4)
     with col1:
+         st.markdown(f"""
+        <div class="modern-card">
         st.write("📥 **Total Entrées**")
         st.write(f"### {mouvements['Entrees'].sum()}")
+         </div>
+        """, unsafe_allow_html=True)
     with col2:
+         st.markdown(f"""
+        <div class="modern-card">
         st.write("📤 **Total Sorties**")
         st.write(f"### {mouvements['Total_Sorties'].sum()}")
+        </div>
+        """, unsafe_allow_html=True)
     with col3:
+        st.markdown(f"""
+        <div class="modern-card">
         st.write("⚖️ **Solde Net**")
         st.write(f"### {mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum()}")
+        </div>
+        """, unsafe_allow_html=True)
     with col4:
+        st.markdown(f"""
+        <div class="modern-card">
         st.write("🔄 **Turnover**")
         st.write(f"### {turnover:.1f}%")
+        </div>
+        """, unsafe_allow_html=True)
     
     # Graphique Entrées/Sorties
     fig = go.Figure()
