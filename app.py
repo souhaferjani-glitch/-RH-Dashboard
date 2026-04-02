@@ -8,6 +8,7 @@ import time
 import warnings
 import base64
 import os
+import json
 
 warnings.filterwarnings('ignore')
 
@@ -17,6 +18,20 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# ==================== SESSION STATE POUR LA CONFIGURATION ====================
+if "config" not in st.session_state:
+    st.session_state.config = {
+        "langue": "Français",
+        "theme": "Clair",
+        "primary_color": "#667eea",
+        "font": "Inter",
+        "chart_size": 450,
+        "alert_turnover": True,
+        "alert_contrats": True,
+        "rapport_mensuel": False,
+        "notifications": True
+    }
 
 # ==================== FONCTION POUR CHARGER LE LOGO ====================
 def get_logo_base64():
@@ -29,6 +44,58 @@ def get_logo_base64():
 
 LOGO_BASE64 = get_logo_base64()
 
+# ==================== FONCTION POUR APPLIQUER LA CONFIGURATION ====================
+def apply_config():
+    # Appliquer la police
+    if st.session_state.config["font"] != "Inter":
+        st.markdown(f"""
+        <style>
+            * {{ font-family: '{st.session_state.config["font"]}', sans-serif !important; }}
+        </style>
+        """, unsafe_allow_html=True)
+    
+    # Appliquer la couleur principale
+    primary = st.session_state.config["primary_color"]
+    st.markdown(f"""
+    <style>
+        .main-header {{ background: linear-gradient(135deg, {primary} 0%, #764ba2 100%); }}
+        .kpi-value {{ background: linear-gradient(135deg, {primary} 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }}
+        .stButton > button {{ background: linear-gradient(135deg, {primary} 0%, #764ba2 100%); }}
+        .section-title {{ border-bottom-color: {primary}; }}
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Appliquer le thème
+    if st.session_state.config["theme"] == "Sombre":
+        st.markdown("""
+        <style>
+            .stApp { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); }
+            .modern-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border-color: rgba(0,255,255,0.2); }
+            .modern-card:hover { border-color: rgba(0,255,255,0.6); }
+            .kpi-label { color: rgba(255,255,255,0.7); }
+            [data-testid="stSidebar"] { background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); border-right: 1px solid rgba(0,255,255,0.3); }
+            [data-testid="stSidebar"] * { color: rgba(255,255,255,0.9) !important; }
+            .config-section { background: rgba(255,255,255,0.08); border-color: rgba(0,255,255,0.2); }
+            .config-title { color: #00ffff; border-bottom-color: #00ffff; }
+            .glass-header { background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-color: rgba(0,255,255,0.2); }
+            .glass-header h1 { color: #00ffff; }
+        </style>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <style>
+            .stApp { background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%); }
+            .modern-card { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-color: #eef2f6; }
+            .kpi-label { color: #6c757d; }
+            [data-testid="stSidebar"] { background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); border-right: 1px solid rgba(102,126,234,0.1); }
+            [data-testid="stSidebar"] * { color: #1e293b !important; }
+            .config-section { background: white; border-color: #eef2f6; }
+            .config-title { color: #0f172a; border-bottom-color: #e2e8f0; }
+            .glass-header { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-color: rgba(255,255,255,0.18); }
+            .glass-header h1 { color: #0f172a; }
+        </style>
+        """, unsafe_allow_html=True)
+
 # ==================== STYLE CSS ====================
 st.markdown("""
 <style>
@@ -39,7 +106,6 @@ st.markdown("""
     }
     
     .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 2rem;
         border-radius: 1rem;
         color: white;
@@ -54,14 +120,11 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Modern Card - Design uniforme pour toutes les cartes */
     .modern-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
         border-radius: 1.5rem;
         padding: 1.5rem;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
-        border: 1px solid #eef2f6;
         text-align: center;
         height: 100%;
     }
@@ -69,22 +132,16 @@ st.markdown("""
     .modern-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
-        border-color: rgba(102, 126, 234, 0.3);
     }
     
     .kpi-value {
         font-size: 2.8rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
         margin: 0.5rem 0;
     }
     
     .kpi-label {
         font-size: 0.85rem;
-        color: #6c757d;
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 500;
@@ -146,17 +203,10 @@ st.markdown("""
         font-weight: 600;
         margin: 1.5rem 0 1rem 0;
         padding-bottom: 0.5rem;
-        border-bottom: 3px solid #667eea;
         display: inline-block;
     }
     
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-        border-right: 1px solid rgba(102, 126, 234, 0.1);
-    }
-    
     .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
         border-radius: 0.5rem;
@@ -178,81 +228,32 @@ st.markdown("""
         margin: 0.5rem 0;
     }
     
-    /* Style pour la page configuration */
     .glass-header {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
         padding: 2rem;
         border-radius: 2rem;
         margin-bottom: 2rem;
         box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        text-align: center;
     }
     
     .config-section {
-        background: white;
         border-radius: 1.5rem;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-        border: 1px solid #eef2f6;
     }
     
     .config-title {
         font-size: 1.2rem;
         font-weight: 600;
-        color: #0f172a;
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
-        border-bottom: 2px solid #e2e8f0;
-    }
-    
-    /* Correction de la couleur du texte dans le sidebar */
-    [data-testid="stSidebar"],
-    [data-testid="stSidebar"] * {
-        color: #1e293b !important;
+        border-bottom: 2px solid;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== FONCTION POUR COMPTEUR ANIMÉ ====================
-def animated_counter(target_value, prefix="", suffix="", duration=1.0):
-    """Affiche un compteur animé qui compte de 0 à la valeur cible"""
-    if "counted" not in st.session_state:
-        st.session_state.counted = {}
-    
-    key = f"{prefix}_{target_value}_{suffix}"
-    
-    if key not in st.session_state.counted:
-        counter_html = f"""
-        <div class="kpi-value" id="counter_{id(key)}">
-            <span id="number_{id(key)}">0</span>
-        </div>
-        <script>
-            (function() {{
-                var target = {target_value};
-                var duration = {duration * 1000};
-                var stepTime = 20;
-                var steps = duration / stepTime;
-                var increment = target / steps;
-                var current = 0;
-                var element = document.getElementById('number_{id(key)}');
-                var timer = setInterval(function() {{
-                    current += increment;
-                    if (current >= target) {{
-                        current = target;
-                        clearInterval(timer);
-                    }}
-                    element.innerText = Math.floor(current);
-                }}, stepTime);
-            }})();
-        </script>
-        """
-        st.markdown(counter_html, unsafe_allow_html=True)
-        st.session_state.counted[key] = True
-    else:
-        st.markdown(f'<div class="kpi-value">{prefix}{target_value}{suffix}</div>', unsafe_allow_html=True)
-    
-    return target_value
+# Appliquer la config
+apply_config()
 
 # ==================== LOGIN - DESIGN SPLIT ====================
 USERS = {"Rhadmin": "admin123"}
@@ -552,11 +553,11 @@ date_limite = datetime.now() + timedelta(days=30)
 contrats_alertes = contrats_expiration[contrats_expiration['Date_Fin'] <= date_limite]
 
 # ==================== SIDEBAR ====================
-st.sidebar.markdown("""
+st.sidebar.markdown(f"""
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-         style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; border: 3px solid #667eea;">
-    <h3 style="color: #667eea; margin: 0;">La Pratique Electronique</h3>
+         style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; border: 3px solid {st.session_state.config['primary_color']};">
+    <h3 style="color: {st.session_state.config['primary_color']}; margin: 0;">La Pratique Electronique</h3>
 </div>
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
@@ -572,19 +573,17 @@ page = st.sidebar.radio("Navigation", [
 ])
 
 st.sidebar.markdown("---")
-if st.sidebar.button("📥 Exporter PDF", use_container_width=True):
-    st.sidebar.success("Export en cours...")
 if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
     st.session_state.logged_in = False
     st.session_state.username = ""
     st.rerun()
 st.sidebar.markdown("---")
 st.sidebar.caption("© 2025 - La Pratique Electronique")
-st.sidebar.caption("Version 2.0 - Business Intelligence")
+st.sidebar.caption("Version 3.0 - Configuration")
 
 # ==================== PAGE ACCUEIL ====================
 if page == "🏠 Accueil":
-    st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p> - La Pratique Electronique - </p></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p> - La Pratique Electronique - </p></div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -639,7 +638,7 @@ if page == "🏠 Accueil":
                      color_discrete_sequence=px.colors.qualitative.Set3)
         fig.update_traces(textposition='inside', textinfo='percent+label',
                           marker=dict(line=dict(color='white', width=2)))
-        fig.update_layout(height=450, title_font_size=20, title_x=0.5)
+        fig.update_layout(height=st.session_state.config["chart_size"], title_font_size=20, title_x=0.5)
         st.plotly_chart(fig, use_container_width=True)
     
     st.markdown("---")
@@ -715,444 +714,7 @@ elif page == "📈 Mouvements":
     
     fig = go.Figure()
     fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Entrees'], 
-                         name='Entrées', marker_color='#667eea',
+                         name='Entrées', marker_color=st.session_state.config["primary_color"],
                          text=mouvements['Entrees'], textposition='outside'))
     fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Total_Sorties'], 
-                         name='Sorties', marker_color='#ff6b6b',
-                         text=mouvements['Total_Sorties'], textposition='outside'))
-    fig.update_layout(title='Entrées vs Sorties mensuelles', barmode='group', height=450)
-    st.plotly_chart(fig, use_container_width=True)
-    
-    st.subheader("📊 Motifs de Sortie")
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">📝 DÉMISSION</div>
-            <div class="kpi-value">{mouvements['Sorties_Dem'].sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">👴 RETRAITE</div>
-            <div class="kpi-value">{mouvements['Sorties_Retr'].sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">⚖️ LICENCIEMENT</div>
-            <div class="kpi-value">{mouvements['Sorties_Lice'].sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.subheader("📊 Turnover par Service")
-    turnover_service = []
-    for service in actifs['Service'].unique():
-        effectif_service = len(actifs[actifs['Service'] == service])
-        departs_service = len(effectifs[(effectifs['Service'] == service) & (~effectifs['Date_Sortie'].isna())])
-        taux = (departs_service / effectif_service * 100) if effectif_service > 0 else 0
-        turnover_service.append({'Service': service, 'Turnover (%)': round(taux, 1), 'Départs': departs_service})
-    st.dataframe(pd.DataFrame(turnover_service), use_container_width=True)
-    
-    st.subheader("📈 Évolution Mensuelle des Effectifs")
-    effectifs_par_mois = []
-    for i in range(len(mouvements)):
-        cumul_entrees = mouvements['Entrees'].iloc[:i+1].sum()
-        cumul_sorties = mouvements['Total_Sorties'].iloc[:i+1].sum()
-        effectifs_par_mois.append(cumul_entrees - cumul_sorties)
-    fig = px.line(x=mouvements['Mois'].dt.strftime('%b %Y'), y=effectifs_par_mois,
-                  markers=True, title="Évolution des effectifs")
-    fig.update_layout(xaxis_title='Mois', yaxis_title='Effectif')
-    st.plotly_chart(fig, use_container_width=True)
-    
-    st.subheader("📊 Taux de départ durant la première année")
-    embauches_recentes = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
-    if len(embauches_recentes) > 0:
-        departs_recents = embauches_recentes['Date_Sortie'].notna().sum()
-        taux_calcule = (departs_recents / len(embauches_recentes) * 100)
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-value">{taux_calcule:.1f}%</div>
-            <div class="kpi-label">Objectif: &lt; 20%</div>
-            <progress value="{taux_calcule}" max="100" style="width: 100%; height: 8px; border-radius: 4px;"></progress>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown("""
-        <div class="modern-card">
-            <div class="kpi-value">0.0%</div>
-            <div class="kpi-label">Objectif: &lt; 20%</div>
-            <p style="color: #64748b;">ℹ️ Pas d'embauches dans la dernière année</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-# ==================== PAGE TALENTS ====================
-elif page == "⭐ Talents":
-    st.markdown('<div class="main-header"><h1>⭐ Gestion des Talents</h1><p>Promotions et mobilité interne</p></div>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">⭐ TOTAL PROMOTIONS</div>
-            <div class="kpi-value">{len(promotions)}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        st.dataframe(promotions, use_container_width=True)
-    
-    with col2:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">⏱️ DÉLAI MOYEN DE PROMOTION</div>
-            <div class="kpi-value">{delai_promotion:.1f} ans</div>
-            <div class="trend-up">Objectif: &lt; 3 ans</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">🔄 MOBILITÉ INTERNE</div>
-            <div class="kpi-value">{len(promotions)} changements</div>
-            <div class="kpi-label">Période: 2024-2025</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    if len(promotions) > 0:
-        promotions_par_annee = promotions.groupby(promotions['Date_Promot'].dt.year).size().reset_index(name='Nombre')
-        promotions_par_annee.columns = ['Année', 'Nombre']
-        fig = px.bar(promotions_par_annee, x='Année', y='Nombre', title="Promotions par année", text='Nombre')
-        fig.update_traces(marker_color='#667eea', textposition='outside')
-        st.plotly_chart(fig, use_container_width=True)
-
-# ==================== PAGE ADMIN ====================
-elif page == "📋 Admin":
-    st.markdown('<div class="main-header"><h1>📋 Gestion Administrative</h1><p>Suivi des indicateurs administratifs RH</p></div>', unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.subheader("📊 1. Taux de réponse aux questionnaires")
-    st.caption("Formule: (Réponses / Diffusés) × 100 | Seuil de vigilance: 50%")
-    
-    taux_reponse_moyen = questionnaires['Taux_Reponse'].mean()
-    if taux_reponse_moyen >= 75:
-        statut_questionnaires = "🟢 Conforme"
-    elif taux_reponse_moyen >= 50:
-        statut_questionnaires = "🟡 Vigilance"
-    else:
-        statut_questionnaires = "🔴 Critique"
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">📋 TAUX MOYEN</div>
-            <div class="kpi-value">{taux_reponse_moyen:.1f}%</div>
-            <div>{statut_questionnaires}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">📊 QUESTIONNAIRES DIFFUSÉS</div>
-            <div class="kpi-value">{questionnaires['Nb_Diffuses'].sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">📝 RÉPONSES REÇUES</div>
-            <div class="kpi-value">{questionnaires['Nb_Reponses'].sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    fig = px.line(questionnaires, x='Periode', y='Taux_Reponse',
-                  title="📈 Évolution du taux de participation",
-                  markers=True, line_shape='spline')
-    fig.update_traces(marker=dict(size=12, symbol='circle', color='#667eea'), line=dict(width=3, color='#667eea'))
-    fig.add_hline(y=75, line_dash="dash", line_color="#ffd93d", annotation_text="Seuil vigilance 75%")
-    fig.add_hline(y=50, line_dash="dash", line_color="#ff6b6b", annotation_text="Zone critique")
-    fig.update_layout(height=450, yaxis_range=[0, 100])
-    st.plotly_chart(fig, use_container_width=True)
-    
-    st.markdown("---")
-    st.subheader("📋 2. Entretiens annuels")
-    st.caption("Formule: (Réalisés / Planifiés) × 100 | Seuil de vigilance: 80%")
-    
-    taux_entretien_moyen = entretiens['Taux_Realisation'].mean()
-    if taux_entretien_moyen >= 80:
-        statut_entretien = "🟢 Conforme"
-    elif taux_entretien_moyen >= 60:
-        statut_entretien = "🟡 Vigilance"
-    else:
-        statut_entretien = "🔴 Critique"
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">📊 TAUX DE RÉALISATION</div>
-            <div class="kpi-value">{taux_entretien_moyen:.1f}%</div>
-            <div>{statut_entretien}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">📋 ENTRETIENS PLANIFIÉS</div>
-            <div class="kpi-value">{entretiens['Nb_Planifies'].sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col3:
-        st.markdown(f"""
-        <div class="modern-card">
-            <div class="kpi-label">✅ ENTRETIENS RÉALISÉS</div>
-            <div class="kpi-value">{entretiens['Nb_Realises'].sum()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    fig = go.Figure()
-    fig.add_trace(go.Bar(x=entretiens['Annee'], y=entretiens['Taux_Realisation'],
-                         text=entretiens['Taux_Realisation'], texttemplate='%{text:.1f}%',
-                         marker_color='#667eea', marker_line_color='white', marker_line_width=2))
-    fig.add_hline(y=80, line_dash="dash", line_color="#ff6b6b", annotation_text="🎯 Objectif 80%")
-    fig.update_layout(title="Taux de réalisation des entretiens annuels", height=400)
-    st.plotly_chart(fig, use_container_width=True)
-    
-    st.markdown("---")
-    st.subheader("⚠️ 3. Contrats arrivant à expiration (30 jours)")
-    
-    if len(contrats_alertes) > 0:
-        st.markdown(f"""
-        <div class="alert-critical">
-            🚨 ALERTE CRITIQUE | {len(contrats_alertes)} contrat(s) expire(nt) dans les 30 jours
-        </div>
-        """, unsafe_allow_html=True)
-        st.dataframe(contrats_alertes, use_container_width=True)
-    else:
-        st.markdown("""
-        <div class="success-card">
-            ✅ AUCUNE ALERTE | Aucun contrat n'expire dans les 30 jours
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.subheader("⚖️ 4. Sanctions disciplinaires")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.dataframe(sanctions, use_container_width=True)
-    with col2:
-        sanctions_par_service = sanctions.groupby('Service').size().reset_index(name='Nb_Sanctions')
-        fig = px.pie(sanctions_par_service, values='Nb_Sanctions', names='Service',
-                     title="Sanctions par service", hole=0.4)
-        st.plotly_chart(fig, use_container_width=True)
-    
-    st.markdown("---")
-    st.subheader("📊 5. Taux d'absentéisme par service")
-    
-    fig = px.bar(absenteisme, x='Service', y='Taux_Absence', title="Taux d'absentéisme", text='Taux_Absence')
-    fig.add_hline(y=8, line_dash="dash", line_color="#ef4444", annotation_text="Seuil d'alerte 8%")
-    st.plotly_chart(fig, use_container_width=True)
-
-# ==================== PAGE KPIs ====================
-elif page == "🎯 KPIs":
-    st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>Performance RH et score de risque</p></div>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=qualite,
-            title={'text': "Qualité des recrutements", 'font': {'size': 18}},
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [0, 100]},
-                   'bar': {'color': "#51cf66"},
-                   'steps': [{'range': [0, 50], 'color': '#ff6b6b'},
-                             {'range': [50, 80], 'color': '#ffd93d'},
-                             {'range': [80, 100], 'color': '#51cf66'}],
-                   'threshold': {'value': 80, 'line': {'color': "red", 'width': 4}}}))
-        fig.update_layout(height=400)
-        st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=fuite_cadres,
-            title={'text': "Fuite des compétences", 'font': {'size': 18}},
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [0, 30]},
-                   'bar': {'color': "#ff6b6b"},
-                   'steps': [{'range': [0, 5], 'color': '#51cf66'},
-                             {'range': [5, 10], 'color': '#ffd93d'},
-                             {'range': [10, 30], 'color': '#ff6b6b'}],
-                   'threshold': {'value': 10, 'line': {'color': "red", 'width': 4}}}))
-        fig.update_layout(height=400)
-        st.plotly_chart(fig, use_container_width=True)
-    
-    st.subheader("🎯 Score de risque par service")
-    st.dataframe(pd.DataFrame(services_risque), use_container_width=True)
-    
-    fig = px.bar(pd.DataFrame(services_risque), x='Service', y='Score Risque', 
-                 title="Score de risque par service",
-                 color='Score Risque',
-                 color_continuous_scale=['green', 'yellow', 'red'])
-    st.plotly_chart(fig, use_container_width=True)
-
-# ==================== PAGE ALERTES ====================
-elif page == "⚠️ Alertes":
-    st.markdown('<div class="main-header"><h1>⚠️ Système d\'Alertes</h1><p>Détection automatique des risques</p></div>', unsafe_allow_html=True)
-    
-    alertes = []
-    if turnover > 15:
-        alertes.append(("🔴 CRITIQUE", f"Turnover élevé: {turnover:.1f}% (Seuil > 15%)", "Plan de rétention urgent"))
-    if fuite_cadres > 10:
-        alertes.append(("🔴 CRITIQUE", f"Fuite des cadres: {fuite_cadres:.1f}% (Seuil > 10%)", "Entretiens de départ"))
-    elif fuite_cadres > 5:
-        alertes.append(("🟡 ATTENTION", f"Fuite des cadres: {fuite_cadres:.1f}% (Seuil > 5%)", "Surveiller les départs"))
-    if qualite < 80:
-        alertes.append(("🟡 ATTENTION", f"Qualité recrutements: {qualite:.1f}% (Seuil < 80%)", "Améliorer processus d'intégration"))
-    if taux_depart_1ere > 20:
-        alertes.append(("🔴 CRITIQUE", f"Départs 1ère année: {taux_depart_1ere:.1f}% (Seuil > 20%)", "Revoir programme d'intégration"))
-    elif taux_depart_1ere > 15:
-        alertes.append(("🟡 ATTENTION", f"Départs 1ère année: {taux_depart_1ere:.1f}% (Seuil > 15%)", "Améliorer onboarding"))
-    if questionnaires['Taux_Reponse'].mean() < 50:
-        alertes.append(("🟡 ATTENTION", f"Taux réponse questionnaires: {questionnaires['Taux_Reponse'].mean():.1f}% (Seuil < 50%)", "Relancer les enquêtes"))
-    if entretiens['Taux_Realisation'].mean() < 80:
-        alertes.append(("🟡 ATTENTION", f"Entretiens annuels: {entretiens['Taux_Realisation'].mean():.1f}% (Seuil < 80%)", "Planifier les entretiens manquants"))
-    
-    for service in services_risque:
-        if service['Score Risque'] > 15:
-            alertes.append(("🔴 CRITIQUE", f"Service {service['Service']} à risque: Score {service['Score Risque']}", "Diagnostic approfondi"))
-    
-    if len(contrats_alertes) > 0:
-        alertes.append(("🟡 ATTENTION", f"{len(contrats_alertes)} contrat(s) expire(nt) dans 30 jours", "Contacter les responsables"))
-    
-    if alertes:
-        st.subheader(f"🚨 {len(alertes)} alerte(s) détectée(s)")
-        for niveau, message, action in alertes:
-            if "🔴" in niveau:
-                st.markdown(f'<div class="alert-critical">🚨 {niveau}<br>{message}<br>📋 Action: {action}</div>', unsafe_allow_html=True)
-            else:
-                st.markdown(f'<div class="alert-warning">⚠️ {niveau}<br>{message}<br>📋 Action: {action}</div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="success-card">✅ Aucune alerte critique. Tous les indicateurs sont sous contrôle.</div>', unsafe_allow_html=True)
-
-# ==================== PAGE CONFIGURATION ====================
-elif page == "⚙️ Configuration":
-    st.markdown("""
-    <div class="glass-header">
-        <h1 style="margin: 0;">⚙️ Configuration</h1>
-        <p>Paramétrage de l'application</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Section 1: Profil utilisateur
-    st.markdown("""
-    <div class="config-section">
-        <div class="config-title">👤 Profil Utilisateur</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.text_input("Nom d'utilisateur", value=st.session_state.username, key="config_username")
-        st.text_input("Email", value="admin@pratique-electronique.com", key="config_email")
-    with col2:
-        st.selectbox("Rôle", ["Administrateur", "Manager RH", "Consultant", "Visiteur"], key="config_role")
-        st.selectbox("Langue", ["Français", "English", "العربية"], key="config_langue")
-    
-    # Section 2: Apparence
-    st.markdown("""
-    <div class="config-section">
-        <div class="config-title">🎨 Apparence</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        theme_choice = st.selectbox("Thème", ["Clair", "Sombre", "Système"], key="config_theme")
-        st.color_picker("Couleur principale", "#667eea", key="config_primary_color")
-    with col2:
-        st.selectbox("Police", ["Inter", "Poppins", "Roboto", "Open Sans"], key="config_font")
-        st.slider("Taille des graphiques", 300, 600, 450, key="config_chart_size")
-    
-    # Section 3: Notifications
-    st.markdown("""
-    <div class="config-section">
-        <div class="config-title">🔔 Notifications</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.checkbox("Alertes email pour turnover élevé", value=True, key="config_alert_turnover")
-        st.checkbox("Alertes email pour contrats expirant", value=True, key="config_alert_contrats")
-    with col2:
-        st.checkbox("Rapport mensuel automatique", value=False, key="config_rapport_mensuel")
-        st.checkbox("Notifications dans l'application", value=True, key="config_notifications")
-    
-    # Section 4: Logo
-    st.markdown("""
-    <div class="config-section">
-        <div class="config-title">🖼️ Logo</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if LOGO_BASE64:
-        st.markdown(f"""
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <img src="data:image/png;base64,{LOGO_BASE64}" style="width: 80px; height: 80px; border-radius: 1rem; border: 2px solid #e2e8f0;">
-            <div>
-                <p style="color: #10b981;">✅ Logo actuel</p>
-                <p style="color: #64748b; font-size: 0.8rem;">Pour changer le logo, remplacez le fichier logo.png dans le dossier</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.warning("⚠️ Aucun logo trouvé. Ajoutez un fichier logo.png dans le dossier.")
-        st.file_uploader("Uploader un nouveau logo", type=["png", "jpg", "jpeg"], key="config_logo_upload")
-    
-    # Section 5: Base de données
-    st.markdown("""
-    <div class="config-section">
-        <div class="config-title">💾 Base de données</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.text_input("Source de données", value="Fichier local (CSV)", key="config_data_source", disabled=True)
-    with col2:
-        st.text_input("Dernière mise à jour", value=datetime.now().strftime("%d/%m/%Y %H:%M"), key="config_last_update", disabled=True)
-    
-    if st.button("🔄 Synchroniser les données", use_container_width=True, key="config_sync"):
-        st.success("✅ Synchronisation terminée avec succès!")
-        st.cache_data.clear()
-        st.rerun()
-    
-    # Section 6: Sauvegarde
-    st.markdown("""
-    <div class="config-section">
-        <div class="config-title">💾 Sauvegarde</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("📥 Exporter la configuration", use_container_width=True, key="config_export"):
-            st.success("Configuration exportée avec succès!")
-    with col2:
-        if st.button("📤 Importer la configuration", use_container_width=True, key="config_import"):
-            st.info("Veuillez sélectionner un fichier de configuration")
-    
-    st.markdown("---")
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("💾 Enregistrer tous les paramètres", use_container_width=True, key="config_save_all"):
-            st.success("✅ Tous les paramètres ont été enregistrés avec succès!")
-            st.balloons()
-
-st.markdown("---")
-st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
+                         name='Sorties', marker_color='#ff6b6
