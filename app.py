@@ -560,6 +560,12 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
 st.sidebar.markdown(f"**👤 {st.session_state.username}**")
+# Dans le sidebar, après st.sidebar.markdown(f"**👤 {st.session_state.username}**")
+st.sidebar.markdown("---")
+if "last_update" in st.session_state.config:
+    st.sidebar.caption(f"📅 Données: {st.session_state.config['last_update']}")
+else:
+    st.sidebar.caption("📅 Données chargées")
 st.sidebar.markdown("---")
 
 service_filter = st.sidebar.multiselect("Service", actifs['Service'].unique(), default=actifs['Service'].unique())
@@ -579,7 +585,7 @@ if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
     st.rerun()
 st.sidebar.markdown("---")
 st.sidebar.caption("© 2025 - La Pratique Electronique")
-st.sidebar.caption("Version 3.0 - Configuration")
+st.sidebar.caption("Version 2.0 - Business Intelligence")
 
 # ==================== PAGE ACCUEIL ====================
 if page == "🏠 Accueil":
@@ -1047,7 +1053,7 @@ elif page == "⚙️ Configuration":
     </div>
     """, unsafe_allow_html=True)
     
-    # Section 1: Profil utilisateur
+    # ==================== SECTION 1: PROFIL UTILISATEUR ====================
     st.markdown("""
     <div class="config-section">
         <div class="config-title">👤 Profil Utilisateur</div>
@@ -1060,8 +1066,10 @@ elif page == "⚙️ Configuration":
         st.text_input("Email", value="admin@pratique-electronique.com", key="config_email")
     with col2:
         st.selectbox("Rôle", ["Administrateur", "Manager RH", "Consultant", "Visiteur"], key="config_role", disabled=True)
+        
+        # Changement de langue
         langue = st.selectbox("Langue", ["Français", "English", "العربية"], key="config_langue")
-        if langue != st.session_state.config["langue"]:
+        if langue != st.session_state.config.get("langue", "Français"):
             st.session_state.config["langue"] = langue
             if langue == "English":
                 st.info("🌐 Language changed to English")
@@ -1070,7 +1078,7 @@ elif page == "⚙️ Configuration":
             else:
                 st.info("🌐 Langue changée en Français")
     
-    # Section 2: Apparence
+    # ==================== SECTION 2: APPARENCE ====================
     st.markdown("""
     <div class="config-section">
         <div class="config-title">🎨 Apparence</div>
@@ -1079,25 +1087,29 @@ elif page == "⚙️ Configuration":
     
     col1, col2 = st.columns(2)
     with col1:
+        # Changement de thème (Clair/Sombre)
         theme = st.selectbox("Thème", ["Clair", "Sombre"], key="config_theme_select")
-        if theme != st.session_state.config["theme"]:
+        if theme != st.session_state.config.get("theme", "Clair"):
             st.session_state.config["theme"] = theme
             st.rerun()
         
-        color = st.color_picker("Couleur principale", st.session_state.config["primary_color"], key="config_primary_color_picker")
-        if color != st.session_state.config["primary_color"]:
+        # Changement de couleur principale
+        color = st.color_picker("Couleur principale", st.session_state.config.get("primary_color", "#667eea"), key="config_primary_color_picker")
+        if color != st.session_state.config.get("primary_color", "#667eea"):
             st.session_state.config["primary_color"] = color
             st.rerun()
     with col2:
+        # Changement de police
         font = st.selectbox("Police", ["Inter", "Poppins", "Roboto", "Open Sans"], key="config_font_select")
-        if font != st.session_state.config["font"]:
+        if font != st.session_state.config.get("font", "Inter"):
             st.session_state.config["font"] = font
             st.rerun()
         
-        chart_size = st.slider("Taille des graphiques", 300, 600, st.session_state.config["chart_size"], key="config_chart_size_slider")
+        # Taille des graphiques
+        chart_size = st.slider("Taille des graphiques", 300, 600, st.session_state.config.get("chart_size", 450), key="config_chart_size_slider")
         st.session_state.config["chart_size"] = chart_size
     
-    # Section 3: Notifications
+    # ==================== SECTION 3: NOTIFICATIONS ====================
     st.markdown("""
     <div class="config-section">
         <div class="config-title">🔔 Notifications</div>
@@ -1106,19 +1118,19 @@ elif page == "⚙️ Configuration":
     
     col1, col2 = st.columns(2)
     with col1:
-        alert_turnover = st.checkbox("Alertes email pour turnover élevé", value=st.session_state.config["alert_turnover"], key="config_alert_turnover_check")
+        alert_turnover = st.checkbox("Alertes email pour turnover élevé", value=st.session_state.config.get("alert_turnover", True), key="config_alert_turnover_check")
         st.session_state.config["alert_turnover"] = alert_turnover
         
-        alert_contrats = st.checkbox("Alertes email pour contrats expirant", value=st.session_state.config["alert_contrats"], key="config_alert_contrats_check")
+        alert_contrats = st.checkbox("Alertes email pour contrats expirant", value=st.session_state.config.get("alert_contrats", True), key="config_alert_contrats_check")
         st.session_state.config["alert_contrats"] = alert_contrats
     with col2:
-        rapport_mensuel = st.checkbox("Rapport mensuel automatique", value=st.session_state.config["rapport_mensuel"], key="config_rapport_mensuel_check")
+        rapport_mensuel = st.checkbox("Rapport mensuel automatique", value=st.session_state.config.get("rapport_mensuel", False), key="config_rapport_mensuel_check")
         st.session_state.config["rapport_mensuel"] = rapport_mensuel
         
-        notifications = st.checkbox("Notifications dans l'application", value=st.session_state.config["notifications"], key="config_notifications_check")
+        notifications = st.checkbox("Notifications dans l'application", value=st.session_state.config.get("notifications", True), key="config_notifications_check")
         st.session_state.config["notifications"] = notifications
     
-    # Section 4: Logo
+    # ==================== SECTION 4: LOGO ====================
     st.markdown("""
     <div class="config-section">
         <div class="config-title">🖼️ Logo</div>
@@ -1143,7 +1155,7 @@ elif page == "⚙️ Configuration":
                 f.write(uploaded_logo.getbuffer())
             st.success("✅ Logo uploadé avec succès! Rafraîchissez la page.")
     
-    # Section 5: Base de données
+    # ==================== SECTION 5: BASE DE DONNÉES (AMÉLIORÉE) ====================
     st.markdown("""
     <div class="config-section">
         <div class="config-title">💾 Base de données</div>
@@ -1151,20 +1163,119 @@ elif page == "⚙️ Configuration":
     """, unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
+    
+    # Liste des sources possibles
+    sources_data = [
+        "📁 Fichier local (CSV)",
+        "📊 Fichier Excel (.xlsx)",
+        "🗄️ Base de données SQLite",
+        "🐘 Base de données PostgreSQL",
+        "🌐 API REST",
+        "📱 Google Sheets",
+        "💼 SharePoint"
+    ]
+    
     with col1:
-        st.text_input("Source de données", value="Fichier local (CSV)", key="config_data_source", disabled=True)
+        # Source de données - MODIFIABLE
+        data_source = st.selectbox(
+            "Source de données", 
+            sources_data, 
+            index=0,
+            key="config_data_source_select",
+            help="Choisissez la source de vos données RH"
+        )
+        
+        # Afficher un message selon la source choisie
+        if data_source != "📁 Fichier local (CSV)":
+            st.info(f"ℹ️ Configuration pour {data_source} - Fonctionnalité à venir")
+            
+            # Si Excel est choisi, permettre l'upload
+            if data_source == "📊 Fichier Excel (.xlsx)":
+                uploaded_excel = st.file_uploader("📂 Uploader votre fichier Excel", type=["xlsx", "xls"], key="config_excel_upload")
+                if uploaded_excel is not None:
+                    try:
+                        df = pd.read_excel(uploaded_excel)
+                        st.success(f"✅ Fichier chargé avec {len(df)} lignes et {len(df.columns)} colonnes")
+                        st.dataframe(df.head(), use_container_width=True)
+                    except Exception as e:
+                        st.error(f"Erreur: {e}")
+            
+            # Si CSV est choisi
+            elif data_source == "📁 Fichier local (CSV)":
+                uploaded_csv = st.file_uploader("📂 Uploader votre fichier CSV", type=["csv"], key="config_csv_upload")
+                if uploaded_csv is not None:
+                    try:
+                        df = pd.read_csv(uploaded_csv)
+                        st.success(f"✅ Fichier chargé avec {len(df)} lignes et {len(df.columns)} colonnes")
+                        st.dataframe(df.head(), use_container_width=True)
+                    except Exception as e:
+                        st.error(f"Erreur: {e}")
+    
     with col2:
-        st.text_input("Dernière mise à jour", value=datetime.now().strftime("%d/%m/%Y %H:%M"), key="config_last_update", disabled=True)
+        # Mode de mise à jour
+        update_mode = st.radio(
+            "🔄 Mode de mise à jour",
+            ["Automatique", "Manuelle"],
+            index=0 if st.session_state.config.get("update_mode", "auto") == "auto" else 1,
+            key="config_update_mode",
+            help="Automatique = à chaque chargement, Manuelle = via bouton",
+            horizontal=True
+        )
+        
+        # Sauvegarder le mode
+        st.session_state.config["update_mode"] = "auto" if update_mode == "Automatique" else "manuel"
+        
+        # Affichage de la dernière mise à jour
+        if update_mode == "Manuelle":
+            last_update = st.text_input(
+                "📅 Dernière mise à jour", 
+                value=st.session_state.config.get("last_update", datetime.now().strftime("%d/%m/%Y %H:%M:%S")),
+                key="config_last_update_manual",
+                help="Modifiez la date manuellement"
+            )
+            st.session_state.config["last_update"] = last_update
+        else:
+            auto_update = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            st.text_input(
+                "📅 Dernière mise à jour", 
+                value=auto_update,
+                key="config_last_update_auto",
+                disabled=True,
+                help="Mise à jour automatique à chaque session"
+            )
+            st.session_state.config["last_update"] = auto_update
+        
+        # Statistiques des données
+        st.markdown("---")
+        st.markdown("**📊 Statistiques actuelles:**")
+        st.metric("📋 Nombre d'employés", len(effectifs), delta=None)
+        st.metric("🏢 Nombre de services", len(effectifs['Service'].unique()), delta=None)
+        st.metric("⭐ Nombre de promotions", len(promotions), delta=None)
     
-    if st.button("🔄 Synchroniser les données", use_container_width=True, key="config_sync"):
-        with st.spinner("Synchronisation en cours..."):
-            time.sleep(1)
-            st.cache_data.clear()
-            st.success("✅ Synchronisation terminée avec succès!")
-            time.sleep(1)
-            st.rerun()
+    # Bouton de synchronisation
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("🔄 Synchroniser les données", use_container_width=True, key="config_sync"):
+            with st.spinner("🔄 Synchronisation en cours..."):
+                time.sleep(1)
+                # Vider le cache pour recharger les données
+                st.cache_data.clear()
+                # Recharger les données
+                effectifs, mouvements, promotions, questionnaires, entretiens, sanctions, absenteisme, contrats_expiration = load_data()
+                # Recalculer les indicateurs
+                st.session_state.config["last_sync"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                st.session_state.config["last_update"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                st.success(f"✅ Synchronisation terminée avec succès! ({datetime.now().strftime('%H:%M:%S')})")
+                time.sleep(1)
+                st.rerun()
     
-    # Section 6: Sauvegarde
+    # Afficher le statut de la synchronisation
+    if "last_sync" in st.session_state.config:
+        st.caption(f"📅 Dernière synchronisation: {st.session_state.config['last_sync']}")
+    else:
+        st.caption("📅 Première synchronisation effectuée au chargement de l'application")
+    
+    # ==================== SECTION 6: SAUVEGARDE ====================
     st.markdown("""
     <div class="config-section">
         <div class="config-title">💾 Sauvegarde</div>
@@ -1175,21 +1286,35 @@ elif page == "⚙️ Configuration":
     with col1:
         if st.button("📥 Exporter la configuration", use_container_width=True, key="config_export"):
             config_json = json.dumps(st.session_state.config, indent=2, default=str)
-            st.download_button("📥 Télécharger", config_json, file_name="rh_config.json", mime="application/json")
+            st.download_button(
+                "📥 Télécharger la configuration", 
+                config_json, 
+                file_name=f"rh_config_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json", 
+                mime="application/json",
+                key="config_download_btn"
+            )
     with col2:
         uploaded_config = st.file_uploader("📤 Importer la configuration", type=["json"], key="config_import_file")
         if uploaded_config is not None:
-            new_config = json.load(uploaded_config)
-            st.session_state.config.update(new_config)
-            st.success("✅ Configuration importée avec succès!")
-            st.rerun()
+            try:
+                new_config = json.load(uploaded_config)
+                st.session_state.config.update(new_config)
+                st.success("✅ Configuration importée avec succès!")
+                time.sleep(1)
+                st.rerun()
+            except Exception as e:
+                st.error(f"❌ Erreur lors de l'import: {e}")
     
+    # ==================== BOUTON ENREGISTREMENT GLOBAL ====================
     st.markdown("---")
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("💾 Enregistrer tous les paramètres", use_container_width=True, key="config_save_all"):
             st.success("✅ Tous les paramètres ont été enregistrés avec succès!")
             st.balloons()
-
-st.markdown("---")
+            # Optionnel: sauvegarder la config dans un fichier
+            config_backup = json.dumps(st.session_state.config, indent=2, default=str)
+            with open("config_backup.json", "w") as f:
+                f.write(config_backup)
+        st.markdown("---")
 st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
