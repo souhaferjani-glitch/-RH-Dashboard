@@ -130,18 +130,28 @@ st.markdown("""
         padding: 15px;
         margin: 10px 0;
     }
-      .modern-card {
+    
+    .modern-card {
         background: white;
         border-radius: 1.5rem;
         padding: 1.5rem;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
         border: 1px solid #eef2f6;
+        text-align: center;
+    }
+    
+    .kpi-value {
+        font-size: 2.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOGIN - DESIGN SPLIT (LOGO GAUCHE / FORMULAIRE DROITE) ====================
+# ==================== LOGIN - DESIGN SPLIT ====================
 USERS = {"Rhadmin": "admin123"}
 
 if "logged_in" not in st.session_state:
@@ -161,7 +171,6 @@ def show_login():
         box-sizing: border-box;
     }
     
-    /* Fond avec animation */
     @keyframes gradientBG {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
@@ -174,7 +183,6 @@ def show_login():
         animation: gradientBG 8s ease infinite;
     }
     
-    /* Container principal */
     .login-container {
         display: flex;
         justify-content: center;
@@ -183,7 +191,6 @@ def show_login():
         padding: 40px;
     }
     
-    /* Carte split - Logo à gauche, formulaire à droite */
     .login-split-card {
         display: flex;
         max-width: 900px;
@@ -194,7 +201,6 @@ def show_login():
         box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
     }
     
-    /* Partie gauche - Logo et Branding */
     .login-left {
         flex: 1;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -229,13 +235,6 @@ def show_login():
         margin-bottom: 16px;
     }
     
-    .brand-description {
-        font-size: 12px;
-        color: rgba(255,255,255,0.7);
-        line-height: 1.5;
-    }
-    
-    /* Partie droite - Formulaire */
     .login-right {
         flex: 1;
         padding: 48px 40px;
@@ -252,7 +251,6 @@ def show_login():
         text-align: center;
     }
     
-    /* Form Group */
     .form-group {
         margin-bottom: 20px;
     }
@@ -265,7 +263,6 @@ def show_login():
         margin-bottom: 8px;
     }
     
-    /* Inputs */
     .stTextInput > div > div > input {
         width: 100%;
         padding: 12px 16px;
@@ -283,12 +280,6 @@ def show_login():
         outline: none;
     }
     
-    .stTextInput > div > div > input::placeholder {
-        color: #cbd5e1;
-        font-size: 13px;
-    }
-    
-    /* Forgot Password */
     .forgot-section {
         text-align: right;
         margin-bottom: 24px;
@@ -301,11 +292,6 @@ def show_login():
         font-weight: 500;
     }
     
-    .forgot-link:hover {
-        text-decoration: underline;
-    }
-    
-    /* Login Button */
     .stButton > button {
         width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -324,7 +310,6 @@ def show_login():
         box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
     }
     
-    /* Footer */
     .footer-section {
         margin-top: 32px;
         padding-top: 20px;
@@ -337,21 +322,13 @@ def show_login():
         color: #94a3b8;
     }
     
-    .footer-text a {
-        color: #667eea;
-        text-decoration: none;
-    }
-    
-    /* Hide Streamlit Elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     .stDeployButton {display: none;}
     .stAppDeployButton {display: none;}
     .stStatusWidget {display: none;}
-    .viewerBadge_container__1QSob {display: none;}
     
-    /* Responsive */
     @media (max-width: 768px) {
         .login-split-card {
             flex-direction: column;
@@ -372,7 +349,6 @@ def show_login():
     
     <div class="login-container">
         <div class="login-split-card">
-            <!-- Partie Gauche - Logo et Branding -->
             <div class="login-left">
                 <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
                      class="logo-large" 
@@ -380,21 +356,18 @@ def show_login():
                 <div class="brand-title">RH Dashboard</div>
                 <div class="brand-subtitle">La Pratique Electronique</div>
             </div>
-            <!-- Partie Droite - Formulaire de connexion -->
             <div class="login-right">
                 <div class="welcome-title">Bienvenue</div>
     """, unsafe_allow_html=True)
-    # Champs de connexion
+    
     st.markdown('<div class="form-group"><label class="form-label">Username</label></div>', unsafe_allow_html=True)
     username = st.text_input("", placeholder="Rhadmin", key="login_username", label_visibility="collapsed")
     
     st.markdown('<div class="form-group"><label class="form-label">Password</label></div>', unsafe_allow_html=True)
     password = st.text_input("", placeholder="••••••••", type="password", key="login_password", label_visibility="collapsed")
     
-    # Forgot Password
     st.markdown('<div class="forgot-section"><a href="#" class="forgot-link">Forgot Password?</a></div>', unsafe_allow_html=True)
     
-    # Bouton Login
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("Login", use_container_width=True):
@@ -405,7 +378,6 @@ def show_login():
             else:
                 st.error("❌ Invalid username or password")
     
-    # Footer
     st.markdown("""
                 <div class="footer-section">
                     <div class="footer-text">
@@ -422,6 +394,7 @@ def show_login():
 if not st.session_state.logged_in:
     show_login()
     st.stop()
+
 # ==================== CHARGEMENT DES DONNÉES ====================
 @st.cache_data
 def load_data():
@@ -475,14 +448,12 @@ def load_data():
     })
     sanctions['Date'] = pd.to_datetime(sanctions['Date'])
     
-    # Données absentéisme
     absenteisme = pd.DataFrame({
         'Mois': ['01/2024','02/2024','03/2024','04/2024','05/2024','06/2024'],
         'Service': ['Commercial','Technique','RH','Commercial','Technique','RH'],
         'Taux_Absence': [5.2,6.8,3.5,6.1,7.2,4.2]
     })
     
-    # Contrats arrivant à expiration
     contrats_expiration = pd.DataFrame({
         'Matricule': ['EMP004', 'EMP009', 'EMP014'],
         'Date_Fin': pd.to_datetime(['2026-04-15', '2026-04-20', '2026-05-01']),
@@ -509,17 +480,10 @@ qualite = (len(recents[recents['Date_Sortie'].isna()]) / len(recents) * 100) if 
 
 mouvements['Total_Sorties'] = mouvements['Sorties_Dem'] + mouvements['Sorties_Retr'] + mouvements['Sorties_Lice']
 
-# ==================== NOUVEAUX INDICATEURS ====================
-
-# 1. Taux de départ 1ère année
 embauches_an_dernier = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
 departs_1ere_annee = len(embauches_an_dernier[~embauches_an_dernier['Date_Sortie'].isna()])
-if len(embauches_an_dernier) > 0:
-    taux_depart_1ere = (departs_1ere_annee / len(embauches_an_dernier) * 100)
-else:
-    taux_depart_1ere = 0
+taux_depart_1ere = (departs_1ere_annee / len(embauches_an_dernier) * 100) if len(embauches_an_dernier) > 0 else 0
 
-# 2. Délai moyen de promotion
 if len(promotions) > 0:
     promo_with_embauche = promotions.merge(effectifs[['Matricule', 'Date_Embauche']], 
                                            left_on='Matricule', right_on='Matricule')
@@ -528,20 +492,16 @@ if len(promotions) > 0:
 else:
     delai_promotion = 0
 
-# 3. Mobilité interne (changements de poste)
 mobilite_interne = len(promotions)
 
-# 4. Évolution mensuelle des effectifs
 effectifs_par_mois = []
 for i in range(len(mouvements)):
     cumul_entrees = mouvements['Entrees'].iloc[:i+1].sum()
     cumul_sorties = mouvements['Total_Sorties'].iloc[:i+1].sum()
     effectifs_par_mois.append(cumul_entrees - cumul_sorties)
 
-# 5. Sanctions par service
 sanctions_par_service = sanctions.groupby('Service').size().reset_index(name='Nb_Sanctions')
 
-# 6. Score de risque par service
 services_risque = []
 for service in actifs['Service'].unique():
     effectif_service = len(actifs[actifs['Service'] == service])
@@ -564,17 +524,15 @@ for service in actifs['Service'].unique():
         'Niveau': niveau
     })
 
-# 7. Contrats arrivant à expiration (30 jours)
 date_limite = datetime.now() + timedelta(days=30)
 contrats_alertes = contrats_expiration[contrats_expiration['Date_Fin'] <= date_limite]
 
-# Prévisions
 entrees_ma = mouvements['Entrees'].rolling(window=3, min_periods=1).mean()
 sorties_ma = mouvements['Total_Sorties'].rolling(window=3, min_periods=1).mean()
 prevision_entrees = entrees_ma.iloc[-1] * 1.05 if len(entrees_ma) > 0 else 0
 prevision_sorties = sorties_ma.iloc[-1] * 0.95 if len(sorties_ma) > 0 else 0
 
-# ==================== SIDEBAR AVEC LOGO LOCAL ====================
+# ==================== SIDEBAR ====================
 st.sidebar.markdown("""
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
@@ -585,17 +543,16 @@ st.sidebar.markdown("""
 st.sidebar.markdown("---")
 st.sidebar.markdown(f"**👤 {st.session_state.username}**")
 st.sidebar.markdown("---")
-# Filtres
-st.sidebar.subheader("📊 Filtres")
+
 service_filter = st.sidebar.multiselect("Service", actifs['Service'].unique(), default=actifs['Service'].unique())
 categorie_filter = st.sidebar.multiselect("Catégorie", actifs['Categorie'].unique(), default=actifs['Categorie'].unique())
 sexe_filter = st.sidebar.multiselect("Sexe", actifs['Sexe'].unique(), default=actifs['Sexe'].unique())
+
 page = st.sidebar.radio("Navigation", [
     "🏠 Accueil", "📈 Mouvements", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes"
 ])
+
 st.sidebar.markdown("---")
-if st.sidebar.button("📥 Exporter PDF", use_container_width=True):
-    st.sidebar.success("Export en cours...")
 if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
     st.session_state.logged_in = False
     st.session_state.username = ""
@@ -603,11 +560,11 @@ if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
 st.sidebar.markdown("---")
 st.sidebar.caption("© 2025 - La Pratique Electronique")
 st.sidebar.caption("Version 2.0 - Business Intelligence")
+
 # ==================== PAGE ACCUEIL ====================
 if page == "🏠 Accueil":
     st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p> - La Pratique Electronique - </p></div>', unsafe_allow_html=True)
     
-    # KPIs
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.markdown(f'''
@@ -645,8 +602,6 @@ if page == "🏠 Accueil":
         </div>
         ''', unsafe_allow_html=True)
     
-    # GRAPHIQUE PRINCIPAL AU CENTRE
-    st.markdown('<div class="center-chart">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         effectifs_filtres = actifs[actifs['Service'].isin(service_filter) & 
@@ -661,9 +616,7 @@ if page == "🏠 Accueil":
                           marker=dict(line=dict(color='white', width=2)))
         fig.update_layout(showlegend=False, height=450)
         st.plotly_chart(fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
     
-    # Indicateurs supplémentaires
     st.markdown("---")
     st.subheader("📊 Indicateurs Complémentaires")
     col1, col2, col3, col4 = st.columns(4)
@@ -680,38 +633,40 @@ if page == "🏠 Accueil":
 elif page == "📈 Mouvements":
     st.markdown('<div class="main-header"><h1>📈 Mouvements du Personnel</h1><p>Entrées, sorties et turnover</p></div>', unsafe_allow_html=True)
     
-    # Indicateurs de flux
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-         st.markdown(f"""
+        st.markdown(f"""
         <div class="modern-card">
-        st.write("📥 **Total Entrées**")
-        st.write(f"### {mouvements['Entrees'].sum()}")
-         </div>
+            <div style="font-size: 2rem;">📥</div>
+            <div class="kpi-value">{mouvements['Entrees'].sum()}</div>
+            <div>Total Entrées</div>
+        </div>
         """, unsafe_allow_html=True)
     with col2:
-         st.markdown(f"""
+        st.markdown(f"""
         <div class="modern-card">
-        st.write("📤 **Total Sorties**")
-        st.write(f"### {mouvements['Total_Sorties'].sum()}")
+            <div style="font-size: 2rem;">📤</div>
+            <div class="kpi-value">{mouvements['Total_Sorties'].sum()}</div>
+            <div>Total Sorties</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown(f"""
         <div class="modern-card">
-        st.write("⚖️ **Solde Net**")
-        st.write(f"### {mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum()}")
+            <div style="font-size: 2rem;">⚖️</div>
+            <div class="kpi-value">{mouvements['Entrees'].sum() - mouvements['Total_Sorties'].sum()}</div>
+            <div>Solde Net</div>
         </div>
         """, unsafe_allow_html=True)
     with col4:
         st.markdown(f"""
         <div class="modern-card">
-        st.write("🔄 **Turnover**")
-        st.write(f"### {turnover:.1f}%")
+            <div style="font-size: 2rem;">🔄</div>
+            <div class="kpi-value">{turnover:.1f}%</div>
+            <div>Turnover</div>
         </div>
         """, unsafe_allow_html=True)
     
-    # Graphique Entrées/Sorties
     fig = go.Figure()
     fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Entrees'], 
                          name='Entrées', marker_color='#51cf66',
@@ -722,20 +677,30 @@ elif page == "📈 Mouvements":
     fig.update_layout(title='Entrées vs Sorties mensuelles', barmode='group', height=450)
     st.plotly_chart(fig, use_container_width=True)
     
-    # Motifs de sortie
     st.subheader("📊 Motifs de Sortie")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.write("📝 **Démission**")
-        st.write(f"### {mouvements['Sorties_Dem'].sum()}")
+        st.markdown(f"""
+        <div class="modern-card">
+            <div>📝 Démission</div>
+            <div class="kpi-value">{mouvements['Sorties_Dem'].sum()}</div>
+        </div>
+        """, unsafe_allow_html=True)
     with col2:
-        st.write("👴 **Retraite**")
-        st.write(f"### {mouvements['Sorties_Retr'].sum()}")
+        st.markdown(f"""
+        <div class="modern-card">
+            <div>👴 Retraite</div>
+            <div class="kpi-value">{mouvements['Sorties_Retr'].sum()}</div>
+        </div>
+        """, unsafe_allow_html=True)
     with col3:
-        st.write("⚖️ **Licenciement**")
-        st.write(f"### {mouvements['Sorties_Lice'].sum()}")
+        st.markdown(f"""
+        <div class="modern-card">
+            <div>⚖️ Licenciement</div>
+            <div class="kpi-value">{mouvements['Sorties_Lice'].sum()}</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Turnover par service
     st.subheader("📊 Turnover par Service")
     turnover_service = []
     for service in actifs['Service'].unique():
@@ -745,7 +710,6 @@ elif page == "📈 Mouvements":
         turnover_service.append({'Service': service, 'Turnover (%)': round(taux, 1), 'Départs': departs_service})
     st.dataframe(pd.DataFrame(turnover_service), use_container_width=True)
     
-    # Évolution mensuelle des effectifs
     st.subheader("📈 Évolution Mensuelle des Effectifs")
     effectifs_par_mois = []
     for i in range(len(mouvements)):
@@ -757,21 +721,27 @@ elif page == "📈 Mouvements":
     fig.update_layout(xaxis_title='Mois', yaxis_title='Effectif')
     st.plotly_chart(fig, use_container_width=True)
     
-    # Taux de départ 1ère année - Version SIMPLE sans st.metric
     st.subheader("📊 Taux de départ durant la première année")
-    
-    # Calcul direct
     embauches_recentes = effectifs[effectifs['Date_Embauche'] > datetime.now() - timedelta(days=365)]
     if len(embauches_recentes) > 0:
         departs_recents = embauches_recentes['Date_Sortie'].notna().sum()
         taux_calcule = (departs_recents / len(embauches_recentes) * 100)
-        st.write(f"### {taux_calcule:.1f}%")
-        st.write("**Objectif:** < 20%")
-        st.progress(taux_calcule/100)
+        st.markdown(f"""
+        <div class="modern-card">
+            <div class="kpi-value">{taux_calcule:.1f}%</div>
+            <div>Objectif: < 20%</div>
+            <progress value="{taux_calcule}" max="100" style="width: 100%; height: 8px; border-radius: 4px;"></progress>
+        </div>
+        """, unsafe_allow_html=True)
     else:
-        st.write("### 0.0%")
-        st.write("**Objectif:** < 20%")
-        st.info("ℹ️ Pas d'embauches dans la dernière année")
+        st.markdown("""
+        <div class="modern-card">
+            <div class="kpi-value">0.0%</div>
+            <div>Objectif: < 20%</div>
+            <p style="color: #64748b;">ℹ️ Pas d'embauches dans la dernière année</p>
+        </div>
+        """, unsafe_allow_html=True)
+
 # ==================== PAGE TALENTS ====================
 elif page == "⭐ Talents":
     st.markdown('<div class="main-header"><h1>⭐ Gestion des Talents</h1><p>Promotions et mobilité interne</p></div>', unsafe_allow_html=True)
@@ -785,7 +755,6 @@ elif page == "⭐ Talents":
     
     with col2:
         st.subheader("⏱️ Délai moyen de promotion")
-        # Calcul direct
         if len(promotions) > 0:
             promo_temp = promotions.merge(effectifs[['Matricule', 'Date_Embauche']], 
                                           left_on='Matricule', right_on='Matricule')
@@ -808,16 +777,15 @@ elif page == "⭐ Talents":
                      title="Promotions par année", text='Nombre')
         fig.update_traces(texttemplate='%{text}', textposition='outside')
         st.plotly_chart(fig, use_container_width=True)
-# ==================== PAGE ADMIN - VERSION PROFESSIONNELLE ====================
+
+# ==================== PAGE ADMIN ====================
 elif page == "📋 Admin":
     st.markdown('<div class="main-header"><h1>📋 Gestion Administrative</h1><p>Suivi des indicateurs administratifs RH</p></div>', unsafe_allow_html=True)
     
-    # ==================== INDICATEUR 1: TAUX DE RÉPONSE QUESTIONNAIRES ====================
     st.markdown("---")
     st.subheader("📊 1. Taux de réponse aux questionnaires")
     st.caption("Formule: (Réponses / Diffusés) × 100 | Seuil de vigilance: 50%")
     
-    # Calcul du statut
     taux_reponse_moyen = questionnaires['Taux_Reponse'].mean()
     if taux_reponse_moyen >= 75:
         statut_questionnaires = "🟢 Conforme"
@@ -829,7 +797,6 @@ elif page == "📋 Admin":
         statut_questionnaires = "🔴 Critique"
         couleur_questionnaires = "#ff6b6b"
     
-    # Métriques
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f"""
@@ -854,26 +821,19 @@ elif page == "📋 Admin":
         </div>
         """, unsafe_allow_html=True)
     
-    # Graphique d'évolution
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
         fig = px.line(questionnaires, x='Periode', y='Taux_Reponse',
                       title="📈 Évolution du taux de participation",
                       markers=True, line_shape='spline')
         fig.update_traces(marker=dict(size=12, symbol='circle', color='#667eea'), line=dict(width=3, color='#667eea'))
-        
-        # Zone d'alerte colorée
-        fig.add_hrect(y0=0, y1=50, line_width=0, fillcolor="#ff6b6b", opacity=0.1, annotation_text="Zone critique", annotation_position="bottom left")
+        fig.add_hrect(y0=0, y1=50, line_width=0, fillcolor="#ff6b6b", opacity=0.1)
         fig.add_hline(y=50, line_dash="dash", line_color="#ff6b6b", line_width=2)
-        fig.add_hline(y=75, line_dash="dash", line_color="#ffd93d", line_width=2, annotation_text="Seuil vigilance 75%", annotation_position="bottom right")
-        
+        fig.add_hline(y=75, line_dash="dash", line_color="#ffd93d", line_width=2, annotation_text="Seuil vigilance 75%")
         fig.update_layout(height=450, xaxis_title="Période", yaxis_title="Taux de réponse (%)",
                           yaxis_range=[0, 100], plot_bgcolor='white', title_font_size=18, title_x=0.5)
-        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
-        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         st.plotly_chart(fig, use_container_width=True)
     
-    # ==================== INDICATEUR 2: ENTRETIENS ANNUELS ====================
     st.markdown("---")
     st.subheader("📋 2. Entretiens annuels")
     st.caption("Formule: (Réalisés / Planifiés) × 100 | Seuil de vigilance: 80%")
@@ -918,7 +878,6 @@ elif page == "📋 Admin":
     
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
-        # Couleurs basées sur le seuil
         colors = ['#ff6b6b' if x < 80 else '#51cf66' for x in entretiens['Taux_Realisation']]
         fig = go.Figure()
         fig.add_trace(go.Bar(x=entretiens['Annee'], y=entretiens['Taux_Realisation'],
@@ -926,15 +885,12 @@ elif page == "📋 Admin":
                              texttemplate='%{text:.1f}%', marker_color=colors,
                              marker_line_color='white', marker_line_width=2))
         fig.add_hline(y=80, line_dash="dash", line_color="#ff6b6b", line_width=2,
-                      annotation_text="🎯 Objectif 80%", annotation_position="bottom right")
+                      annotation_text="🎯 Objectif 80%")
         fig.update_layout(title="📊 Taux de réalisation des entretiens annuels", height=450,
                           xaxis_title="Année", yaxis_title="Taux de réalisation (%)",
                           yaxis_range=[0, 100], plot_bgcolor='white', title_font_size=18, title_x=0.5)
-        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
-        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         st.plotly_chart(fig, use_container_width=True)
     
-    # ==================== INDICATEUR 3: CONTRATS ARRIVANT À EXPIRATION ====================
     st.markdown("---")
     st.subheader("⚠️ 3. Contrats arrivant à expiration (30 jours)")
     st.caption("Liste des contrats dont la date de fin est ≤ J+30")
@@ -953,7 +909,6 @@ elif page == "📋 Admin":
         </div>
         """, unsafe_allow_html=True)
     
-    # ==================== INDICATEUR 4: SANCTIONS DISCIPLINAIRES ====================
     st.markdown("---")
     st.subheader("⚖️ 4. Sanctions disciplinaires")
     st.caption("Suivi des sanctions par service et par type")
@@ -963,52 +918,34 @@ elif page == "📋 Admin":
         st.dataframe(sanctions, use_container_width=True)
     with col2:
         sanctions_par_service = sanctions.groupby('Service').size().reset_index(name='Nb_Sanctions')
-        
-        # Statut par service
-        max_sanctions = sanctions_par_service['Nb_Sanctions'].max()
-        sanctions_par_service['Statut'] = sanctions_par_service['Nb_Sanctions'].apply(
-            lambda x: '🔴 Critique' if x == max_sanctions and x > 2 else '🟡 Vigilance' if x > 1 else '🟢 Normal'
-        )
-        
         fig = px.pie(sanctions_par_service, values='Nb_Sanctions', names='Service',
                      title="Répartition des sanctions par service",
                      hole=0.4, color_discrete_sequence=['#667eea', '#764ba2', '#51cf66', '#ff6b6b', '#ffd93d'])
-        fig.update_traces(textposition='inside', textinfo='percent+label',
-                          marker=dict(line=dict(color='white', width=2)))
-        fig.update_layout(height=400, title_font_size=18, title_x=0.5)
+        fig.update_traces(textposition='inside', textinfo='percent+label')
+        fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
     
-    # ==================== INDICATEUR 5: TAUX D'ABSENTÉISME ====================
     st.markdown("---")
     st.subheader("📊 5. Taux d'absentéisme par service")
     st.caption("Formule: (Nombre de jours d'absence / Effectif) × 100 | Seuil d'alerte: 8%")
     
     col1, col2, col3 = st.columns([1, 8, 1])
     with col2:
-        # Couleurs: Vert (<5%), Jaune (5-8%), Rouge (>8%)
         colors_abs = ['#51cf66' if x < 5 else '#ffd93d' if x < 8 else '#ff6b6b' for x in absenteisme['Taux_Absence']]
-        
         fig = go.Figure()
         fig.add_trace(go.Bar(x=absenteisme['Service'], y=absenteisme['Taux_Absence'],
                              text=absenteisme['Taux_Absence'], textposition='outside',
                              texttemplate='%{text:.1f}%', 
                              marker_color=colors_abs,
                              marker_line_color='white', marker_line_width=2))
-        
-        # Zone rouge au-dessus du seuil
         fig.add_hrect(y0=8, y1=100, line_width=0, fillcolor="#ff6b6b", opacity=0.15)
         fig.add_hline(y=8, line_dash="dash", line_color="#ff6b6b", line_width=3,
-                      annotation_text="🔴 SEUIL D'ALERTE 8%", annotation_position="top right",
-                      annotation_font_size=12, annotation_font_color="#ff6b6b")
-        
+                      annotation_text="🔴 SEUIL D'ALERTE 8%")
         fig.update_layout(title="📈 Taux d'absentéisme par service", height=450,
                           xaxis_title="Service", yaxis_title="Taux d'absentéisme (%)",
                           plot_bgcolor='white', title_font_size=18, title_x=0.5)
-        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
-        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ecf0f1')
         st.plotly_chart(fig, use_container_width=True)
     
-    # Ajouter un résumé des services en alerte
     services_alerte = absenteisme[absenteisme['Taux_Absence'] > 8]['Service'].tolist()
     if services_alerte:
         st.markdown(f"""
@@ -1017,7 +954,6 @@ elif page == "📋 Admin":
         </div>
         """, unsafe_allow_html=True)
     
-    # ==================== RÉCAPITULATIF PROFESSIONNEL ====================
     st.markdown("---")
     st.subheader("📊 Synthèse des indicateurs administratifs")
     
@@ -1059,6 +995,7 @@ elif page == "📋 Admin":
         ]
     }
     st.dataframe(pd.DataFrame(recap_data), use_container_width=True, hide_index=True)
+
 # ==================== PAGE KPIs ====================
 elif page == "🎯 KPIs":
     st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>Performance RH</p></div>', unsafe_allow_html=True)
@@ -1095,11 +1032,9 @@ elif page == "🎯 KPIs":
         fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
     
-    # Score de risque par service
     st.subheader("🎯 Score de risque par service")
     st.dataframe(pd.DataFrame(services_risque), use_container_width=True)
     
-    # Graphique des scores
     fig = px.bar(pd.DataFrame(services_risque), x='Service', y='Score Risque', 
                  title="Score de risque par service",
                  color='Score Risque',
@@ -1128,12 +1063,10 @@ elif page == "⚠️ Alertes":
     if entretiens['Taux_Realisation'].mean() < 80:
         alertes.append(("🟡 ATTENTION", f"Entretiens annuels: {entretiens['Taux_Realisation'].mean():.1f}% (Seuil < 80%)", "Planifier les entretiens manquants"))
     
-    # Alertes services à risque
     for service in services_risque:
         if service['Score Risque'] > 15:
             alertes.append(("🔴 CRITIQUE", f"Service {service['Service']} à risque: Score {service['Score Risque']}", "Diagnostic approfondi"))
     
-    # Contrats expiration
     if len(contrats_alertes) > 0:
         alertes.append(("🟡 ATTENTION", f"{len(contrats_alertes)} contrat(s) expire(nt) dans 30 jours", "Contacter les responsables"))
     
