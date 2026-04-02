@@ -576,10 +576,13 @@ if page == "🏠 Accueil":
             <div class="trend-down">▼ -2 vs 2023</div>
         </div>
         """, unsafe_allow_html=True)
+     # ========== GRAPHIQUE CENTRÉ ==========
+    st.markdown("---")
     
-    col1, col2 = st.columns(2)
+    # Centrer le graphique avec des colonnes vides à gauche et à droite
+    col_left, col_center, col_right = st.columns([1, 3, 1])
     
-    with col1:
+    with col_center:
         effectifs_filtres = actifs[actifs['Service'].isin(service_filter) & 
                                     actifs['Categorie'].isin(categorie_filter) & 
                                     actifs['Sexe'].isin(sexe_filter)]
