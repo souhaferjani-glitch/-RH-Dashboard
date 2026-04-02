@@ -6,6 +6,9 @@ import numpy as np
 from datetime import datetime, timedelta
 import time
 import warnings
+import base64
+import os
+
 warnings.filterwarnings('ignore')
 
 st.set_page_config(
@@ -14,6 +17,17 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# ==================== FONCTION POUR CHARGER LE LOGO ====================
+def get_logo_base64():
+    logo_paths = ["logo.png", "logo.PNG", "assets/logo.png", "images/logo.png"]
+    for path in logo_paths:
+        if os.path.exists(path):
+            with open(path, "rb") as img_file:
+                return base64.b64encode(img_file.read()).decode()
+    return None
+
+LOGO_BASE64 = get_logo_base64()
 
 # ==================== STYLE CSS ====================
 st.markdown("""
@@ -163,46 +177,40 @@ st.markdown("""
         border-radius: 1rem;
         margin: 0.5rem 0;
     }
-    /* ========== STYLE POUR MODE SOMBRE (DÉTECTION AUTOMATIQUE) ========== */
-@media (prefers-color-scheme: dark) {
-    [data-testid="stSidebar"] {
-        background: rgba(0, 0, 0, 0.5);
+    
+    /* Style pour la page configuration */
+    .glass-header {
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        border-right: 1px solid rgba(0, 255, 255, 0.3);
-    }
-    [data-testid="stSidebar"] *,
-    [data-testid="stSidebar"] .stMarkdown,
-    [data-testid="stSidebar"] .stMarkdown *,
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] div,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] .stRadio label,
-    [data-testid="stSidebar"] .stSelectbox label,
-    [data-testid="stSidebar"] .stMultiSelect label,
-    [data-testid="stSidebar"] .css-1c6f4el,
-    [data-testid="stSidebar"] .css-1c6f4el * {
-        color: #ffffff !important;
+        padding: 2rem;
+        border-radius: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
     }
     
-    [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] div,
-    [data-testid="stSidebar"] .stMultiSelect div[data-baseweb="select"] div {
-        background-color: rgba(255, 255, 255, 0.15);
-        border-color: rgba(0, 255, 255, 0.3);
-        color: white !important;
+    .config-section {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #eef2f6;
     }
     
-    [data-testid="stSidebar"] .stSelectbox svg,
-    [data-testid="stSidebar"] .stMultiSelect svg {
-        fill: #00ffff !important;
+    .config-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e2e8f0;
     }
-}
+    
     /* Correction de la couleur du texte dans le sidebar */
     [data-testid="stSidebar"],
     [data-testid="stSidebar"] * {
         color: #1e293b !important;
     }
-</style>
 </style>
 """, unsafe_allow_html=True)
 
@@ -215,7 +223,6 @@ def animated_counter(target_value, prefix="", suffix="", duration=1.0):
     key = f"{prefix}_{target_value}_{suffix}"
     
     if key not in st.session_state.counted:
-        # Animation en JavaScript
         counter_html = f"""
         <div class="kpi-value" id="counter_{id(key)}">
             <span id="number_{id(key)}">0</span>
@@ -548,7 +555,7 @@ contrats_alertes = contrats_expiration[contrats_expiration['Date_Fin'] <= date_l
 st.sidebar.markdown("""
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-         <div style="background: linear-gradient(135deg, #0ea5e9, #6366f1); width: 70px; height: 70px; border-radius: 1rem; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+         style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; border: 3px solid #667eea;">
     <h3 style="color: #667eea; margin: 0;">La Pratique Electronique</h3>
 </div>
 """, unsafe_allow_html=True)
@@ -561,7 +568,7 @@ categorie_filter = st.sidebar.multiselect("Catégorie", actifs['Categorie'].uniq
 sexe_filter = st.sidebar.multiselect("Sexe", actifs['Sexe'].unique(), default=actifs['Sexe'].unique())
 
 page = st.sidebar.radio("Navigation", [
-    "🏠 Accueil", "📈 Mouvements", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes"
+    "🏠 Accueil", "📈 Mouvements", "⭐ Talents", "📋 Admin", "🎯 KPIs", "⚠️ Alertes", "⚙️ Configuration"
 ])
 
 st.sidebar.markdown("---")
@@ -616,10 +623,9 @@ if page == "🏠 Accueil":
             <div class="trend-down">▼ -2 vs 2023</div>
         </div>
         """, unsafe_allow_html=True)
-# ========== GRAPHIQUE CENTRÉ ==========
+    
     st.markdown("---")
     
-    # Centrer le graphique avec des colonnes vides à gauche et à droite
     col_left, col_center, col_right = st.columns([1, 3, 1])
     
     with col_center:
@@ -635,6 +641,7 @@ if page == "🏠 Accueil":
                           marker=dict(line=dict(color='white', width=2)))
         fig.update_layout(height=450, title_font_size=20, title_x=0.5)
         st.plotly_chart(fig, use_container_width=True)
+    
     st.markdown("---")
     st.markdown('<div class="section-title">📊 Démographie</div>', unsafe_allow_html=True)
     
@@ -671,6 +678,7 @@ if page == "🏠 Accueil":
             <div class="trend-up">Moyenne</div>
         </div>
         """, unsafe_allow_html=True)
+
 # ==================== PAGE MOUVEMENTS ====================
 elif page == "📈 Mouvements":
     st.markdown('<div class="main-header"><h1>📈 Mouvements du Personnel</h1><p>Entrées, sorties et turnover</p></div>', unsafe_allow_html=True)
@@ -815,7 +823,7 @@ elif page == "⭐ Talents":
         promotions_par_annee = promotions.groupby(promotions['Date_Promot'].dt.year).size().reset_index(name='Nombre')
         promotions_par_annee.columns = ['Année', 'Nombre']
         fig = px.bar(promotions_par_annee, x='Année', y='Nombre', title="Promotions par année", text='Nombre')
-        fig.update_traces(marker_color='pink', textposition='outside')
+        fig.update_traces(marker_color='#667eea', textposition='outside')
         st.plotly_chart(fig, use_container_width=True)
 
 # ==================== PAGE ADMIN ====================
@@ -1014,12 +1022,10 @@ elif page == "⚠️ Alertes":
     if entretiens['Taux_Realisation'].mean() < 80:
         alertes.append(("🟡 ATTENTION", f"Entretiens annuels: {entretiens['Taux_Realisation'].mean():.1f}% (Seuil < 80%)", "Planifier les entretiens manquants"))
     
-    # Alertes services à risque
     for service in services_risque:
         if service['Score Risque'] > 15:
             alertes.append(("🔴 CRITIQUE", f"Service {service['Service']} à risque: Score {service['Score Risque']}", "Diagnostic approfondi"))
     
-    # Contrats expiration
     if len(contrats_alertes) > 0:
         alertes.append(("🟡 ATTENTION", f"{len(contrats_alertes)} contrat(s) expire(nt) dans 30 jours", "Contacter les responsables"))
     
@@ -1032,7 +1038,7 @@ elif page == "⚠️ Alertes":
                 st.markdown(f'<div class="alert-warning">⚠️ {niveau}<br>{message}<br>📋 Action: {action}</div>', unsafe_allow_html=True)
     else:
         st.markdown('<div class="success-card">✅ Aucune alerte critique. Tous les indicateurs sont sous contrôle.</div>', unsafe_allow_html=True)
-st.markdown("---")
+
 # ==================== PAGE CONFIGURATION ====================
 elif page == "⚙️ Configuration":
     st.markdown("""
@@ -1051,7 +1057,7 @@ elif page == "⚙️ Configuration":
     
     col1, col2 = st.columns(2)
     with col1:
-        st.text_input("Nom d'utilisateur", value="Admin RH", key="config_username")
+        st.text_input("Nom d'utilisateur", value=st.session_state.username, key="config_username")
         st.text_input("Email", value="admin@pratique-electronique.com", key="config_email")
     with col2:
         st.selectbox("Rôle", ["Administrateur", "Manager RH", "Consultant", "Visiteur"], key="config_role")
@@ -1066,8 +1072,8 @@ elif page == "⚙️ Configuration":
     
     col1, col2 = st.columns(2)
     with col1:
-        st.selectbox("Thème", ["Clair", "Sombre", "Système"], key="config_theme")
-        st.color_picker("Couleur principale", "#0ea5e9", key="config_primary_color")
+        theme_choice = st.selectbox("Thème", ["Clair", "Sombre", "Système"], key="config_theme")
+        st.color_picker("Couleur principale", "#667eea", key="config_primary_color")
     with col2:
         st.selectbox("Police", ["Inter", "Poppins", "Roboto", "Open Sans"], key="config_font")
         st.slider("Taille des graphiques", 300, 600, 450, key="config_chart_size")
@@ -1147,4 +1153,6 @@ elif page == "⚙️ Configuration":
         if st.button("💾 Enregistrer tous les paramètres", use_container_width=True, key="config_save_all"):
             st.success("✅ Tous les paramètres ont été enregistrés avec succès!")
             st.balloons()
-st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence ")
+
+st.markdown("---")
+st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence")
