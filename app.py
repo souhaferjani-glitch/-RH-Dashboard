@@ -533,7 +533,7 @@ if st.sidebar.button("🚪 Déconnexion", use_container_width=True):
     st.rerun()
 st.sidebar.markdown("---")
 st.sidebar.caption("© 2025 - La Pratique Electronique")
-st.sidebar.caption("Version 3.0 - Compteurs Animés")
+st.sidebar.caption("Version 2.0 - Business Intelligence")
 
 # ==================== PAGE ACCUEIL ====================
 if page == "🏠 Accueil":
@@ -1002,4 +1002,4 @@ elif page == "⚠️ Alertes":
     else:
         st.markdown('<div class="success-card">✅ Aucune alerte critique. Tous les indicateurs sont sous contrôle.</div>', unsafe_allow_html=True)
 st.markdown("---")
-st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence | Version avec Compteurs Animés")
+st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence ")
