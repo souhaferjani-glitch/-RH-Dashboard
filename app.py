@@ -588,7 +588,7 @@ if page == "🏠 Accueil":
                                     actifs['Sexe'].isin(sexe_filter)]
         effectifs_service = effectifs_filtres.groupby('Service').size().reset_index(name='Effectif')
         fig = px.pie(effectifs_service, values='Effectif', names='Service', 
-                     title="🏢 Répartition par Service",
+        title="🏢 Répartition par Service",
                      hole=0.4, 
                      color_discrete_sequence=px.colors.qualitative.Set3)
         fig.update_traces(textposition='inside', textinfo='percent+label',
