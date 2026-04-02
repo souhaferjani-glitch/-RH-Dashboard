@@ -602,6 +602,7 @@ with col_center:
     )
     st.plotly_chart(fig, use_container_width=True)
 st.markdown("---")
+
     st.markdown('<div class="section-title">📊 Démographie</div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
