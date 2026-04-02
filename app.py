@@ -197,6 +197,12 @@ st.markdown("""
         fill: #00ffff !important;
     }
 }
+    /* Correction de la couleur du texte dans le sidebar */
+    [data-testid="stSidebar"],
+    [data-testid="stSidebar"] * {
+        color: #1e293b !important;
+    }
+</style>
 </style>
 """, unsafe_allow_html=True)
 
