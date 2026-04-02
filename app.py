@@ -676,7 +676,7 @@ elif page == "📈 Mouvements":
     
     fig = go.Figure()
     fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Entrees'], 
-                         name='Entrées', marker_color='#51cf66',
+                         name='Entrées', marker_color='#667eea',
                          text=mouvements['Entrees'], textposition='outside'))
     fig.add_trace(go.Bar(x=mouvements['Mois'].dt.strftime('%b %Y'), y=mouvements['Total_Sorties'], 
                          name='Sorties', marker_color='#ff6b6b',
