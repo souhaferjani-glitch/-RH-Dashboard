@@ -976,6 +976,19 @@ elif page == "⚠️ Alertes":
         alertes.append(("🟡 ATTENTION", f"Qualité recrutements: {qualite:.1f}% (Seuil < 80%)", "Améliorer processus d'intégration"))
     if taux_depart_1ere > 20:
         alertes.append(("🔴 CRITIQUE", f"Départs 1ère année: {taux_depart_1ere:.1f}% (Seuil > 20%)", "Revoir programme d'intégration"))
+    elif taux_depart_1ere > 15:
+        alertes.append(("🟡 ATTENTION", f"Départs 1ère année: {taux_depart_1ere:.1f}% (Seuil > 15%)", "Améliorer onboarding"))
+    if questionnaires['Taux_Reponse'].mean() < 50:
+        alertes.append(("🟡 ATTENTION", f"Taux réponse questionnaires: {questionnaires['Taux_Reponse'].mean():.1f}% (Seuil < 50%)", "Relancer les enquêtes"))
+    if entretiens['Taux_Realisation'].mean() < 80:
+        alertes.append(("🟡 ATTENTION", f"Entretiens annuels: {entretiens['Taux_Realisation'].mean():.1f}% (Seuil < 80%)", "Planifier les entretiens manquants"))
+    
+    # Alertes services à risque
+    for service in services_risque:
+        if service['Score Risque'] > 15:
+            alertes.append(("🔴 CRITIQUE", f"Service {service['Service']} à risque: Score {service['Score Risque']}", "Diagnostic approfondi"))
+    
+    # Contrats expiration
     if len(contrats_alertes) > 0:
         alertes.append(("🟡 ATTENTION", f"{len(contrats_alertes)} contrat(s) expire(nt) dans 30 jours", "Contacter les responsables"))
     
@@ -983,11 +996,10 @@ elif page == "⚠️ Alertes":
         st.subheader(f"🚨 {len(alertes)} alerte(s) détectée(s)")
         for niveau, message, action in alertes:
             if "🔴" in niveau:
-                st.markdown(f'<div class="alert-critical">{niveau}<br><strong>{message}</strong><br>📋 Action: {action}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="alert-critical">🚨 {niveau}<br>{message}<br>📋 Action: {action}</div>', unsafe_allow_html=True)
             else:
-                st.markdown(f'<div class="alert-warning">{niveau}<br><strong>{message}</strong><br>📋 Action: {action}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="alert-warning">⚠️ {niveau}<br>{message}<br>📋 Action: {action}</div>', unsafe_allow_html=True)
     else:
         st.markdown('<div class="success-card">✅ Aucune alerte critique. Tous les indicateurs sont sous contrôle.</div>', unsafe_allow_html=True)
-
 st.markdown("---")
 st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence | Version avec Compteurs Animés")
