@@ -576,10 +576,13 @@ if page == "🏠 Accueil":
             <div class="trend-down">▼ -2 vs 2023</div>
         </div>
         """, unsafe_allow_html=True)
+# ========== GRAPHIQUE CENTRÉ ==========
+    st.markdown("---")
     
-    col1, col2 = st.columns(2)
+    # Centrer le graphique avec des colonnes vides à gauche et à droite
+    col_left, col_center, col_right = st.columns([1, 3, 1])
     
-    with col1:
+    with col_center:
         effectifs_filtres = actifs[actifs['Service'].isin(service_filter) & 
                                     actifs['Categorie'].isin(categorie_filter) & 
                                     actifs['Sexe'].isin(sexe_filter)]
@@ -588,8 +591,9 @@ if page == "🏠 Accueil":
                      title="🏢 Répartition par Service",
                      hole=0.4, 
                      color_discrete_sequence=px.colors.qualitative.Set3)
-        fig.update_traces(textposition='inside', textinfo='percent+label')
-        fig.update_layout(height=450)
+        fig.update_traces(textposition='inside', textinfo='percent+label',
+                          marker=dict(line=dict(color='white', width=2)))
+        fig.update_layout(height=450, title_font_size=20, title_x=0.5)
         st.plotly_chart(fig, use_container_width=True)
     st.markdown("---")
     st.markdown('<div class="section-title">📊 Démographie</div>', unsafe_allow_html=True)
