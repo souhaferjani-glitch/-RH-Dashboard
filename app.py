@@ -508,7 +508,7 @@ contrats_alertes = contrats_expiration[contrats_expiration['Date_Fin'] <= date_l
 st.sidebar.markdown("""
 <div style="text-align: center; margin-bottom: 20px;">
     <img src="https://raw.githubusercontent.com/souhaferjani-glitch/-RH-Dashboard/main/logo.png" 
-         style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px; border: 3px solid #667eea;">
+         <div style="background: linear-gradient(135deg, #0ea5e9, #6366f1); width: 70px; height: 70px; border-radius: 1rem; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
     <h3 style="color: #667eea; margin: 0;">La Pratique Electronique</h3>
 </div>
 """, unsafe_allow_html=True)
