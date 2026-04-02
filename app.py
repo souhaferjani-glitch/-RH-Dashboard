@@ -163,6 +163,40 @@ st.markdown("""
         border-radius: 1rem;
         margin: 0.5rem 0;
     }
+    /* ========== STYLE POUR MODE SOMBRE (DÉTECTION AUTOMATIQUE) ========== */
+@media (prefers-color-scheme: dark) {
+    [data-testid="stSidebar"] {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        border-right: 1px solid rgba(0, 255, 255, 0.3);
+    }
+    [data-testid="stSidebar"] *,
+    [data-testid="stSidebar"] .stMarkdown,
+    [data-testid="stSidebar"] .stMarkdown *,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] div,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] .stRadio label,
+    [data-testid="stSidebar"] .stSelectbox label,
+    [data-testid="stSidebar"] .stMultiSelect label,
+    [data-testid="stSidebar"] .css-1c6f4el,
+    [data-testid="stSidebar"] .css-1c6f4el * {
+        color: #ffffff !important;
+    }
+    
+    [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] div,
+    [data-testid="stSidebar"] .stMultiSelect div[data-baseweb="select"] div {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: rgba(0, 255, 255, 0.3);
+        color: white !important;
+    }
+    
+    [data-testid="stSidebar"] .stSelectbox svg,
+    [data-testid="stSidebar"] .stMultiSelect svg {
+        fill: #00ffff !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
