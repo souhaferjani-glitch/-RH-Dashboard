@@ -130,6 +130,14 @@ st.markdown("""
         padding: 15px;
         margin: 10px 0;
     }
+      .modern-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border: 1px solid #eef2f6;
+    }
 </style>
 """, unsafe_allow_html=True)
 
