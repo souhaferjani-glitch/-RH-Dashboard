@@ -539,6 +539,7 @@ st.sidebar.caption("Version 2.0 - Business Intelligence")
 if page == "🏠 Accueil":
     st.markdown('<div class="main-header"><h1>📊 Tableau de Bord RH</h1><p> - La Pratique Electronique - </p></div>', unsafe_allow_html=True)
     
+    # KPIs en haut
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -576,31 +577,36 @@ if page == "🏠 Accueil":
             <div class="trend-down">▼ -2 vs 2023</div>
         </div>
         """, unsafe_allow_html=True)
-# ========== GRAPHIQUE CENTRÉ AVEC TITRE À GAUCHE ==========
-st.markdown("---")
-
-# Centrer le graphique avec des colonnes vides à gauche et à droite
-col_left, col_center, col_right = st.columns([1, 3, 1])
-
-with col_center:
-    # Ajouter un titre personnalisé aligné à gauche
-    st.markdown('<h3 style="text-align: left; margin-bottom: 1rem; color: #1e293b;">🏢 Répartition par Service</h3>', unsafe_allow_html=True)
     
-    effectifs_filtres = actifs[actifs['Service'].isin(service_filter) & 
-                                actifs['Categorie'].isin(categorie_filter) & 
-                                actifs['Sexe'].isin(sexe_filter)]
-    effectifs_service = effectifs_filtres.groupby('Service').size().reset_index(name='Effectif')
-    fig = px.pie(effectifs_service, values='Effectif', names='Service', 
-                 title="",  # Titre vide car on utilise le titre personnalisé
-                 hole=0.4, 
-                 color_discrete_sequence=px.colors.qualitative.Set3)
-    fig.update_traces(textposition='inside', textinfo='percent+label',
-                      marker=dict(line=dict(color='white', width=2)))
-    fig.update_layout(height=450, showlegend=False)
-    st.plotly_chart(fig, use_container_width=True)
-
-st.markdown("---")
+    # ========== GRAPHIQUE CENTRÉ ==========
+    st.markdown("---")
+    
+    # Centrer le graphique avec des colonnes vides à gauche et à droite
+    col_left, col_center, col_right = st.columns([1, 3, 1])
+    
+    with col_center:
+        effectifs_filtres = actifs[actifs['Service'].isin(service_filter) & 
+                                    actifs['Categorie'].isin(categorie_filter) & 
+                                    actifs['Sexe'].isin(sexe_filter)]
+        effectifs_service = effectifs_filtres.groupby('Service').size().reset_index(name='Effectif')
+        fig = px.pie(effectifs_service, values='Effectif', names='Service', 
+                     title="🏢 Répartition par Service",
+                     hole=0.4, 
+                     color_discrete_sequence=px.colors.qualitative.Set3)
+        fig.update_traces(textposition='inside', textinfo='percent+label',
+                          marker=dict(line=dict(color='white', width=2)))
+        fig.update_layout(
+            height=450, 
+            title_font_size=20, 
+            title_x=0.5,
+            showlegend=False
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    st.markdown("---")
     st.markdown('<div class="section-title">📊 Démographie</div>', unsafe_allow_html=True)
+    
+    # Démographie en bas
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.markdown(f"""
@@ -634,7 +640,6 @@ st.markdown("---")
             <div class="trend-up">Moyenne</div>
         </div>
         """, unsafe_allow_html=True)
-
 # ==================== PAGE MOUVEMENTS ====================
 elif page == "📈 Mouvements":
     st.markdown('<div class="main-header"><h1>📈 Mouvements du Personnel</h1><p>Entrées, sorties et turnover</p></div>', unsafe_allow_html=True)
