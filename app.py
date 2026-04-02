@@ -956,7 +956,7 @@ elif page == "🎯 KPIs":
     fig = px.bar(pd.DataFrame(services_risque), x='Service', y='Score Risque', 
                  title="Score de risque par service",
                  color='Score Risque',
-                 color_continuous_scale=['#10b981', '#f59e0b', '#ef4444'])
+                 color_continuous_scale=['green', 'yellow', 'red'])
     st.plotly_chart(fig, use_container_width=True)
 
 # ==================== PAGE ALERTES ====================
