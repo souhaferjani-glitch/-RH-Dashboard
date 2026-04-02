@@ -784,7 +784,7 @@ elif page == "⭐ Talents":
         promotions_par_annee = promotions.groupby(promotions['Date_Promot'].dt.year).size().reset_index(name='Nombre')
         promotions_par_annee.columns = ['Année', 'Nombre']
         fig = px.bar(promotions_par_annee, x='Année', y='Nombre', title="Promotions par année", text='Nombre')
-        fig.update_traces(marker_color='red', textposition='outside')
+        fig.update_traces(marker_color='pink', textposition='outside')
         st.plotly_chart(fig, use_container_width=True)
 
 # ==================== PAGE ADMIN ====================
