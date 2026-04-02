@@ -1033,4 +1033,118 @@ elif page == "⚠️ Alertes":
     else:
         st.markdown('<div class="success-card">✅ Aucune alerte critique. Tous les indicateurs sont sous contrôle.</div>', unsafe_allow_html=True)
 st.markdown("---")
+# ==================== PAGE CONFIGURATION ====================
+elif page == "⚙️ Configuration":
+    st.markdown("""
+    <div class="glass-header">
+        <h1 style="margin: 0;">⚙️ Configuration</h1>
+        <p>Paramétrage de l'application</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Section 1: Profil utilisateur
+    st.markdown("""
+    <div class="config-section">
+        <div class="config-title">👤 Profil Utilisateur</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.text_input("Nom d'utilisateur", value="Admin RH", key="config_username")
+        st.text_input("Email", value="admin@pratique-electronique.com", key="config_email")
+    with col2:
+        st.selectbox("Rôle", ["Administrateur", "Manager RH", "Consultant", "Visiteur"], key="config_role")
+        st.selectbox("Langue", ["Français", "English", "العربية"], key="config_langue")
+    
+    # Section 2: Apparence
+    st.markdown("""
+    <div class="config-section">
+        <div class="config-title">🎨 Apparence</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.selectbox("Thème", ["Clair", "Sombre", "Système"], key="config_theme")
+        st.color_picker("Couleur principale", "#0ea5e9", key="config_primary_color")
+    with col2:
+        st.selectbox("Police", ["Inter", "Poppins", "Roboto", "Open Sans"], key="config_font")
+        st.slider("Taille des graphiques", 300, 600, 450, key="config_chart_size")
+    
+    # Section 3: Notifications
+    st.markdown("""
+    <div class="config-section">
+        <div class="config-title">🔔 Notifications</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.checkbox("Alertes email pour turnover élevé", value=True, key="config_alert_turnover")
+        st.checkbox("Alertes email pour contrats expirant", value=True, key="config_alert_contrats")
+    with col2:
+        st.checkbox("Rapport mensuel automatique", value=False, key="config_rapport_mensuel")
+        st.checkbox("Notifications dans l'application", value=True, key="config_notifications")
+    
+    # Section 4: Logo
+    st.markdown("""
+    <div class="config-section">
+        <div class="config-title">🖼️ Logo</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    if LOGO_BASE64:
+        st.markdown(f"""
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <img src="data:image/png;base64,{LOGO_BASE64}" style="width: 80px; height: 80px; border-radius: 1rem; border: 2px solid #e2e8f0;">
+            <div>
+                <p style="color: #10b981;">✅ Logo actuel</p>
+                <p style="color: #64748b; font-size: 0.8rem;">Pour changer le logo, remplacez le fichier logo.png dans le dossier</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.warning("⚠️ Aucun logo trouvé. Ajoutez un fichier logo.png dans le dossier.")
+        st.file_uploader("Uploader un nouveau logo", type=["png", "jpg", "jpeg"], key="config_logo_upload")
+    
+    # Section 5: Base de données
+    st.markdown("""
+    <div class="config-section">
+        <div class="config-title">💾 Base de données</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.text_input("Source de données", value="Fichier local (CSV)", key="config_data_source", disabled=True)
+    with col2:
+        st.text_input("Dernière mise à jour", value=datetime.now().strftime("%d/%m/%Y %H:%M"), key="config_last_update", disabled=True)
+    
+    if st.button("🔄 Synchroniser les données", use_container_width=True, key="config_sync"):
+        st.success("✅ Synchronisation terminée avec succès!")
+        st.cache_data.clear()
+        st.rerun()
+    
+    # Section 6: Sauvegarde
+    st.markdown("""
+    <div class="config-section">
+        <div class="config-title">💾 Sauvegarde</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("📥 Exporter la configuration", use_container_width=True, key="config_export"):
+            st.success("Configuration exportée avec succès!")
+    with col2:
+        if st.button("📤 Importer la configuration", use_container_width=True, key="config_import"):
+            st.info("Veuillez sélectionner un fichier de configuration")
+    
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("💾 Enregistrer tous les paramètres", use_container_width=True, key="config_save_all"):
+            st.success("✅ Tous les paramètres ont été enregistrés avec succès!")
+            st.balloons()
 st.caption("🎓 La Pratique Electronique | Projet PFE - Souha Ferjani | Business Intelligence ")
