@@ -833,7 +833,7 @@ elif page == "⭐ Talents":
 
 # ==================== PAGE ADMIN ====================
 elif page == "📋 Admin":
-    st.markdown('<div class="main-header"><h1>📋 Gestion Administrative</h1><p>Suivi des indicateurs administratifs RH-</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>📋 Gestion Administrative</h1><p>-Suivi des indicateurs administratifs RH-</p></div>', unsafe_allow_html=True)
     
     st.markdown("---")
     st.subheader("📊 1. Taux de réponse aux questionnaires")
