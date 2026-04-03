@@ -965,35 +965,18 @@ elif page == "🎯 KPIs":
     st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>-Performance RH et score de risque-</p></div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
-    
-    with col1:
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=qualite,
-            title={'text': "Qualité des recrutements", 'font': {'size': 18}},
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [0, 100]},
-                   'bar': {'color': "#51cf66"},
-                   'steps': [{'range': [0, 50], 'color': '#ff6b6b'},
-                             {'range': [50, 80], 'color': '#ffd93d'},
-                             {'range': [80, 100], 'color': '#51cf66'}],
-                   'threshold': {'value': 80, 'line': {'color': "red", 'width': 4}}}))
-        fig.update_layout(height=400)
+   with col1:
+        fig = go.Figure(go.Indicator(mode="gauge+number", value=qualite, title={'text': "Qualité des recrutements"},
+                                       gauge={'axis': {'range': [0, 100]}, 'bar': {'color': "#10b981"},
+                                              'steps': [{'range': [0, 50], 'color': '#fee2e2'}, {'range': [50, 80], 'color': '#fed7aa'}, {'range': [80, 100], 'color': '#d1fae5'}]}))
+        fig.update_layout(height=350)
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=fuite_cadres,
-            title={'text': "Fuite des compétences", 'font': {'size': 18}},
-            domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={'axis': {'range': [0, 30]},
-                   'bar': {'color': "#ff6b6b"},
-                   'steps': [{'range': [0, 5], 'color': '#51cf66'},
-                             {'range': [5, 10], 'color': '#ffd93d'},
-                             {'range': [10, 30], 'color': '#ff6b6b'}],
-                   'threshold': {'value': 10, 'line': {'color': "red", 'width': 4}}}))
-        fig.update_layout(height=400)
+        fig = go.Figure(go.Indicator(mode="gauge+number", value=fuite_cadres, title={'text': "Fuite des compétences"},
+                                       gauge={'axis': {'range': [0, 30]}, 'bar': {'color': "#ef4444"},
+                                              'steps': [{'range': [0, 5], 'color': '#d1fae5'}, {'range': [5, 10], 'color': '#fed7aa'}, {'range': [10, 30], 'color': '#fee2e2'}]}))
+        fig.update_layout(height=350)
         st.plotly_chart(fig, use_container_width=True)
     
     st.subheader("🎯 Score de risque par service")
