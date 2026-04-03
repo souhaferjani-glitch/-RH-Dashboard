@@ -686,7 +686,7 @@ if page == "🏠 Accueil":
 
 # ==================== PAGE MOUVEMENTS ====================
 elif page == "📈 Mouvements":
-    st.markdown('<div class="main-header"><h1>📈 Mouvements du Personnel</h1><p>Entrées, sorties et turnover</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>📈 Mouvements du Personnel</h1><p>-Entrées, sorties et turnover-</p></div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -795,7 +795,7 @@ elif page == "📈 Mouvements":
 
 # ==================== PAGE TALENTS ====================
 elif page == "⭐ Talents":
-    st.markdown('<div class="main-header"><h1>⭐ Gestion des Talents</h1><p>Promotions et mobilité interne</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>⭐ Gestion des Talents</h1><p>-Promotions et mobilité interne-</p></div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
@@ -833,7 +833,7 @@ elif page == "⭐ Talents":
 
 # ==================== PAGE ADMIN ====================
 elif page == "📋 Admin":
-    st.markdown('<div class="main-header"><h1>📋 Gestion Administrative</h1><p>Suivi des indicateurs administratifs RH</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>📋 Gestion Administrative</h1><p>Suivi des indicateurs administratifs RH-</p></div>', unsafe_allow_html=True)
     
     st.markdown("---")
     st.subheader("📊 1. Taux de réponse aux questionnaires")
@@ -962,7 +962,7 @@ elif page == "📋 Admin":
 
 # ==================== PAGE KPIs ====================
 elif page == "🎯 KPIs":
-    st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>Performance RH et score de risque</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>-Performance RH et score de risque-</p></div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
@@ -1007,7 +1007,7 @@ elif page == "🎯 KPIs":
 
 # ==================== PAGE ALERTES ====================
 elif page == "⚠️ Alertes":
-    st.markdown('<div class="main-header"><h1>⚠️ Système d\'Alertes</h1><p>Détection automatique des risques</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h1>⚠️ Système d\'Alertes</h1><p>-Détection automatique des risques-</p></div>', unsafe_allow_html=True)
     
     alertes = []
     if turnover > 15:
@@ -1049,7 +1049,7 @@ elif page == "⚙️ Configuration":
     st.markdown("""
     <div class="main-header">
         <h1>⚙️ Configuration</h1>
-        <p>Paramétrage de l'application</p>
+        <p>-Paramétrage de l'application-</p>
     </div>
     """, unsafe_allow_html=True)
     
