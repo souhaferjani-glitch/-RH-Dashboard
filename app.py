@@ -1155,7 +1155,7 @@ elif page == "⚙️ Configuration":
                 f.write(uploaded_logo.getbuffer())
             st.success("✅ Logo uploadé avec succès! Rafraîchissez la page.")
     
-    # ==================== SECTION 5: BASE DE DONNÉES (AMÉLIORÉE) ====================
+       # ==================== SECTION 5: BASE DE DONNÉES (AMÉLIORÉE) ====================
     st.markdown("""
     <div class="config-section">
         <div class="config-title">💾 Base de données</div>
@@ -1185,11 +1185,9 @@ elif page == "⚙️ Configuration":
             help="Choisissez la source de vos données RH"
         )
         
-        # Afficher un message selon la source choisie
         if data_source != "📁 Fichier local (CSV)":
             st.info(f"ℹ️ Configuration pour {data_source} - Fonctionnalité à venir")
             
-            # Si Excel est choisi, permettre l'upload
             if data_source == "📊 Fichier Excel (.xlsx)":
                 uploaded_excel = st.file_uploader("📂 Uploader votre fichier Excel", type=["xlsx", "xls"], key="config_excel_upload")
                 if uploaded_excel is not None:
@@ -1200,7 +1198,6 @@ elif page == "⚙️ Configuration":
                     except Exception as e:
                         st.error(f"Erreur: {e}")
             
-            # Si CSV est choisi
             elif data_source == "📁 Fichier local (CSV)":
                 uploaded_csv = st.file_uploader("📂 Uploader votre fichier CSV", type=["csv"], key="config_csv_upload")
                 if uploaded_csv is not None:
@@ -1222,10 +1219,8 @@ elif page == "⚙️ Configuration":
             horizontal=True
         )
         
-        # Sauvegarder le mode
         st.session_state.config["update_mode"] = "auto" if update_mode == "Automatique" else "manuel"
         
-        # Affichage de la dernière mise à jour
         if update_mode == "Manuelle":
             last_update = st.text_input(
                 "📅 Dernière mise à jour", 
@@ -1245,12 +1240,48 @@ elif page == "⚙️ Configuration":
             )
             st.session_state.config["last_update"] = auto_update
         
-        # Statistiques des données
+        # ==================== STATISTIQUES MODERN CARD HORIZONTAL ====================
         st.markdown("---")
-        st.markdown("**📊 Statistiques actuelles:**")
-        st.metric("📋 Nombre d'employés", len(effectifs), delta=None)
-        st.metric("🏢 Nombre de services", len(effectifs['Service'].unique()), delta=None)
-        st.metric("⭐ Nombre de promotions", len(promotions), delta=None)
+        st.markdown("**📊 Statistiques actuelles**")
+        
+        # Cartes horizontales pour les statistiques
+        col_stat1, col_stat2, col_stat3, col_stat4 = st.columns(4)
+        
+        with col_stat1:
+            st.markdown(f"""
+            <div class="modern-card" style="padding: 0.8rem;">
+                <div class="kpi-label" style="font-size: 0.7rem;">👥 EMPLOYÉS</div>
+                <div class="kpi-value" style="font-size: 1.8rem;">{len(effectifs)}</div>
+                <div class="trend-up">Total</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_stat2:
+            st.markdown(f"""
+            <div class="modern-card" style="padding: 0.8rem;">
+                <div class="kpi-label" style="font-size: 0.7rem;">🏢 SERVICES</div>
+                <div class="kpi-value" style="font-size: 1.8rem;">{len(effectifs['Service'].unique())}</div>
+                <div class="trend-up">Différents</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_stat3:
+            st.markdown(f"""
+            <div class="modern-card" style="padding: 0.8rem;">
+                <div class="kpi-label" style="font-size: 0.7rem;">⭐ PROMOTIONS</div>
+                <div class="kpi-value" style="font-size: 1.8rem;">{len(promotions)}</div>
+                <div class="trend-up">Cette année</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_stat4:
+            st.markdown(f"""
+            <div class="modern-card" style="padding: 0.8rem;">
+                <div class="kpi-label" style="font-size: 0.7rem;">👋 DÉPARTS</div>
+                <div class="kpi-value" style="font-size: 1.8rem;">{departs}</div>
+                <div class="trend-down">Total</div>
+            </div>
+            """, unsafe_allow_html=True)
     
     # Bouton de synchronisation
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -1258,18 +1289,14 @@ elif page == "⚙️ Configuration":
         if st.button("🔄 Synchroniser les données", use_container_width=True, key="config_sync"):
             with st.spinner("🔄 Synchronisation en cours..."):
                 time.sleep(1)
-                # Vider le cache pour recharger les données
                 st.cache_data.clear()
-                # Recharger les données
                 effectifs, mouvements, promotions, questionnaires, entretiens, sanctions, absenteisme, contrats_expiration = load_data()
-                # Recalculer les indicateurs
                 st.session_state.config["last_sync"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 st.session_state.config["last_update"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 st.success(f"✅ Synchronisation terminée avec succès! ({datetime.now().strftime('%H:%M:%S')})")
                 time.sleep(1)
                 st.rerun()
     
-    # Afficher le statut de la synchronisation
     if "last_sync" in st.session_state.config:
         st.caption(f"📅 Dernière synchronisation: {st.session_state.config['last_sync']}")
     else:
