@@ -959,7 +959,6 @@ elif page == "📋 Admin":
     fig = px.bar(absenteisme, x='Service', y='Taux_Absence', title="Taux d'absentéisme", text='Taux_Absence')
     fig.add_hline(y=8, line_dash="dash", line_color="#ef4444", annotation_text="Seuil d'alerte 8%")
     st.plotly_chart(fig, use_container_width=True)
-
 # ==================== PAGE KPIs ====================
 elif page == "🎯 KPIs":
     st.markdown('<div class="main-header"><h1>🎯 Indicateurs Stratégiques</h1><p>-Performance RH et score de risque-</p></div>', unsafe_allow_html=True)
@@ -972,7 +971,7 @@ elif page == "🎯 KPIs":
         fig.update_layout(height=350)
         st.plotly_chart(fig, use_container_width=True)
     
-     with col2:
+    with col2:
         fig = go.Figure(go.Indicator(mode="gauge+number", value=fuite_cadres, title={'text': "Fuite des compétences"},
                                       gauge={'axis': {'range': [0, 30]}, 'bar': {'color': "#ef4444"},
                                               'steps': [{'range': [0, 5], 'color': '#d1fae5'}, {'range': [5, 10], 'color': '#fed7aa'}, {'range': [10, 30], 'color': '#fee2e2'}]}))
@@ -987,7 +986,6 @@ elif page == "🎯 KPIs":
                  color='Score Risque',
                  color_continuous_scale=['green', 'yellow', 'red'])
     st.plotly_chart(fig, use_container_width=True)
-
 # ==================== PAGE ALERTES ====================
 elif page == "⚠️ Alertes":
     st.markdown('<div class="main-header"><h1>⚠️ Système d\'Alertes</h1><p>-Détection automatique des risques-</p></div>', unsafe_allow_html=True)
@@ -1035,7 +1033,6 @@ elif page == "⚙️ Configuration":
         <p>-Paramétrage de l'application-</p>
     </div>
     """, unsafe_allow_html=True)
-    
     # ==================== SECTION 1: PROFIL UTILISATEUR ====================
     st.markdown("""
     <div class="config-section">
@@ -1060,7 +1057,6 @@ elif page == "⚙️ Configuration":
                 st.info("🌐 تم تغيير اللغة إلى العربية")
             else:
                 st.info("🌐 Langue changée en Français")
-    
     # ==================== SECTION 2: APPARENCE ====================
     st.markdown("""
     <div class="config-section">
@@ -1091,7 +1087,6 @@ elif page == "⚙️ Configuration":
         # Taille des graphiques
         chart_size = st.slider("Taille des graphiques", 300, 600, st.session_state.config.get("chart_size", 450), key="config_chart_size_slider")
         st.session_state.config["chart_size"] = chart_size
-    
     # ==================== SECTION 3: NOTIFICATIONS ====================
     st.markdown("""
     <div class="config-section">
@@ -1112,7 +1107,6 @@ elif page == "⚙️ Configuration":
         
         notifications = st.checkbox("Notifications dans l'application", value=st.session_state.config.get("notifications", True), key="config_notifications_check")
         st.session_state.config["notifications"] = notifications
-    
     # ==================== SECTION 4: LOGO ====================
     st.markdown("""
     <div class="config-section">
@@ -1137,7 +1131,6 @@ elif page == "⚙️ Configuration":
             with open("logo.png", "wb") as f:
                 f.write(uploaded_logo.getbuffer())
             st.success("✅ Logo uploadé avec succès! Rafraîchissez la page.")
-    
        # ==================== SECTION 5: BASE DE DONNÉES (AMÉLIORÉE) ====================
     st.markdown("""
     <div class="config-section">
@@ -1284,7 +1277,6 @@ elif page == "⚙️ Configuration":
         st.caption(f"📅 Dernière synchronisation: {st.session_state.config['last_sync']}")
     else:
         st.caption("📅 Première synchronisation effectuée au chargement de l'application")
-    
     # ==================== SECTION 6: SAUVEGARDE ====================
     st.markdown("""
     <div class="config-section">
@@ -1314,7 +1306,6 @@ elif page == "⚙️ Configuration":
                 st.rerun()
             except Exception as e:
                 st.error(f"❌ Erreur lors de l'import: {e}")
-    
     # ==================== BOUTON ENREGISTREMENT GLOBAL ====================
     st.markdown("---")
     col1, col2, col3 = st.columns([1, 2, 1])
