@@ -972,9 +972,9 @@ elif page == "🎯 KPIs":
         fig.update_layout(height=350)
         st.plotly_chart(fig, use_container_width=True)
     
-     with col2:
+      with col2:
         fig = go.Figure(go.Indicator(mode="gauge+number", value=fuite_cadres, title={'text': "Fuite des compétences"},
-                                       gauge={'axis': {'range': [0, 30]}, 'bar': {'color': "#ef4444"},
+                                      gauge={'axis': {'range': [0, 30]}, 'bar': {'color': "#ef4444"},
                                               'steps': [{'range': [0, 5], 'color': '#d1fae5'}, {'range': [5, 10], 'color': '#fed7aa'}, {'range': [10, 30], 'color': '#fee2e2'}]}))
         fig.update_layout(height=350)
         st.plotly_chart(fig, use_container_width=True)
